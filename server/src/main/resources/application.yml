@@ -4,3 +4,17 @@ server:
 spring:
   application:
     name: wiki
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/wiki
+    username: root
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.MySQLDialect
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    properties:
+      format_sql: true
+      highlight_sql: true
