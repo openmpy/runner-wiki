@@ -11,8 +11,22 @@ public record DocumentReadResponse(
         String category,
         String author,
         String content,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        LocalDateTime updatedAt
 ) {
+
+    public static DocumentReadResponse from(final Document document) {
+        return new DocumentReadResponse(
+                document.getId(),
+                null,
+                document.getTitle(),
+                document.getCategory().getValue(),
+                null,
+                null,
+                null,
+                document.getUpdatedAt()
+        );
+    }
 
     public static DocumentReadResponse from(final Document document, final DocumentHistory documentHistory) {
         return new DocumentReadResponse(
@@ -22,7 +36,8 @@ public record DocumentReadResponse(
                 document.getCategory().getValue(),
                 documentHistory.isDeleted() ? null : documentHistory.getAuthor(),
                 documentHistory.isDeleted() ? null : documentHistory.getContent(),
-                documentHistory.getCreatedAt()
+                documentHistory.getCreatedAt(),
+                document.getUpdatedAt()
         );
     }
 }
