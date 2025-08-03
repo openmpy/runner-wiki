@@ -3,6 +3,7 @@ package com.openmpy.wiki.document.application;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
+import com.openmpy.wiki.document.application.response.DocumentHistoryReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentReadResponse;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
@@ -10,9 +11,14 @@ import com.openmpy.wiki.document.domain.entity.Document;
 import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import com.openmpy.wiki.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.wiki.document.domain.repository.DocumentRepository;
+import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.global.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -86,6 +92,30 @@ public class DocumentService {
                 );
 
         return DocumentReadResponse.from(document, documentHistory);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentHistoryReadResponses> readDocumentHistory(
+            final Long documentId, final int page, final int size
+    ) {
+        final Document document = getDocument(documentId);
+
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "version"));
+        final Page<DocumentHistory> documentHistoryPage = documentHistoryRepository.findAllByDocumentAndDeletedFalse(
+                document, pageRequest
+        );
+        final DocumentHistoryReadResponses responses = DocumentHistoryReadResponses.from(
+                document, documentHistoryPage.getContent()
+        );
+
+        return new PageResponse<>(
+                responses,
+                page,
+                size,
+                documentHistoryPage.getTotalElements(),
+                documentHistoryPage.getTotalPages(),
+                documentHistoryPage.isLast()
+        );
     }
 
     private Document getDocument(final Long documentId) {

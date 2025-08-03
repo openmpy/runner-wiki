@@ -4,8 +4,10 @@ import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
+import com.openmpy.wiki.document.application.response.DocumentHistoryReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentReadResponse;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
+import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.utils.IpAddressUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -60,5 +63,14 @@ public class DocumentController {
     @GetMapping("/{documentId}")
     public ResponseEntity<DocumentReadResponse> readDocument(@PathVariable final Long documentId) {
         return ResponseEntity.ok(documentService.readLatestDocument(documentId));
+    }
+
+    @GetMapping("/{documentId}/histories")
+    public ResponseEntity<PageResponse<DocumentHistoryReadResponses>> readDocumentHistory(
+            @PathVariable final Long documentId,
+            @RequestParam("page") final int page,
+            @RequestParam(value = "size", defaultValue = "20", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentService.readDocumentHistory(documentId, page, size));
     }
 }
