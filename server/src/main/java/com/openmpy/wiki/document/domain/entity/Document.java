@@ -1,9 +1,12 @@
 package com.openmpy.wiki.document.domain.entity;
 
+import com.openmpy.wiki.document.domain.DocumentTitle;
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
 import com.openmpy.wiki.document.domain.constants.DocumentStatus;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -25,8 +28,9 @@ public class Document {
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false))
+    private DocumentTitle title;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -48,7 +52,7 @@ public class Document {
     public static Document create(final Long id, final String title, final DocumentCategory category) {
         final Document document = new Document();
         document.id = id;
-        document.title = title;
+        document.title = new DocumentTitle(title);
         document.category = category;
         document.status = DocumentStatus.ACTIVE;
         document.createdAt = document.updatedAt = LocalDateTime.now();
@@ -58,5 +62,9 @@ public class Document {
     public void addHistory(final DocumentHistory documentHistory) {
         history.add(documentHistory);
         updatedAt = LocalDateTime.now();
+    }
+
+    public String getTitle() {
+        return title.getValue();
     }
 }
