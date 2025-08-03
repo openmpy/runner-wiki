@@ -20,8 +20,8 @@ public record DocumentReadResponse(
                 documentHistory.getId(),
                 document.getTitle(),
                 document.getCategory().getValue(),
-                documentHistory.getAuthor(),
-                documentHistory.getContent(),
+                documentHistory.isDeleted() ? null : documentHistory.getAuthor(),
+                documentHistory.isDeleted() ? null : documentHistory.getContent(),
                 documentHistory.getCreatedAt()
         );
     }

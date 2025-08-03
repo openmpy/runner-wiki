@@ -16,5 +16,6 @@ spring:
     hibernate:
       ddl-auto: create
     properties:
-      format_sql: true
-      highlight_sql: true
+      hibernate:
+        format_sql: true
+        highlight_sql: true

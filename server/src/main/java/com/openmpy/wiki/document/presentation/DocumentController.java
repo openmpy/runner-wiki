@@ -51,6 +51,12 @@ public class DocumentController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/histories/{documentHistoryId}")
+    public ResponseEntity<Void> deleteDocumentHistory(@PathVariable final Long documentHistoryId) {
+        documentService.deleteDocumentHistory(documentHistoryId);
+        return ResponseEntity.ok().build();
+    }
+
     @GetMapping("/{documentId}")
     public ResponseEntity<DocumentReadResponse> readDocument(@PathVariable final Long documentId) {
         return ResponseEntity.ok(documentService.readLatestDocument(documentId));

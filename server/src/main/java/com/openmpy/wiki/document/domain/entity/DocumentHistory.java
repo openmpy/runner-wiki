@@ -49,11 +49,15 @@ public class DocumentHistory {
         documentHistory.id = id;
         documentHistory.author = author;
         documentHistory.content = content;
-        documentHistory.version = document.getHistory().size() + 1;
+        documentHistory.version = document.getHistory().size() + 1L;
         documentHistory.clientIp = clientIp;
         documentHistory.deleted = false;
         documentHistory.createdAt = LocalDateTime.now();
         documentHistory.document = document;
         return documentHistory;
+    }
+
+    public void delete() {
+        deleted = true;
     }
 }
