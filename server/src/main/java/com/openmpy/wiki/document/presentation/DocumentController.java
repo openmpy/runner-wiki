@@ -4,12 +4,14 @@ import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
+import com.openmpy.wiki.document.application.response.DocumentReadResponse;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.global.utils.IpAddressUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -47,5 +49,10 @@ public class DocumentController {
     public ResponseEntity<Void> deleteDocument(@PathVariable final Long documentId) {
         documentService.deleteDocument(documentId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{documentId}")
+    public ResponseEntity<DocumentReadResponse> readDocument(@PathVariable final Long documentId) {
+        return ResponseEntity.ok(documentService.readLatestDocument(documentId));
     }
 }

@@ -2,7 +2,9 @@ package com.openmpy.wiki.document.domain.constants;
 
 import com.openmpy.wiki.global.exception.CustomException;
 import java.util.Arrays;
+import lombok.Getter;
 
+@Getter
 public enum DocumentCategory {
 
     RUNNER("런너"), GUILD("길드");
