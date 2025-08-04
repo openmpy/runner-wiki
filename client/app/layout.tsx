@@ -1,4 +1,11 @@
+import localFont from "next/font/local";
+import Header from "./components/layout/Header";
 import "./globals.css";
+
+const bmhanna = localFont({
+  src: "../public/fonts/BMHANNA_11yrs_ttf.ttf",
+  display: "swap",
+});
 
 export default function RootLayout({
   children,
@@ -7,7 +14,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`antialiased`}>{children}</body>
+      <body className={`antialiased ${bmhanna.className}`}>
+        <Header />
+        <main>{children}</main>
+      </body>
     </html>
   );
 }
