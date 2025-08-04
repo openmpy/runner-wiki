@@ -7,6 +7,7 @@ import com.openmpy.wiki.image.application.response.ImageUploadResponse;
 import com.openmpy.wiki.image.domain.entity.Image;
 import com.openmpy.wiki.image.domain.repository.ImageRepository;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -57,6 +58,22 @@ public class ImageService {
             return new ImageUploadResponse(image.getId());
         } catch (final IOException e) {
             throw new CustomException("이미지 업로드 중에 에러가 발생했습니다. " + e.getMessage());
+        }
+    }
+
+    @Transactional
+    public void use(final Long imageId, final Long documentId) {
+        final Image image = imageRepository.findById(imageId).orElseThrow(
+                () -> new CustomException("찾을 수 없는 이미지 번호입니다.")
+        );
+        image.markUsed(documentId);
+    }
+
+    @Transactional
+    public void delete(final Long documentId) {
+        final List<Image> images = imageRepository.findAllByDocumentId(documentId);
+        for (final Image image : images) {
+            image.markDeleted();
         }
     }
 

@@ -24,6 +24,9 @@ public class Image {
     private String clientIp;
 
     @Column
+    private Long documentId;
+
+    @Column
     private boolean used;
 
     @Column(nullable = false)
@@ -37,14 +40,21 @@ public class Image {
         image.id = id;
         image.name = key;
         image.clientIp = clientIp;
+        image.documentId = null;
         image.used = false;
         image.createdAt = LocalDateTime.now();
         image.usedAt = null;
         return image;
     }
 
-    public void markUsed() {
+    public void markUsed(final Long documentId) {
+        this.documentId = documentId;
         used = true;
         usedAt = LocalDateTime.now();
+    }
+
+    public void markDeleted() {
+        used = false;
+        usedAt = null;
     }
 }

@@ -1,4 +1,8 @@
 package com.openmpy.wiki.document.application.request;
 
-public record DocumentUpdateRequest(String author, String content) {
+import java.util.List;
+
+public record DocumentUpdateRequest(
+        String author, String content, List<Long> imageIds
+) {
 }

@@ -14,6 +14,7 @@ import com.openmpy.wiki.document.domain.repository.DocumentRepository;
 import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.global.snowflake.Snowflake;
+import com.openmpy.wiki.image.application.ImageService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,6 +31,7 @@ public class DocumentService {
     private final Snowflake snowflake = new Snowflake();
     private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
+    private final ImageService imageService;
 
     @Transactional
     public DocumentCreateResponse createDocument(final DocumentCreateRequest request, final String clientIp) {
@@ -44,8 +46,8 @@ public class DocumentService {
                 snowflake.nextId(), request.author(), request.content(), clientIp, document
         );
         document.addHistory(documentHistory);
-
         final Document savedDocument = documentRepository.save(document);
+        handleImageRequests(savedDocument.getId(), request.imageIds());
         return new DocumentCreateResponse(savedDocument.getId());
     }
 
@@ -58,6 +60,7 @@ public class DocumentService {
                 snowflake.nextId(), request.author(), request.content(), clientIp, document
         );
         document.addHistory(documentHistory);
+        handleImageRequests(document.getId(), request.imageIds());
         return new DocumentUpdateResponse(documentId);
     }
 
@@ -67,6 +70,7 @@ public class DocumentService {
     ) {
         final Document document = getDocument(documentId);
         documentRepository.delete(document);
+        imageService.delete(documentId);
     }
 
     @Transactional
@@ -147,5 +151,13 @@ public class DocumentService {
         return documentRepository.findById(documentId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 번호입니다.")
         );
+    }
+
+    private void handleImageRequests(final Long documentId, final List<Long> imageIds) {
+        if (imageIds != null && !imageIds.isEmpty()) {
+            for (final Long imageId : imageIds) {
+                imageService.use(documentId, imageId);
+            }
+        }
     }
 }
