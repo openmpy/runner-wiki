@@ -21,7 +21,7 @@ export default function Header() {
             {/* 네비게이션 */}
             <nav className="flex items-center space-x-4">
               <Link
-                href="/"
+                href="/wiki/recent"
                 className="flex items-center space-x-2 text-white hover:text-blue-100 transition-colors font-medium text-xl"
               >
                 <BiTime className="h-5 w-5" />
@@ -86,9 +86,9 @@ export default function Header() {
             {/* 메뉴 아이콘들 */}
             <div className="flex items-center">
               <Link
-                href="/"
+                href="/wiki/recent"
                 className="text-white hover:text-blue-100 transition-colors p-2"
-                title="최근 토론"
+                title="최근 편집"
               >
                 <BiTime className="h-6 w-6" />
               </Link>

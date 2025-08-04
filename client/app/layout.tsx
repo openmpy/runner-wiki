@@ -5,7 +5,7 @@ import Sidebar from "@/components/layout/Sidebar";
 import localFont from "next/font/local";
 import "./globals.css";
 
-const bmhanna = localFont({
+export const bmhanna = localFont({
   src: "../public/fonts/BMHANNA_11yrs_ttf.ttf",
   display: "swap",
 });

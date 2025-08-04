@@ -49,7 +49,7 @@ export default function Sidebar() {
                 key={doc.id}
                 className="cursor-pointer transition-colors group"
               >
-                <td className="py-1 text-sm text-black group-hover:underline font-bold">
+                <td className="py-1 text-sm text-gray-900 group-hover:underline">
                   {doc.title}
                 </td>
                 <td className="py-1 text-xs text-gray-500 text-right">
