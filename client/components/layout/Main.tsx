@@ -1,4 +1,4 @@
-import { pretendard } from "../../layout";
+import { pretendard } from "@/app/layout";
 
 export default function Main({ children }: { children: React.ReactNode }) {
   return (

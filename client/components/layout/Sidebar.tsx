@@ -1,5 +1,5 @@
+import { pretendard } from "@/app/layout";
 import { MdLocalFireDepartment } from "react-icons/md";
-import { pretendard } from "../../layout";
 
 export default function Sidebar() {
   const popularDocuments = [

@@ -1,8 +1,8 @@
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
+import Main from "@/components/layout/Main";
+import Sidebar from "@/components/layout/Sidebar";
 import localFont from "next/font/local";
-import Footer from "./components/layout/Footer";
-import Header from "./components/layout/Header";
-import Main from "./components/layout/Main";
-import Sidebar from "./components/layout/Sidebar";
 import "./globals.css";
 
 const bmhanna = localFont({
