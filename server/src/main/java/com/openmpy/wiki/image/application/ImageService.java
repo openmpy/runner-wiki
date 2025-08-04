@@ -62,7 +62,7 @@ public class ImageService {
     }
 
     @Transactional
-    public void use(final Long imageId, final Long documentId) {
+    public void use(final Long documentId, final Long imageId) {
         final Image image = imageRepository.findById(imageId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 이미지 번호입니다.")
         );
