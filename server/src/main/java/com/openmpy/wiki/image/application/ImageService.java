@@ -7,6 +7,7 @@ import com.openmpy.wiki.image.application.response.ImageUploadResponse;
 import com.openmpy.wiki.image.domain.entity.Image;
 import com.openmpy.wiki.image.domain.repository.ImageRepository;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
@@ -18,6 +19,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.ObjectCannedACL;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
@@ -75,6 +77,21 @@ public class ImageService {
         for (final Image image : images) {
             image.markDeleted();
         }
+    }
+
+    @Transactional
+    public void cleanUp() {
+        final LocalDateTime cutoffTime = LocalDateTime.now().minusHours(12);
+        final List<Image> images = imageRepository.findAllByUsedFalseAndCreatedAtBefore(cutoffTime);
+
+        for (final Image image : images) {
+            s3Client.deleteObject(DeleteObjectRequest.builder()
+                    .bucket(s3Properties.bucket())
+                    .key(image.getName())
+                    .build()
+            );
+        }
+        imageRepository.deleteAll(images);
     }
 
     private void validateExtension(final String extension) {
