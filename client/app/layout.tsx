@@ -1,6 +1,8 @@
 import localFont from "next/font/local";
 import Footer from "./components/layout/Footer";
 import Header from "./components/layout/Header";
+import Main from "./components/layout/Main";
+import Sidebar from "./components/layout/Sidebar";
 import "./globals.css";
 
 const bmhanna = localFont({
@@ -18,8 +20,13 @@ export default function RootLayout({
       <body
         className={`antialiased ${bmhanna.className} min-h-screen flex flex-col`}
       >
-        <Header />
-        <main className="flex-1">{children}</main>
+        <div className="flex flex-col flex-1">
+          <Header />
+          <div className="flex flex-col md:flex-row flex-1 gap-6 px-0 md:px-4 lg:px-8 xl:px-24 py-6">
+            <Main>{children}</Main>
+            <Sidebar />
+          </div>
+        </div>
         <Footer />
       </body>
     </html>

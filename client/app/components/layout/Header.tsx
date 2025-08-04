@@ -6,7 +6,7 @@ import { BiEdit, BiSearch, BiShuffle, BiTime } from "react-icons/bi";
 export default function Header() {
   return (
     <header style={{ backgroundColor: "#00A495" }}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="px-4 sm:px-6 lg:px-8 xl:px-24">
         {/* 데스크탑 버전 */}
         <div className="hidden md:flex justify-between items-center h-16">
           {/* 로고와 네비게이션 */}
