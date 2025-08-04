@@ -22,7 +22,7 @@ export default function RootLayout({
       >
         <div className="flex flex-col flex-1">
           <Header />
-          <div className="flex flex-col md:flex-row flex-1 gap-6 px-0 md:px-4 lg:px-8 xl:px-24 py-6">
+          <div className="flex flex-col md:flex-row flex-1 gap-6 px-0 md:px-8 lg:px-16 xl:px-32 py-6">
             <Main>{children}</Main>
             <Sidebar />
           </div>

@@ -6,7 +6,7 @@ import { BiEdit, BiSearch, BiShuffle, BiTime } from "react-icons/bi";
 export default function Header() {
   return (
     <header style={{ backgroundColor: "#00A495" }}>
-      <div className="px-4 sm:px-6 lg:px-8 xl:px-24">
+      <div className="px-6 sm:px-8 lg:px-16 xl:px-32">
         {/* 데스크탑 버전 */}
         <div className="hidden md:flex justify-between items-center h-16">
           {/* 로고와 네비게이션 */}
@@ -22,15 +22,17 @@ export default function Header() {
             <nav className="flex items-center space-x-4">
               <Link
                 href="/"
-                className="text-white hover:text-blue-100 transition-colors font-medium text-xl"
+                className="flex items-center space-x-2 text-white hover:text-blue-100 transition-colors font-medium text-xl"
               >
-                최근 편집
+                <BiTime className="h-5 w-5" />
+                <span>최근 편집</span>
               </Link>
               <Link
                 href="/"
-                className="text-white hover:text-blue-100 transition-colors font-medium text-xl"
+                className="flex items-center space-x-2 text-white hover:text-blue-100 transition-colors font-medium text-xl"
               >
-                문서 작성
+                <BiEdit className="h-5 w-5" />
+                <span>문서 작성</span>
               </Link>
             </nav>
           </div>

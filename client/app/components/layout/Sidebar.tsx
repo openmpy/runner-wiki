@@ -35,8 +35,8 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="border-t border-b md:border border-[#00A495] p-4 h-fit rounded-none md:rounded-lg w-full md:min-w-[300px] md:w-[300px]">
-      <h2 className="text-lg font-semibold mb-4 text-white bg-[#00A495] p-3 rounded-none md:rounded-t flex items-center gap-2 -mx-4 -mt-4 px-4 pt-4">
+    <div className="border-t border-b md:border border-[#00A495] px-6 sm:px-8 md:px-6 py-4 h-fit rounded-none md:rounded-lg w-full md:min-w-[300px] md:w-[300px]">
+      <h2 className="text-lg font-semibold mb-4 text-white bg-[#00A495] p-3 rounded-none md:rounded-t flex items-center gap-2 -mx-6 sm:-mx-8 md:-mx-6 -mt-4 px-6 sm:px-8 md:px-6 pt-4">
         <MdLocalFireDepartment className="text-white" />
         인기 문서
       </h2>
