@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { BiEdit, BiSearch, BiShuffle, BiTime } from "react-icons/bi";
+import { BiBook, BiEdit, BiSearch, BiShuffle, BiTime } from "react-icons/bi";
 
 export default function Header() {
   return (
@@ -13,9 +13,10 @@ export default function Header() {
           <div className="flex items-center space-x-6">
             <Link
               href="/"
-              className="text-2xl font-bold text-white hover:text-blue-100 transition-colors"
+              className="flex items-center space-x-2 text-2xl font-bold text-white hover:text-blue-100 transition-colors"
             >
-              런너위키
+              <BiBook className="h-8 w-8" />
+              <span>런너위키</span>
             </Link>
 
             {/* 네비게이션 */}
@@ -78,9 +79,10 @@ export default function Header() {
           <div className="flex justify-between items-center h-16">
             <Link
               href="/"
-              className="text-xl font-bold text-white hover:text-blue-100 transition-colors"
+              className="flex items-center space-x-2 text-xl font-bold text-white hover:text-blue-100 transition-colors"
             >
-              런너위키
+              <BiBook className="h-6 w-6" />
+              <span>런너위키</span>
             </Link>
 
             {/* 메뉴 아이콘들 */}
