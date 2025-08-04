@@ -1,6 +1,10 @@
 package com.openmpy.wiki.document.domain.entity;
 
+import com.openmpy.wiki.document.domain.DocumentAuthor;
+import com.openmpy.wiki.document.domain.DocumentContent;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
@@ -20,11 +24,13 @@ public class DocumentHistory {
     @Id
     private Long id;
 
-    @Column(nullable = false)
-    private String author;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "author", nullable = false))
+    private DocumentAuthor author;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String content;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "content", columnDefinition = "LONGTEXT", nullable = false))
+    private DocumentContent content;
 
     @Column
     private long version = 0L;
@@ -47,8 +53,8 @@ public class DocumentHistory {
     ) {
         final DocumentHistory documentHistory = new DocumentHistory();
         documentHistory.id = id;
-        documentHistory.author = author;
-        documentHistory.content = content;
+        documentHistory.author = new DocumentAuthor(author);
+        documentHistory.content = new DocumentContent(content);
         documentHistory.version = document.getHistory().size() + 1L;
         documentHistory.clientIp = clientIp;
         documentHistory.deleted = false;
@@ -59,5 +65,13 @@ public class DocumentHistory {
 
     public void delete() {
         deleted = true;
+    }
+
+    public String getAuthor() {
+        return author.getValue();
+    }
+
+    public String getContent() {
+        return content.getValue();
     }
 }
