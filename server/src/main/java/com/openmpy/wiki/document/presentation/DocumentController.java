@@ -1,5 +1,6 @@
 package com.openmpy.wiki.document.presentation;
 
+import com.openmpy.wiki.document.application.DocumentFacade;
 import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DocumentController {
 
     private final DocumentService documentService;
+    private final DocumentFacade documentFacade;
 
     @PostMapping
     public ResponseEntity<DocumentCreateResponse> createDocument(
@@ -36,7 +38,7 @@ public class DocumentController {
             final HttpServletRequest servletRequest
     ) {
         final String clientIp = IpAddressUtil.getClientIp(servletRequest);
-        return ResponseEntity.ok(documentService.createDocument(request, clientIp));
+        return ResponseEntity.ok(documentFacade.createDocument(request, clientIp));
     }
 
     @PutMapping("/{documentId}")
@@ -46,12 +48,12 @@ public class DocumentController {
             final HttpServletRequest servletRequest
     ) {
         final String clientIp = IpAddressUtil.getClientIp(servletRequest);
-        return ResponseEntity.ok(documentService.updateDocument(documentId, request, clientIp));
+        return ResponseEntity.ok(documentFacade.updateDocument(documentId, request, clientIp));
     }
 
     @DeleteMapping("/{documentId}")
     public ResponseEntity<Void> deleteDocument(@PathVariable final Long documentId) {
-        documentService.deleteDocument(documentId);
+        documentFacade.deleteDocument(documentId);
         return ResponseEntity.ok().build();
     }
 

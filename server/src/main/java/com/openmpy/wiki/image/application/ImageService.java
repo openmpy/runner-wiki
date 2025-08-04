@@ -62,19 +62,17 @@ public class ImageService {
     }
 
     @Transactional
-    public void use(final Long documentId, final Long imageId) {
-        final Image image = imageRepository.findById(imageId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 이미지 번호입니다.")
-        );
-        image.markUsed(documentId);
+    public void uses(final List<Long> imageIds, final Long documentId) {
+        if (imageIds != null && !imageIds.isEmpty()) {
+            for (final Long imageId : imageIds) {
+                imageRepository.findById(imageId).ifPresent(image -> image.markUsed(documentId));
+            }
+        }
     }
 
     @Transactional
     public void delete(final Long documentId) {
-        final List<Image> images = imageRepository.findAllByDocumentId(documentId);
-        for (final Image image : images) {
-            image.markDeleted();
-        }
+        imageRepository.findAllByDocumentId(documentId).forEach(Image::markDeleted);
     }
 
     @Transactional
