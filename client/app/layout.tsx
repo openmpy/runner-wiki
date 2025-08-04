@@ -10,6 +10,11 @@ const bmhanna = localFont({
   display: "swap",
 });
 
+export const pretendard = localFont({
+  src: "../public/fonts/Pretendard-Regular.otf",
+  display: "swap",
+});
+
 export default function RootLayout({
   children,
 }: Readonly<{

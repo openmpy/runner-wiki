@@ -1,4 +1,5 @@
 import { MdLocalFireDepartment } from "react-icons/md";
+import { pretendard } from "../../layout";
 
 export default function Sidebar() {
   const popularDocuments = [
@@ -35,12 +36,12 @@ export default function Sidebar() {
   ];
 
   return (
-    <div className="border-t border-b md:border border-[#00A495] px-6 sm:px-8 md:px-6 py-4 h-fit rounded-none md:rounded-lg w-full md:min-w-[300px] md:w-[300px]">
-      <h2 className="text-lg font-semibold mb-4 text-white bg-[#00A495] p-3 rounded-none md:rounded-t flex items-center gap-2 -mx-6 sm:-mx-8 md:-mx-6 -mt-4 px-6 sm:px-8 md:px-6 pt-4">
+    <div className="border-t border-b md:border border-[#00A495] px-4 sm:px-8 md:px-6 py-4 h-fit rounded-none md:rounded-lg w-full md:min-w-[300px] md:w-[300px]">
+      <h2 className="text-lg font-semibold mb-4 text-white bg-[#00A495] p-3 rounded-none md:rounded-t flex items-center gap-2 -mx-4 sm:-mx-8 md:-mx-6 -mt-4 px-4 sm:px-8 md:px-6 pt-4">
         <MdLocalFireDepartment className="text-white" />
         인기 문서
       </h2>
-      <div className="bg-white">
+      <div className={`bg-white ${pretendard.className}`}>
         <table className="w-full">
           <tbody>
             {popularDocuments.map((doc) => (
@@ -48,7 +49,7 @@ export default function Sidebar() {
                 key={doc.id}
                 className="cursor-pointer transition-colors group"
               >
-                <td className="py-1 text-sm text-black group-hover:underline">
+                <td className="py-1 text-sm text-black group-hover:underline font-bold">
                   {doc.title}
                 </td>
                 <td className="py-1 text-xs text-gray-500 text-right">
