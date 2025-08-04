@@ -31,6 +31,9 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     runtimeOnly("com.mysql:mysql-connector-j")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // s3
+    implementation("software.amazon.awssdk:s3:2.32.14")
 }
 
 tasks.withType<Test> {
