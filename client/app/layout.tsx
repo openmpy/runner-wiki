@@ -27,7 +27,7 @@ export default function RootLayout({
       >
         <div className="flex flex-col flex-1">
           <Header />
-          <div className="flex flex-col md:flex-row flex-1 gap-6 px-0 md:px-8 lg:px-16 xl:px-32 py-6">
+          <div className="flex flex-col md:flex-row flex-1 gap-6 px-0 md:px-8 lg:px-16 xl:px-32 py-6 bg-gray-50">
             <Main>{children}</Main>
             <Sidebar />
           </div>
