@@ -3,6 +3,7 @@ import TuiViewer from "@/components/toast/TuiViewer";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import TableOfContents from "@/components/wiki/TableOfContents";
+import { formatDateTime } from "@/utils/timeUtils";
 
 interface DocumentData {
   documentId: string;
@@ -75,6 +76,12 @@ export default async function WikiPage({ params }: WikiPageProps) {
       <div>
         <TableOfContents content={document.content} />
         <TuiViewer content={document.content} />
+      </div>
+
+      <div className="mt-8 pt-6 border-t border-gray-200">
+        <div className="text-sm text-gray-500">
+          최근 편집: {formatDateTime(new Date(document.updatedAt))}
+        </div>
       </div>
     </>
   );

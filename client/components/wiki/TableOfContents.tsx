@@ -83,14 +83,12 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
         ".toastui-editor-contents"
       );
       if (!viewerContainer) {
-        console.log("Toast UI Editor 컨테이너를 찾을 수 없습니다.");
         return [];
       }
 
       const headings = viewerContainer.querySelectorAll(
         "h1, h2, h3, h4, h5, h6"
       );
-      console.log("DOM에서 찾은 헤딩 개수:", headings.length);
 
       const items: Array<{ id: string; text: string; level: number }> = [];
       headings.forEach((heading, index) => {
@@ -121,9 +119,6 @@ export default function TableOfContents({ content }: TableOfContentsProps) {
 
     // 마크다운에서 헤딩을 찾지 못한 경우 DOM에서 찾기
     if (items.length === 0) {
-      console.log(
-        "마크다운에서 헤딩을 찾지 못했습니다. DOM에서 찾아보겠습니다."
-      );
       setTimeout(() => {
         const domItems = findDOMHeadings();
         setTocItems(domItems);
