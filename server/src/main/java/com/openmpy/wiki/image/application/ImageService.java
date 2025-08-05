@@ -55,7 +55,7 @@ public class ImageService {
 
             s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             final Image image = imageRepository.save(Image.create(snowflake.nextId(), key, clientIp));
-            return new ImageUploadResponse(image.getId());
+            return new ImageUploadResponse(image.getId(), key);
         } catch (final IOException e) {
             throw new CustomException("이미지 업로드 중에 에러가 발생했습니다. " + e.getMessage());
         }
