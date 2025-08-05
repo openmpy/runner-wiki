@@ -78,9 +78,9 @@ export default function NewPage() {
 
       const result = await response.json();
       console.log("문서 작성 완료:", result);
-      alert("문서가 성공적으로 작성되었습니다!");
+      alert("문서가 성공적으로 작성되었습니다.");
 
-      window.location.href = "/wiki/recent";
+      window.location.href = `/wiki/${result.documentId}`;
     } catch (error) {
       const errorMessage =
         error instanceof Error

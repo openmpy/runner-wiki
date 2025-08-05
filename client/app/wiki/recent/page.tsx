@@ -4,7 +4,7 @@ import { getRelativeTime } from "@/utils/timeUtils";
 import Link from "next/link";
 
 interface Document {
-  documentId: number;
+  documentId: string;
   documentHistoryId: number | null;
   title: string;
   category: string;
