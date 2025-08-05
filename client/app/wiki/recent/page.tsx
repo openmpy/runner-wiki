@@ -92,8 +92,8 @@ export default async function RecentPage() {
                       {doc.title}
                     </Link>
                   </td>
-                  <td className="px-4 py-3 whitespace-nowrap text-[15px]">
-                    <Badge category={doc.category} className="text-[15px]" />
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <Badge category={doc.category} />
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-[15px] text-gray-500">
                     {doc.updatedAt ? getRelativeTime(doc.updatedAt) : "-"}

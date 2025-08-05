@@ -4,6 +4,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import TableOfContents from "@/components/wiki/TableOfContents";
 import { formatDateTime } from "@/utils/timeUtils";
+import Link from "next/link";
 
 interface DocumentData {
   documentId: string;
@@ -61,7 +62,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
         <h1 className={`text-2xl ${bmhanna.className}`}>{document.title}</h1>
         <div className="flex gap-3">
           <Button variant="outline" size="sm">
-            편집목록
+            <Link href={`/wiki/${slug}/history`}>편집내역</Link>
           </Button>
           <Button variant="primary" size="sm">
             편집하기
@@ -70,7 +71,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
       </div>
 
       <div className="mb-6">
-        <Badge category={document.category} size="lg" />
+        <Badge category={document.category} />
       </div>
 
       <div>

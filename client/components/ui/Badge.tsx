@@ -1,22 +1,26 @@
 interface BadgeProps {
-  category: string;
+  category?: string;
+  version?: number;
   size?: "sm" | "md" | "lg";
   className?: string;
 }
 
 export default function Badge({
   category,
+  version,
   size = "md",
   className = "",
 }: BadgeProps) {
-  const getBadgeStyle = (category: string) => {
+  const getBadgeStyle = (category?: string, version?: number) => {
+    if (version !== undefined) {
+      return "bg-[#00A495] text-white border border-[#00A495]";
+    }
+
     switch (category) {
       case "런너":
-        return "bg-blue-100 text-blue-800";
-      case "러너":
-        return "bg-blue-100 text-blue-800";
+        return "bg-blue-100 text-blue-800 border border-blue-200";
       default:
-        return "bg-purple-100 text-purple-800";
+        return "bg-purple-100 text-purple-800 border border-purple-200";
     }
   };
 
@@ -33,13 +37,16 @@ export default function Badge({
     }
   };
 
+  const displayText = version !== undefined ? `V${version}` : category;
+
   return (
     <span
       className={`inline-flex items-center rounded font-medium ${getBadgeStyle(
-        category
+        category,
+        version
       )} ${getSizeStyle(size)} ${className}`}
     >
-      {category}
+      {displayText}
     </span>
   );
 }
