@@ -13,6 +13,7 @@ interface DocumentData {
   category: string;
   author: string;
   content: string;
+  imageIds: number[];
 }
 
 interface EditorInstance {
@@ -26,7 +27,12 @@ export default function NewPage() {
   const [category, setCategory] = useState("runner");
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [uploadedImageIds, setUploadedImageIds] = useState<number[]>([]);
   const editorRef = useRef<EditorInstance>(null);
+
+  const handleImageUpload = (imageIds: number[]) => {
+    setUploadedImageIds(imageIds);
+  };
 
   const handleSubmit = async () => {
     if (!title.trim()) {
@@ -52,6 +58,7 @@ export default function NewPage() {
         category,
         author: author.trim(),
         content: content.trim(),
+        imageIds: uploadedImageIds,
       };
 
       const response = await fetch("http://localhost:8080/api/v1/documents", {
@@ -96,7 +103,7 @@ export default function NewPage() {
       />
       <TitleInput title={title} onTitleChange={setTitle} />
       <AuthorInput author={author} onAuthorChange={setAuthor} />
-      <TuiEditor ref={editorRef} />
+      <TuiEditor ref={editorRef} onImageUpload={handleImageUpload} />
 
       {/* 버튼 영역 */}
       <div className="flex gap-4 mt-4 justify-end">
