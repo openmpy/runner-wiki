@@ -2,7 +2,9 @@
 
 import { bmhanna } from "@/app/layout";
 import Badge from "@/components/ui/Badge";
+import Button from "@/components/ui/Button";
 import Pagination from "@/components/ui/Pagination";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface HistoryItem {
@@ -60,6 +62,7 @@ interface HistoryPageProps {
 }
 
 export default function HistoryPage({ params }: HistoryPageProps) {
+  const router = useRouter();
   const [slug, setSlug] = useState<string>("");
   const [historyData, setHistoryData] = useState<HistoryResponse | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
@@ -108,6 +111,14 @@ export default function HistoryPage({ params }: HistoryPageProps) {
     }
   };
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
+  const handleEdit = () => {
+    router.push(`/wiki/${slug}`);
+  };
+
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleString("ko-KR", {
       year: "numeric",
@@ -121,7 +132,17 @@ export default function HistoryPage({ params }: HistoryPageProps) {
   if (loading) {
     return (
       <>
-        <h1 className={`text-2xl mb-6 ${bmhanna.className}`}>편집 내역</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className={`text-2xl ${bmhanna.className}`}>편집 내역</h1>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" onClick={handleGoBack}>
+              뒤로가기
+            </Button>
+            <Button variant="primary" size="sm" onClick={handleEdit}>
+              편집하기
+            </Button>
+          </div>
+        </div>
         <div className="text-center py-8 text-gray-500">
           편집 내역을 불러오는 중...
         </div>
@@ -132,7 +153,17 @@ export default function HistoryPage({ params }: HistoryPageProps) {
   if (error || !historyData) {
     return (
       <>
-        <h1 className={`text-2xl mb-6 ${bmhanna.className}`}>편집 내역</h1>
+        <div className="flex justify-between items-center mb-6">
+          <h1 className={`text-2xl ${bmhanna.className}`}>편집 내역</h1>
+          <div className="flex gap-3">
+            <Button variant="outline" size="sm" onClick={handleGoBack}>
+              뒤로가기
+            </Button>
+            <Button variant="primary" size="sm" onClick={handleEdit}>
+              편집하기
+            </Button>
+          </div>
+        </div>
         <div className="text-center py-8 text-gray-500">
           {error || "편집 내역을 불러오는 중 오류가 발생했습니다."}
         </div>
@@ -142,7 +173,21 @@ export default function HistoryPage({ params }: HistoryPageProps) {
 
   return (
     <>
-      <h1 className={`text-2xl mb-6 ${bmhanna.className}`}>편집 내역</h1>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className={`text-2xl ${bmhanna.className}`}>편집 내역</h1>
+        <div className="flex gap-3">
+          <Button variant="outline" size="sm" onClick={handleGoBack}>
+            뒤로가기
+          </Button>
+          <Button variant="primary" size="sm" onClick={handleEdit}>
+            편집하기
+          </Button>
+        </div>
+      </div>
+
+      <h2 className={`text-lg text-gray-600 mb-6 ${bmhanna.className}`}>
+        {historyData.content.title}
+      </h2>
 
       {/* 데스크톱 테이블 - 모바일에서 숨김 */}
       <div className="hidden md:block overflow-x-auto">

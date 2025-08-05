@@ -18,26 +18,21 @@ export default function Pagination({
         pages.push(i);
       }
     } else {
-      if (currentPage <= 2) {
-        for (let i = 0; i < 4; i++) {
-          pages.push(i);
+      // 현재 페이지 주변의 연속된 페이지들만 표시
+      let startPage = Math.max(0, currentPage - 2);
+      let endPage = Math.min(totalPages - 1, currentPage + 2);
+
+      // 시작과 끝 페이지 조정
+      if (endPage - startPage < 4) {
+        if (startPage === 0) {
+          endPage = Math.min(totalPages - 1, startPage + 4);
+        } else {
+          startPage = Math.max(0, endPage - 4);
         }
-        pages.push(-1); // 구분자
-        pages.push(totalPages - 1);
-      } else if (currentPage >= totalPages - 3) {
-        pages.push(0);
-        pages.push(-1); // 구분자
-        for (let i = totalPages - 4; i < totalPages; i++) {
-          pages.push(i);
-        }
-      } else {
-        pages.push(0);
-        pages.push(-1); // 구분자
-        for (let i = currentPage - 1; i <= currentPage + 1; i++) {
-          pages.push(i);
-        }
-        pages.push(-1); // 구분자
-        pages.push(totalPages - 1);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        pages.push(i);
       }
     }
 
