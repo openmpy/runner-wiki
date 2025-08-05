@@ -4,7 +4,7 @@ import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import java.time.LocalDateTime;
 
 public record DocumentHistoryReadResponse(
-        Long documentHistoryId,
+        String documentHistoryId,
         String author,
         Long version,
         Integer size,

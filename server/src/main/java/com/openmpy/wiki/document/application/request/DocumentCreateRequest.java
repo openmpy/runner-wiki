@@ -7,6 +7,6 @@ public record DocumentCreateRequest(
         String category,
         String author,
         String content,
-        List<Long> imageIds
+        List<String> imageIds
 ) {
 }

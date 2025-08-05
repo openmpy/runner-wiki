@@ -45,12 +45,12 @@ public class DocumentService {
         );
         document.addHistory(documentHistory);
         final Document savedDocument = documentRepository.save(document);
-        return new DocumentCreateResponse(savedDocument.getId().toString());
+        return new DocumentCreateResponse(savedDocument.getId());
     }
 
     @Transactional
     public DocumentUpdateResponse updateDocument(
-            final Long documentId, final DocumentUpdateRequest request, final String clientIp
+            final String documentId, final DocumentUpdateRequest request, final String clientIp
     ) {
         final Document document = getDocument(documentId);
         final DocumentHistory documentHistory = DocumentHistory.create(
@@ -62,7 +62,7 @@ public class DocumentService {
 
     @Transactional
     public void deleteDocument(
-            final Long documentId
+            final String documentId
     ) {
         final Document document = getDocument(documentId);
         documentRepository.delete(document);
@@ -70,7 +70,7 @@ public class DocumentService {
 
     @Transactional
     public void deleteDocumentHistory(
-            final Long documentHistoryId
+            final String documentHistoryId
     ) {
         final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
@@ -83,7 +83,7 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public DocumentReadResponse readLatestDocument(final Long documentId) {
+    public DocumentReadResponse readLatestDocument(final String documentId) {
         final Document document = getDocument(documentId);
         final DocumentHistory documentHistory = documentHistoryRepository
                 .findFirstByDocumentAndDeletedFalseOrderByVersionDesc(document)
@@ -120,7 +120,7 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public PageResponse<DocumentHistoryReadResponses> readDocumentHistories(
-            final Long documentId, final int page, final int size
+            final String documentId, final int page, final int size
     ) {
         final Document document = getDocument(documentId);
 
@@ -142,7 +142,7 @@ public class DocumentService {
         );
     }
 
-    private Document getDocument(final Long documentId) {
+    private Document getDocument(final String documentId) {
         return documentRepository.findById(documentId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 번호입니다.")
         );

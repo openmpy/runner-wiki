@@ -22,7 +22,7 @@ import lombok.NoArgsConstructor;
 public class DocumentHistory {
 
     @Id
-    private Long id;
+    private String id;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "author", nullable = false))
@@ -49,7 +49,7 @@ public class DocumentHistory {
     private Document document;
 
     public static DocumentHistory create(
-            final Long id, final String author, final String content, final String clientIp, final Document document
+            final String id, final String author, final String content, final String clientIp, final Document document
     ) {
         final DocumentHistory documentHistory = new DocumentHistory();
         documentHistory.id = id;

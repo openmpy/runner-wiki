@@ -43,7 +43,7 @@ public class DocumentController {
 
     @PutMapping("/{documentId}")
     public ResponseEntity<DocumentUpdateResponse> updateDocument(
-            @PathVariable final Long documentId,
+            @PathVariable final String documentId,
             @RequestBody final DocumentUpdateRequest request,
             final HttpServletRequest servletRequest
     ) {
@@ -52,19 +52,19 @@ public class DocumentController {
     }
 
     @DeleteMapping("/{documentId}")
-    public ResponseEntity<Void> deleteDocument(@PathVariable final Long documentId) {
+    public ResponseEntity<Void> deleteDocument(@PathVariable final String documentId) {
         documentFacade.deleteDocument(documentId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/histories/{documentHistoryId}")
-    public ResponseEntity<Void> deleteDocumentHistory(@PathVariable final Long documentHistoryId) {
+    public ResponseEntity<Void> deleteDocumentHistory(@PathVariable final String documentHistoryId) {
         documentService.deleteDocumentHistory(documentHistoryId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{documentId}")
-    public ResponseEntity<DocumentReadResponse> readDocument(@PathVariable final Long documentId) {
+    public ResponseEntity<DocumentReadResponse> readDocument(@PathVariable final String documentId) {
         return ResponseEntity.ok(documentService.readLatestDocument(documentId));
     }
 
@@ -79,7 +79,7 @@ public class DocumentController {
 
     @GetMapping("/{documentId}/histories")
     public ResponseEntity<PageResponse<DocumentHistoryReadResponses>> readDocumentHistory(
-            @PathVariable final Long documentId,
+            @PathVariable final String documentId,
             @RequestParam("page") final int page,
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {

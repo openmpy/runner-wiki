@@ -26,7 +26,7 @@ import lombok.NoArgsConstructor;
 public class Document {
 
     @Id
-    private Long id;
+    private String id;
 
     @Embedded
     @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false))
@@ -49,7 +49,7 @@ public class Document {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<DocumentHistory> history = new ArrayList<>();
 
-    public static Document create(final Long id, final String title, final DocumentCategory category) {
+    public static Document create(final String id, final String title, final DocumentCategory category) {
         final Document document = new Document();
         document.id = id;
         document.title = new DocumentTitle(title);

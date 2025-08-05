@@ -62,16 +62,16 @@ public class ImageService {
     }
 
     @Transactional
-    public void uses(final List<Long> imageIds, final String documentId) {
+    public void uses(final List<String> imageIds, final String documentId) {
         if (imageIds != null && !imageIds.isEmpty()) {
-            for (final Long imageId : imageIds) {
-                imageRepository.findById(imageId).ifPresent(image -> image.markUsed(Long.parseLong(documentId)));
+            for (final String imageId : imageIds) {
+                imageRepository.findById(imageId).ifPresent(image -> image.markUsed(documentId));
             }
         }
     }
 
     @Transactional
-    public void delete(final Long documentId) {
+    public void delete(final String documentId) {
         imageRepository.findAllByDocumentId(documentId).forEach(Image::markDeleted);
     }
 

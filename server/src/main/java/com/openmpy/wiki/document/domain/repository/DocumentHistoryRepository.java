@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory, Long> {
+public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory, String> {
 
     Optional<DocumentHistory> findFirstByDocumentAndDeletedFalseOrderByVersionDesc(final Document document);
 

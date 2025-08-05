@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class Image {
 
     @Id
-    private Long id;
+    private String id;
 
     @Column(nullable = false)
     private String name;
@@ -24,7 +24,7 @@ public class Image {
     private String clientIp;
 
     @Column
-    private Long documentId;
+    private String documentId;
 
     @Column
     private boolean used;
@@ -35,7 +35,7 @@ public class Image {
     @Column
     private LocalDateTime usedAt;
 
-    public static Image create(final Long id, final String key, final String clientIp) {
+    public static Image create(final String id, final String key, final String clientIp) {
         final Image image = new Image();
         image.id = id;
         image.name = key;
@@ -47,7 +47,7 @@ public class Image {
         return image;
     }
 
-    public void markUsed(final Long documentId) {
+    public void markUsed(final String documentId) {
         this.documentId = documentId;
         used = true;
         usedAt = LocalDateTime.now();

@@ -17,7 +17,7 @@ public record DocumentReadResponse(
 
     public static DocumentReadResponse from(final Document document) {
         return new DocumentReadResponse(
-                document.getId().toString(),
+                document.getId(),
                 null,
                 document.getTitle(),
                 document.getCategory().getValue(),
@@ -30,8 +30,8 @@ public record DocumentReadResponse(
 
     public static DocumentReadResponse from(final Document document, final DocumentHistory documentHistory) {
         return new DocumentReadResponse(
-                document.getId().toString(),
-                documentHistory.getId().toString(),
+                document.getId(),
+                documentHistory.getId(),
                 document.getTitle(),
                 document.getCategory().getValue(),
                 documentHistory.isDeleted() ? null : documentHistory.getAuthor(),

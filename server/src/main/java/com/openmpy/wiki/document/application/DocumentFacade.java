@@ -25,15 +25,15 @@ public class DocumentFacade {
 
     @Transactional
     public DocumentUpdateResponse updateDocument(
-            final Long documentId, final DocumentUpdateRequest request, final String clientIp
+            final String documentId, final DocumentUpdateRequest request, final String clientIp
     ) {
         final DocumentUpdateResponse response = documentService.updateDocument(documentId, request, clientIp);
-        imageService.uses(request.imageIds(), documentId.toString());
+        imageService.uses(request.imageIds(), documentId);
         return response;
     }
 
     @Transactional
-    public void deleteDocument(final Long documentId) {
+    public void deleteDocument(final String documentId) {
         documentService.deleteDocument(documentId);
         imageService.delete(documentId);
     }

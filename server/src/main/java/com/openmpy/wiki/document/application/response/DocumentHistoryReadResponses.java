@@ -5,7 +5,7 @@ import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import java.util.List;
 
 public record DocumentHistoryReadResponses(
-        Long historyId,
+        String historyId,
         String title,
         List<DocumentHistoryReadResponse> history
 ) {

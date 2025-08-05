@@ -19,7 +19,7 @@ class SnowflakeTest {
     void nextIdTest() throws ExecutionException, InterruptedException {
         // given
         ExecutorService executorService = Executors.newFixedThreadPool(10);
-        List<Future<List<Long>>> futures = new ArrayList<>();
+        List<Future<List<String>>> futures = new ArrayList<>();
         int repeatCount = 1000;
         int idCount = 1000;
 
@@ -29,9 +29,9 @@ class SnowflakeTest {
         }
 
         // then
-        List<Long> result = new ArrayList<>();
-        for (Future<List<Long>> future : futures) {
-            List<Long> idList = future.get();
+        List<String> result = new ArrayList<>();
+        for (Future<List<String>> future : futures) {
+            List<String> idList = future.get();
             for (int i = 1; i < idList.size(); i++) {
                 assertThat(idList.get(i)).isGreaterThan(idList.get(i - 1));
             }
@@ -42,8 +42,8 @@ class SnowflakeTest {
         executorService.shutdown();
     }
 
-    List<Long> generateIdList(Snowflake snowflake, int count) {
-        List<Long> idList = new ArrayList<>();
+    List<String> generateIdList(Snowflake snowflake, int count) {
+        List<String> idList = new ArrayList<>();
         while (count-- > 0) {
             idList.add(snowflake.nextId());
         }
