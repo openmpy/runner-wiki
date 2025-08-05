@@ -28,7 +28,7 @@ public class DocumentFacade {
             final Long documentId, final DocumentUpdateRequest request, final String clientIp
     ) {
         final DocumentUpdateResponse response = documentService.updateDocument(documentId, request, clientIp);
-        imageService.uses(request.imageIds(), documentId);
+        imageService.uses(request.imageIds(), documentId.toString());
         return response;
     }
 

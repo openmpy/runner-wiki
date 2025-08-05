@@ -1,4 +1,4 @@
 package com.openmpy.wiki.document.application.response;
 
-public record DocumentCreateResponse(Long documentId) {
+public record DocumentCreateResponse(String documentId) {
 }

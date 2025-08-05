@@ -45,7 +45,7 @@ public class DocumentService {
         );
         document.addHistory(documentHistory);
         final Document savedDocument = documentRepository.save(document);
-        return new DocumentCreateResponse(savedDocument.getId());
+        return new DocumentCreateResponse(savedDocument.getId().toString());
     }
 
     @Transactional
