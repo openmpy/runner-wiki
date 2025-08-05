@@ -90,7 +90,7 @@ const TuiEditor = forwardRef<EditorInstance, TuiEditorProps>((props, ref) => {
         height="calc(100vh - 400px)"
         initialValue=" "
         initialEditType="wysiwyg"
-        hideModeSwitch={true}
+        previewStyle="vertical"
         hooks={{
           addImageBlobHook: handleImageUpload,
         }}
