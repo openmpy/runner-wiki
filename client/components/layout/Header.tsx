@@ -1,5 +1,6 @@
 "use client";
 
+import { pretendard } from "@/app/layout";
 import Link from "next/link";
 import { BiBook, BiEdit, BiSearch, BiShuffle, BiTime } from "react-icons/bi";
 
@@ -29,7 +30,7 @@ export default function Header() {
                 <span>최근 편집</span>
               </Link>
               <Link
-                href="/"
+                href="/wiki/new"
                 className="flex items-center space-x-2 text-white hover:text-blue-100 transition-colors font-medium text-xl"
               >
                 <BiEdit className="h-5 w-5" />
@@ -57,7 +58,7 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="검색할 문서 제목을 입력해주세요."
-                className="w-80 px-4 py-2 pl-4 pr-12 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none"
+                className={`w-80 px-4 py-2 pl-4 pr-12 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none ${pretendard.className}`}
               />
               <button
                 type="button"
@@ -95,7 +96,7 @@ export default function Header() {
                 <BiTime className="h-6 w-6" />
               </Link>
               <Link
-                href="/"
+                href="/wiki/new"
                 className="text-white hover:text-blue-100 transition-colors p-2"
                 title="문서 작성"
               >
@@ -123,7 +124,7 @@ export default function Header() {
               <input
                 type="text"
                 placeholder="검색할 문서 제목을 입력해주세요."
-                className="w-full px-3 py-1.5 pl-3 pr-10 text-gray-900 bg-white border border-gray-300 rounded-lg focus:outline-none h-8 text-sm"
+                className={`w-full px-3 py-1.5 pl-3 pr-10 text-gray-900 bg-white b  order border-gray-300 rounded-lg focus:outline-none h-8 text-sm ${pretendard.className}`}
               />
               <button
                 type="button"
