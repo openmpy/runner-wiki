@@ -2,6 +2,7 @@
 
 import "@toast-ui/editor/toastui-editor.css";
 import dynamic from "next/dynamic";
+import { forwardRef } from "react";
 
 const Editor = dynamic(
   () => import("@toast-ui/react-editor").then((mod) => mod.Editor),
@@ -13,10 +14,21 @@ const Editor = dynamic(
   }
 );
 
-export default function TuiEditor() {
+interface TuiEditorProps {
+  initialValue?: string;
+}
+
+interface EditorInstance {
+  getInstance: () => {
+    getMarkdown: () => string;
+  };
+}
+
+const TuiEditor = forwardRef<EditorInstance, TuiEditorProps>((props, ref) => {
   return (
     <div className="w-full">
       <Editor
+        ref={ref}
         height="calc(100vh - 400px)"
         initialValue=" "
         initialEditType="wysiwyg"
@@ -24,4 +36,8 @@ export default function TuiEditor() {
       />
     </div>
   );
-}
+});
+
+TuiEditor.displayName = "TuiEditor";
+
+export default TuiEditor;

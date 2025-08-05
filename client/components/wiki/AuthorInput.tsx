@@ -17,7 +17,7 @@ export default function AuthorInput({
         htmlFor="author"
         className={`block text-lg mb-3 ${bmhanna.className}`}
       >
-        작성자명
+        작성자
       </label>
       <input
         type="text"
