@@ -22,7 +22,7 @@ export default function CategorySelector({
 
   return (
     <div className="mb-6">
-      <h2 className={`text-lg mb-3 ${bmhanna.className}`}>카테고리 선택</h2>
+      <h2 className={`text-lg mb-3 ${bmhanna.className}`}>카테고리</h2>
       <div className="flex gap-2">
         <button
           onClick={() => handleCategorySelect("runner")}

@@ -1,3 +1,4 @@
+import { bmhanna } from "@/app/layout";
 import React from "react";
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -11,8 +12,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     { variant = "primary", size = "md", className = "", children, ...props },
     ref
   ) => {
-    const baseClasses =
-      "inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none";
+    const baseClasses = `inline-flex items-center justify-center rounded-lg font-medium transition-colors focus:outline-none ${bmhanna.className}`;
 
     const variantClasses = {
       primary: "bg-[#00A495] text-white hover:bg-[#00A495]",
