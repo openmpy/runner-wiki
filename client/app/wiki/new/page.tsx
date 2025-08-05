@@ -13,7 +13,7 @@ interface DocumentData {
   category: string;
   author: string;
   content: string;
-  imageIds: number[];
+  imageIds: string[];
 }
 
 interface EditorInstance {
@@ -27,10 +27,10 @@ export default function NewPage() {
   const [category, setCategory] = useState("runner");
   const [title, setTitle] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [uploadedImageIds, setUploadedImageIds] = useState<number[]>([]);
+  const [uploadedImageIds, setUploadedImageIds] = useState<string[]>([]);
   const editorRef = useRef<EditorInstance>(null);
 
-  const handleImageUpload = (imageIds: number[]) => {
+  const handleImageUpload = (imageIds: string[]) => {
     setUploadedImageIds(imageIds);
   };
 

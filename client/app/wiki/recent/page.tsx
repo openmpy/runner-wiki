@@ -5,7 +5,7 @@ import Link from "next/link";
 
 interface Document {
   documentId: string;
-  documentHistoryId: number | null;
+  documentHistoryId: string | null;
   title: string;
   category: string;
   author: string | null;

@@ -16,7 +16,7 @@ const Editor = dynamic(
 
 interface TuiEditorProps {
   initialValue?: string;
-  onImageUpload?: (imageIds: number[]) => void;
+  onImageUpload?: (imageIds: string[]) => void;
 }
 
 interface EditorInstance {
@@ -27,7 +27,7 @@ interface EditorInstance {
 
 const TuiEditor = forwardRef<EditorInstance, TuiEditorProps>((props, ref) => {
   const { onImageUpload } = props;
-  const uploadedImageIds: number[] = [];
+  const uploadedImageIds: string[] = [];
   const editorRef = useRef<{
     getInstance: () => { getMarkdown: () => string };
   }>(null);
