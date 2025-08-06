@@ -14,6 +14,7 @@ import com.openmpy.wiki.document.domain.repository.DocumentRepository;
 import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.global.snowflake.Snowflake;
+import com.openmpy.wiki.global.utils.PageLimitCalculator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -103,15 +104,10 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public PageResponse<List<DocumentReadResponse>> readLatestDocuments(
-            final int page, final int size, final String sort
+            final int page, final int size
     ) {
-        if (!sort.equalsIgnoreCase("createdAt") && !sort.equalsIgnoreCase("updatedAt")) {
-            throw new CustomException("잘못된 정렬 값입니다.");
-        }
-
-        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, sort));
-        final Page<Document> documentPage = documentRepository.findAll(pageRequest);
-        final List<DocumentReadResponse> responses = documentPage.getContent().stream()
+        final List<DocumentReadResponse> responses = documentRepository
+                .findAllOrderByUpdatedAtDesc((page - 1) * size, size).stream()
                 .map(DocumentReadResponse::from)
                 .toList();
 
@@ -119,7 +115,7 @@ public class DocumentService {
                 responses,
                 page,
                 size,
-                documentPage.getTotalElements()
+                documentRepository.count(PageLimitCalculator.calculatePageLimit(page, size, 10))
         );
     }
 

@@ -9,7 +9,7 @@ import com.openmpy.wiki.document.application.response.DocumentHistoryReadRespons
 import com.openmpy.wiki.document.application.response.DocumentReadResponse;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.global.dto.PageResponse;
-import com.openmpy.wiki.global.utils.IpAddressUtil;
+import com.openmpy.wiki.global.utils.ClientIpExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class DocumentController {
             @RequestBody final DocumentCreateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        final String clientIp = IpAddressUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         return ResponseEntity.ok(documentFacade.createDocument(request, clientIp));
     }
 
@@ -47,7 +47,7 @@ public class DocumentController {
             @RequestBody final DocumentUpdateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        final String clientIp = IpAddressUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         return ResponseEntity.ok(documentFacade.updateDocument(documentId, request, clientIp));
     }
 
@@ -76,10 +76,9 @@ public class DocumentController {
     @GetMapping("/latest")
     public ResponseEntity<PageResponse<List<DocumentReadResponse>>> readLatestCreateDocuments(
             @RequestParam("page") final int page,
-            @RequestParam(value = "size", defaultValue = "20", required = false) final int size,
-            @RequestParam(value = "sort", defaultValue = "createdAt", required = false) final String sort
+            @RequestParam(value = "size", defaultValue = "20", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentService.readLatestDocuments(page, size, sort));
+        return ResponseEntity.ok(documentService.readLatestDocuments(page, size));
     }
 
     @GetMapping("/{documentId}/histories")
