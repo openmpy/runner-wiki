@@ -68,6 +68,11 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.readLatestDocument(documentId));
     }
 
+    @GetMapping("/histories/{documentHistoryId}")
+    public ResponseEntity<DocumentReadResponse> readDocumentHistory(@PathVariable final String documentHistoryId) {
+        return ResponseEntity.ok(documentService.readDocumentHistory(documentHistoryId));
+    }
+
     @GetMapping("/latest")
     public ResponseEntity<PageResponse<List<DocumentReadResponse>>> readLatestCreateDocuments(
             @RequestParam("page") final int page,
