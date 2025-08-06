@@ -1,11 +1,9 @@
 package com.openmpy.wiki.global.dto;
 
 public record PageResponse<T>(
-        T content,
+        T items,
         int page,
         int size,
-        long totalElements,
-        int totalPages,
-        boolean last
+        long totalCount
 ) {
 }

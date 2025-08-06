@@ -84,14 +84,13 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public DocumentReadResponse readLatestDocument(final String documentId) {
-        final Document document = getDocument(documentId);
         final DocumentHistory documentHistory = documentHistoryRepository
-                .findFirstByDocumentAndDeletedFalseOrderByVersionDesc(document)
-                .orElseThrow(
-                        () -> new CustomException("문서 기록이 존재하지 않습니다.")
-                );
+                .findLatestHistoryWithDocument(documentId, PageRequest.of(0, 1))
+                .stream()
+                .findFirst()
+                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
 
-        return DocumentReadResponse.from(document, documentHistory);
+        return DocumentReadResponse.from(documentHistory.getDocument(), documentHistory);
     }
 
     @Transactional(readOnly = true)
@@ -112,9 +111,7 @@ public class DocumentService {
                 responses,
                 page,
                 size,
-                documentPage.getTotalElements(),
-                documentPage.getTotalPages(),
-                documentPage.isLast()
+                documentPage.getTotalElements()
         );
     }
 
@@ -136,9 +133,7 @@ public class DocumentService {
                 responses,
                 page,
                 size,
-                documentHistoryPage.getTotalElements(),
-                documentHistoryPage.getTotalPages(),
-                documentHistoryPage.isLast()
+                documentHistoryPage.getTotalElements()
         );
     }
 
