@@ -71,7 +71,11 @@ export default async function WikiPage({ params }: WikiPageProps) {
       </div>
 
       <div className="mb-6">
-        <Badge category={document.category} />
+        {document.category === "런너" ? (
+          <Badge content={document.category} color="blue" />
+        ) : (
+          <Badge content={document.category} color="purple" />
+        )}
       </div>
 
       <div>

@@ -264,7 +264,11 @@ export default function HistoryPage({ params }: HistoryPageProps) {
                   <div className="text-gray-900">{item.author}</div>
                   {/* 버전 */}
                   <div className="flex items-center gap-2">
-                    <Badge version={item.version} size="sm" />
+                    <Badge
+                      content={`V${item.version}`}
+                      size="sm"
+                      color="green"
+                    />
                   </div>
                 </div>
               </div>

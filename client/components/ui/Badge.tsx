@@ -1,29 +1,14 @@
 interface BadgeProps {
-  category?: string;
-  version?: number;
+  content: string;
   size?: "sm" | "md" | "lg";
-  className?: string;
+  color?: "red" | "orange" | "yellow" | "green" | "blue" | "indigo" | "purple";
 }
 
 export default function Badge({
-  category,
-  version,
+  content,
   size = "md",
-  className = "",
+  color = "purple",
 }: BadgeProps) {
-  const getBadgeStyle = (category?: string, version?: number) => {
-    if (version !== undefined) {
-      return "bg-[#00A495] text-white border border-[#00A495]";
-    }
-
-    switch (category) {
-      case "런너":
-        return "bg-blue-100 text-blue-800 border border-blue-200";
-      default:
-        return "bg-purple-100 text-purple-800 border border-purple-200";
-    }
-  };
-
   const getSizeStyle = (size: string) => {
     switch (size) {
       case "sm":
@@ -37,16 +22,34 @@ export default function Badge({
     }
   };
 
-  const displayText = version !== undefined ? `V${version}` : category;
+  const getColorStyle = (color: string) => {
+    switch (color) {
+      case "red":
+        return "bg-red-100 text-red-800 border border-red-200";
+      case "orange":
+        return "bg-orange-100 text-orange-800 border border-orange-200";
+      case "yellow":
+        return "bg-yellow-100 text-yellow-800 border border-yellow-200";
+      case "green":
+        return "bg-green-100 text-green-800 border border-green-200";
+      case "blue":
+        return "bg-blue-100 text-blue-800 border border-blue-200";
+      case "indigo":
+        return "bg-indigo-100 text-indigo-800 border border-indigo-200";
+      case "purple":
+        return "bg-purple-100 text-purple-800 border border-purple-200";
+      default:
+        return "bg-purple-100 text-purple-800 border border-purple-200";
+    }
+  };
 
   return (
     <span
-      className={`inline-flex items-center rounded font-medium ${getBadgeStyle(
-        category,
-        version
-      )} ${getSizeStyle(size)} ${className}`}
+      className={`inline-flex items-center rounded font-medium ${getColorStyle(
+        color
+      )} ${getSizeStyle(size)}`}
     >
-      {displayText}
+      {content}
     </span>
   );
 }

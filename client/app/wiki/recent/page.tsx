@@ -79,24 +79,30 @@ export default async function RecentPage() {
                 </td>
               </tr>
             ) : (
-              documents.map((doc) => (
+              documents.map((document) => (
                 <tr
-                  key={doc.documentId}
+                  key={document.documentId}
                   className="hover:bg-gray-50 transition-colors"
                 >
                   <td className="px-4 py-3 whitespace-nowrap text-[15px]">
                     <Link
-                      href={`/wiki/${doc.documentId}`}
+                      href={`/wiki/${document.documentId}`}
                       className="text-gray-900 font-medium hover:underline cursor-pointer"
                     >
-                      {doc.title}
+                      {document.title}
                     </Link>
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap">
-                    <Badge category={doc.category} />
+                    {document.category === "런너" ? (
+                      <Badge content={document.category} color="blue" />
+                    ) : (
+                      <Badge content={document.category} color="purple" />
+                    )}
                   </td>
                   <td className="px-4 py-3 whitespace-nowrap text-[15px] text-gray-500">
-                    {doc.updatedAt ? getRelativeTime(doc.updatedAt) : "-"}
+                    {document.updatedAt
+                      ? getRelativeTime(document.updatedAt)
+                      : "-"}
                   </td>
                 </tr>
               ))
@@ -110,9 +116,9 @@ export default async function RecentPage() {
         {documents.length === 0 ? (
           <div className="text-center text-gray-500 py-8">문서가 없습니다.</div>
         ) : (
-          documents.map((doc, index) => (
+          documents.map((document, index) => (
             <div
-              key={doc.documentId}
+              key={document.documentId}
               className={`bg-white border-b border-gray-200 px-2 py-4 hover:bg-gray-50 active:bg-gray-100 transition-colors ${
                 index === 0 ? "border-t" : ""
               }`}
@@ -120,21 +126,27 @@ export default async function RecentPage() {
               <div className="space-y-1">
                 {/* 편집 시간 */}
                 <div className="text-xs text-gray-500">
-                  {doc.updatedAt ? getRelativeTime(doc.updatedAt) : "-"}
+                  {document.updatedAt
+                    ? getRelativeTime(document.updatedAt)
+                    : "-"}
                 </div>
                 {/* 제목 */}
                 <div>
                   <Link
-                    href={`/wiki/${doc.documentId}`}
+                    href={`/wiki/${document.documentId}`}
                     className="text-gray-900 font-medium text-lg hover:underline cursor-pointer"
                   >
-                    {doc.title}
+                    {document.title}
                   </Link>
                 </div>
 
                 {/* 카테고리 */}
                 <div>
-                  <Badge category={doc.category} />
+                  {document.category === "런너" ? (
+                    <Badge content={document.category} color="blue" />
+                  ) : (
+                    <Badge content={document.category} color="purple" />
+                  )}
                 </div>
               </div>
             </div>
