@@ -19,6 +19,7 @@ interface DocumentData {
 interface EditorInstance {
   getInstance: () => {
     getMarkdown: () => string;
+    setMarkdown: (markdown: string) => void;
   };
 }
 
