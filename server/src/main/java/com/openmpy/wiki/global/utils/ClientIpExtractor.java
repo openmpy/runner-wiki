@@ -1,12 +1,11 @@
 package com.openmpy.wiki.global.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 
-public final class IpAddressUtil {
-
-    private IpAddressUtil() {
-        throw new UnsupportedOperationException("유틸리티 클래스는 인스턴스화할 수 없습니다.");
-    }
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+public final class ClientIpExtractor {
 
     private static final String[] HEADERS = new String[]{
             "X-Forwarded-For",
