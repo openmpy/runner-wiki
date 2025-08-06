@@ -45,15 +45,16 @@ public class DocumentService {
                 snowflake.nextId(), request.author(), request.content(), clientIp, document
         );
         document.addHistory(documentHistory);
-        final Document savedDocument = documentRepository.save(document);
-        return new DocumentCreateResponse(savedDocument.getId());
+        documentRepository.save(document);
+
+        return new DocumentCreateResponse(document.getId());
     }
 
     @Transactional
     public DocumentUpdateResponse updateDocument(
             final String documentId, final DocumentUpdateRequest request, final String clientIp
     ) {
-        final Document document = getDocument(documentId);
+        final Document document = getDocumentWithHistory(documentId);
         final DocumentHistory documentHistory = DocumentHistory.create(
                 snowflake.nextId(), request.author(), request.content(), clientIp, document
         );
@@ -65,7 +66,7 @@ public class DocumentService {
     public void deleteDocument(
             final String documentId
     ) {
-        final Document document = getDocument(documentId);
+        final Document document = getDocumentWithHistory(documentId);
         documentRepository.delete(document);
     }
 
@@ -89,7 +90,7 @@ public class DocumentService {
                 .findLatestHistoryWithDocument(documentId, PageRequest.of(0, 1))
                 .stream()
                 .findFirst()
-                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
+                .orElseThrow(() -> new CustomException("문서 기록이 존재하지 않습니다."));
 
         return DocumentReadResponse.from(documentHistory.getDocument(), documentHistory);
     }
@@ -143,6 +144,12 @@ public class DocumentService {
 
     private Document getDocument(final String documentId) {
         return documentRepository.findById(documentId).orElseThrow(
+                () -> new CustomException("찾을 수 없는 문서 번호입니다.")
+        );
+    }
+
+    private Document getDocumentWithHistory(final String documentId) {
+        return documentRepository.findByIdWithHistory(documentId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 번호입니다.")
         );
     }

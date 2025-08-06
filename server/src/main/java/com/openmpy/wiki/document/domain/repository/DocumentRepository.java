@@ -3,6 +3,7 @@ package com.openmpy.wiki.document.domain.repository;
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
 import com.openmpy.wiki.document.domain.entity.Document;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -10,6 +11,9 @@ import org.springframework.data.repository.query.Param;
 public interface DocumentRepository extends JpaRepository<Document, String> {
 
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
+
+    @Query("SELECT d FROM Document d LEFT JOIN FETCH d.history WHERE d.id = :id")
+    Optional<Document> findByIdWithHistory(@Param("id") final String id);
 
     @Query(
             value = "SELECT d.id, d.title, d.category, d.status, d.created_at, d.updated_at " +
