@@ -219,7 +219,12 @@ export default function HistoryPage({ params }: HistoryPageProps) {
               historyData.content.history.map((item: HistoryItem) => (
                 <tr
                   key={item.documentHistoryId}
-                  className="hover:bg-gray-50 transition-colors"
+                  className="hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() =>
+                    router.push(
+                      `/wiki/${slug}/history/${item.documentHistoryId}`
+                    )
+                  }
                 >
                   <td className="px-4 py-3 whitespace-nowrap text-[15px] font-medium text-gray-900">
                     {item.version}
@@ -251,9 +256,12 @@ export default function HistoryPage({ params }: HistoryPageProps) {
             (item: HistoryItem, index: number) => (
               <div
                 key={item.documentHistoryId}
-                className={`bg-white border-b border-gray-200 px-2 py-4 hover:bg-gray-50 active:bg-gray-100 transition-colors ${
+                className={`bg-white border-b border-gray-200 px-2 py-4 hover:bg-gray-50 active:bg-gray-100 transition-colors cursor-pointer ${
                   index === 0 ? "border-t" : ""
                 }`}
+                onClick={() =>
+                  router.push(`/wiki/${slug}/history/${item.documentHistoryId}`)
+                }
               >
                 <div className="space-y-1">
                   {/* 작성일시 */}
