@@ -94,6 +94,14 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
+    public DocumentReadResponse readDocumentHistory(final String documentHistoryId) {
+        final DocumentHistory documentHistory = documentHistoryRepository.findByIdWithDocument(documentHistoryId)
+                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 기록 번호입니다."));
+
+        return DocumentReadResponse.from(documentHistory.getDocument(), documentHistory);
+    }
+
+    @Transactional(readOnly = true)
     public PageResponse<List<DocumentReadResponse>> readLatestDocuments(
             final int page, final int size, final String sort
     ) {
@@ -135,14 +143,6 @@ public class DocumentService {
                 size,
                 documentHistoryPage.getTotalElements()
         );
-    }
-
-    @Transactional(readOnly = true)
-    public DocumentReadResponse readDocumentHistory(final String documentHistoryId) {
-        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
-        );
-        return DocumentReadResponse.from(documentHistory.getDocument(), documentHistory);
     }
 
     private Document getDocument(final String documentId) {

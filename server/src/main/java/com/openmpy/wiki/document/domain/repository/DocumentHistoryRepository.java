@@ -12,19 +12,25 @@ import org.springframework.data.repository.query.Param;
 
 public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory, String> {
 
-    Optional<DocumentHistory> findFirstByDocumentAndDeletedFalseOrderByVersionDesc(final Document document);
-
     Page<DocumentHistory> findAllByDocumentAndDeletedFalse(final Document document, final Pageable pageable);
 
     @Query("""
-            SELECT dh 
+            SELECT dh
             FROM DocumentHistory dh
             JOIN FETCH dh.document d
-            WHERE d.id = :documentId 
+            WHERE d.id = :documentId
               AND dh.deleted = false
             ORDER BY dh.version DESC
             """)
     List<DocumentHistory> findLatestHistoryWithDocument(
             @Param("documentId") final String documentId, final Pageable pageable
     );
+
+    @Query("""
+            SELECT dh
+            FROM DocumentHistory dh
+            JOIN FETCH dh.document d
+            WHERE dh.id = :documentHistoryId
+            """)
+    Optional<DocumentHistory> findByIdWithDocument(@Param("documentHistoryId") final String documentHistoryId);
 }
