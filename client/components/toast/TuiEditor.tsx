@@ -22,6 +22,7 @@ interface TuiEditorProps {
 interface EditorInstance {
   getInstance: () => {
     getMarkdown: () => string;
+    setMarkdown: (markdown: string) => void;
   };
 }
 
@@ -29,7 +30,10 @@ const TuiEditor = forwardRef<EditorInstance, TuiEditorProps>((props, ref) => {
   const { onImageUpload } = props;
   const uploadedImageIds: string[] = [];
   const editorRef = useRef<{
-    getInstance: () => { getMarkdown: () => string };
+    getInstance: () => {
+      getMarkdown: () => string;
+      setMarkdown: (markdown: string) => void;
+    };
   }>(null);
 
   const handleImageUpload = async (
@@ -79,6 +83,11 @@ const TuiEditor = forwardRef<EditorInstance, TuiEditorProps>((props, ref) => {
           return editorRef.current.getInstance().getMarkdown();
         }
         return "";
+      },
+      setMarkdown: (markdown: string) => {
+        if (editorRef.current) {
+          editorRef.current.getInstance().setMarkdown(markdown);
+        }
       },
     }),
   }));

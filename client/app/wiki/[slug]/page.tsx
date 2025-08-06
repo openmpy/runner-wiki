@@ -65,7 +65,7 @@ export default async function WikiPage({ params }: WikiPageProps) {
             <Link href={`/wiki/${slug}/history`}>편집내역</Link>
           </Button>
           <Button variant="primary" size="sm">
-            편집하기
+            <Link href={`/wiki/${slug}/edit`}>편집하기</Link>
           </Button>
         </div>
       </div>

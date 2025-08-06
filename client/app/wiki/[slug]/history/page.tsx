@@ -112,11 +112,11 @@ export default function HistoryPage({ params }: HistoryPageProps) {
   };
 
   const handleGoBack = () => {
-    router.back();
+    router.push(`/wiki/${slug}`);
   };
 
   const handleEdit = () => {
-    router.push(`/wiki/${slug}`);
+    router.push(`/wiki/${slug}/edit`);
   };
 
   const formatDate = (dateString: string) => {
@@ -185,7 +185,7 @@ export default function HistoryPage({ params }: HistoryPageProps) {
         </div>
       </div>
 
-      <h2 className={`text-lg text-gray-600 mb-6 ${bmhanna.className}`}>
+      <h2 className={`text-xl text-gray-600 mb-6 ${bmhanna.className}`}>
         {historyData.content.title}
       </h2>
 
