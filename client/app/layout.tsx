@@ -1,3 +1,4 @@
+import Header from "@/components/layout/Header";
 import localFont from "next/font/local";
 import "./globals.css";
 
@@ -23,6 +24,7 @@ export default function RootLayout({
       <body
         className={`antialiased ${bmHanna.variable} ${pretendard.variable} font-pretendard`}
       >
+        <Header />
         {children}
       </body>
     </html>
