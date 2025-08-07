@@ -6,6 +6,8 @@ import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import com.openmpy.wiki.global.snowflake.Snowflake;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -36,7 +38,7 @@ class DataInitializer {
 
         for (int i = 0; i < EXECUTE_COUNT; i++) {
             executorService.submit(() -> {
-                insert();
+                insertDocument();
                 latch.countDown();
                 System.out.println("latch.getCount() = " + latch.getCount());
             });
@@ -46,7 +48,23 @@ class DataInitializer {
         executorService.shutdown();
     }
 
-    void insert() {
+    @Test
+    void initializeWithHistory() throws InterruptedException {
+        final ExecutorService executorService = Executors.newFixedThreadPool(10);
+
+        for (int i = 0; i < EXECUTE_COUNT; i++) {
+            executorService.submit(() -> {
+                insertDocumentWithHistory();
+                latch.countDown();
+                System.out.println("latch.getCount() = " + latch.getCount());
+            });
+        }
+
+        latch.await();
+        executorService.shutdown();
+    }
+
+    void insertDocument() {
         transactionTemplate.executeWithoutResult(status -> {
             for (int i = 0; i < BULK_INSERT_SIZE; i++) {
                 final DocumentCategory category = i % 2 == 0 ? DocumentCategory.RUNNER : DocumentCategory.GUILD;
@@ -61,7 +79,31 @@ class DataInitializer {
         });
     }
 
+    void insertDocumentWithHistory() {
+        transactionTemplate.executeWithoutResult(status -> {
+            final String sql = """
+                        INSERT INTO document_history (id, content, author, client_ip, version, document_id, deleted, created_at)
+                        VALUES (?, ?, ?, ?, ?, ?, false, NOW())
+                    """;
+
+            for (int i = 0; i < BULK_INSERT_SIZE; i++) {
+                entityManager.createNativeQuery(sql)
+                        .setParameter(1, snowflake.nextId())
+                        .setParameter(2, generate())
+                        .setParameter(3, generate())
+                        .setParameter(4, "127.0.0.1")
+                        .setParameter(5, generateVersion(i))
+                        .setParameter(6, "211509106120478720")
+                        .executeUpdate();
+            }
+        });
+    }
+
     String generate() {
         return UUID.randomUUID().toString().replace("-", "").substring(0, 10);
+    }
+
+    Long generateVersion(final int i) {
+        return Long.parseLong(new SimpleDateFormat("yyyyMMddHHmmssSSS").format(new Date())) * 1000 + i;
     }
 }
