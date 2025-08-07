@@ -17,10 +17,7 @@ import com.openmpy.wiki.global.snowflake.Snowflake;
 import com.openmpy.wiki.global.utils.PageLimitCalculator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -125,20 +122,18 @@ public class DocumentService {
             final String documentId, final int page, final int size
     ) {
         final Document document = getDocument(documentId);
-
-        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Direction.DESC, "version"));
-        final Page<DocumentHistory> documentHistoryPage = documentHistoryRepository.findAllByDocumentAndDeletedFalse(
-                document, pageRequest
+        final List<DocumentHistory> documentHistories = documentHistoryRepository.findAllByDocumentAndDeletedFalse(
+                documentId, (page - 1) * size, size
         );
-        final DocumentHistoryReadResponses responses = DocumentHistoryReadResponses.from(
-                document, documentHistoryPage.getContent()
-        );
+        final DocumentHistoryReadResponses responses = DocumentHistoryReadResponses.from(document, documentHistories);
 
         return new PageResponse<>(
                 responses,
                 page,
                 size,
-                documentHistoryPage.getTotalElements()
+                documentHistoryRepository.countByDocumentAndDeletedFalse(
+                        documentId, PageLimitCalculator.calculatePageLimit(page, size, 10)
+                )
         );
     }
 
