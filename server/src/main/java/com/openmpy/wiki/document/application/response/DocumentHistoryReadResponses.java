@@ -7,7 +7,7 @@ import java.util.List;
 public record DocumentHistoryReadResponses(
         String historyId,
         String title,
-        List<DocumentHistoryReadResponse> history
+        List<DocumentHistoryReadResponse> histories
 ) {
 
     public static DocumentHistoryReadResponses from(

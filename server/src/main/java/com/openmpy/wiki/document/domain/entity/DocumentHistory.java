@@ -8,6 +8,7 @@ import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -18,7 +19,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
-@Table(name = "document_history")
+@Table(name = "document_history", indexes = {
+        @Index(name = "idx_document_history_document_id", columnList = "document_id"),
+        @Index(name = "idx_document_history_documentId_deleted_version_desc", columnList = "document_id, deleted, version DESC")
+})
 public class DocumentHistory {
 
     @Id
@@ -49,13 +53,18 @@ public class DocumentHistory {
     private Document document;
 
     public static DocumentHistory create(
-            final String id, final String author, final String content, final String clientIp, final Document document
+            final String id,
+            final String author,
+            final String content,
+            final String clientIp,
+            final long version,
+            final Document document
     ) {
         final DocumentHistory documentHistory = new DocumentHistory();
         documentHistory.id = id;
         documentHistory.author = new DocumentAuthor(author);
         documentHistory.content = new DocumentContent(content);
-        documentHistory.version = document.getHistory().size() + 1L;
+        documentHistory.version = version;
         documentHistory.clientIp = clientIp;
         documentHistory.deleted = false;
         documentHistory.createdAt = LocalDateTime.now();

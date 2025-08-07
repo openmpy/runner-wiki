@@ -11,6 +11,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
+import jakarta.persistence.Index;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
@@ -22,7 +23,10 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
-@Table(name = "document")
+@Table(name = "document", indexes = {
+        @Index(name = "idx_document_updated_at", columnList = "updated_at DESC"),
+        @Index(name = "idx_document_title_category", columnList = "title, category")
+})
 public class Document {
 
     @Id

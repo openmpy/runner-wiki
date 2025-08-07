@@ -1,5 +1,6 @@
 package com.openmpy.wiki.document.domain.repository;
 
+import com.openmpy.wiki.document.domain.entity.Document;
 import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import java.util.List;
 import java.util.Optional;
@@ -11,16 +12,14 @@ import org.springframework.data.repository.query.Param;
 public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory, String> {
 
     @Query(
-            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, "
+            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version "
                     +
-                    "       d.title, d.category, d.status " +
                     "FROM (" +
                     "  SELECT id FROM document_history " +
                     "  WHERE document_id = :documentId AND deleted = false " +
                     "  ORDER BY version DESC " +
                     "  LIMIT :limit OFFSET :offset" +
-                    ") t LEFT JOIN document_history dh ON t.id = dh.id " +
-                    "LEFT JOIN document d ON dh.document_id = d.id",
+                    ") t LEFT JOIN document_history dh ON t.id = dh.id",
             nativeQuery = true
     )
     List<DocumentHistory> findAllByDocumentAndDeletedFalse(
@@ -63,4 +62,7 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
             WHERE dh.id = :documentHistoryId
             """)
     Optional<DocumentHistory> findByIdWithDocument(@Param("documentHistoryId") final String documentHistoryId);
+
+    @Query("SELECT COALESCE(MAX(dh.version), 1) FROM DocumentHistory dh WHERE dh.document = :document")
+    Long getLatestVersionByDocumentId(final Document document);
 }

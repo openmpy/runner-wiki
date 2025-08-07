@@ -30,7 +30,7 @@ class DataInitializer {
     CountDownLatch latch = new CountDownLatch(EXECUTE_COUNT);
 
     static final int BULK_INSERT_SIZE = 2000;
-    static final int EXECUTE_COUNT = 5000;
+    static final int EXECUTE_COUNT = 500;
 
     @Test
     void initialize() throws InterruptedException {
@@ -70,7 +70,7 @@ class DataInitializer {
                 final DocumentCategory category = i % 2 == 0 ? DocumentCategory.RUNNER : DocumentCategory.GUILD;
                 final Document document = Document.create(snowflake.nextId(), generate(), category);
                 final DocumentHistory documentHistory = DocumentHistory.create(
-                        snowflake.nextId(), generate(), generate(), "127.0.0.1", document
+                        snowflake.nextId(), generate(), generate(), "127.0.0.1", 1, document
                 );
 
                 document.addHistory(documentHistory);
@@ -93,7 +93,7 @@ class DataInitializer {
                         .setParameter(3, generate())
                         .setParameter(4, "127.0.0.1")
                         .setParameter(5, generateVersion(i))
-                        .setParameter(6, "211509106120478720")
+                        .setParameter(6, "211690618052411392")
                         .executeUpdate();
             }
         });

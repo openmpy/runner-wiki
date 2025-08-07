@@ -39,7 +39,7 @@ public class DocumentService {
 
         final Document document = Document.create(snowflake.nextId(), request.title(), category);
         final DocumentHistory documentHistory = DocumentHistory.create(
-                snowflake.nextId(), request.author(), request.content(), clientIp, document
+                snowflake.nextId(), request.author(), request.content(), clientIp, 1, document
         );
         document.addHistory(documentHistory);
         documentRepository.save(document);
@@ -51,11 +51,14 @@ public class DocumentService {
     public DocumentUpdateResponse updateDocument(
             final String documentId, final DocumentUpdateRequest request, final String clientIp
     ) {
-        final Document document = getDocumentWithHistory(documentId);
+        final Document document = getDocument(documentId);
+        final long version = documentHistoryRepository.getLatestVersionByDocumentId(document) + 1;
+
         final DocumentHistory documentHistory = DocumentHistory.create(
-                snowflake.nextId(), request.author(), request.content(), clientIp, document
+                snowflake.nextId(), request.author(), request.content(), clientIp, version, document
         );
         document.addHistory(documentHistory);
+
         return new DocumentUpdateResponse(documentId);
     }
 
