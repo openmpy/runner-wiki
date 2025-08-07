@@ -37,7 +37,7 @@ const Header = () => {
             {/* 메뉴 항목들 */}
             <nav className="flex items-center space-x-6">
               <Link
-                href="/"
+                href="/wiki"
                 className="text-white text-lg font-bm-hanna hover:text-gray-200 flex items-center space-x-2 transition-colors duration-200"
               >
                 <FaRegClock className="text-lg" />
@@ -100,7 +100,7 @@ const Header = () => {
             {/* 아이콘들 */}
             <div className="flex items-center space-x-4">
               <Link
-                href="/"
+                href="/wiki"
                 className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
               >
                 <FaRegClock className="text-lg" />
