@@ -29,3 +29,13 @@ export function formatRelativeTime(dateString: string): string {
 
   return `${year}년 ${month}월 ${day}일 ${hours}시 ${minutes}분 ${seconds}초`;
 }
+
+export function formatKoreanDate(dateString: string): string {
+  return new Date(dateString).toLocaleDateString("ko-KR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}

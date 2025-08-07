@@ -13,3 +13,7 @@
     font-family: var(--font-pretendard);
   }
 }
+
+button {
+  cursor: pointer;
+}
