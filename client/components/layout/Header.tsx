@@ -59,7 +59,7 @@ const Header = () => {
             <button
               type="button"
               onClick={handleShuffle}
-              className="w-10 h-10 bg-white rounded flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200"
+              className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200"
             >
               <FaRandom className="text-mint text-lg" />
             </button>
@@ -71,7 +71,7 @@ const Header = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="검색할 문서 제목을 입력해주세요."
-                  className="w-80 px-4 py-2 pl-4 pr-12 text-gray-800 bg-white rounded border border-transparent focus:border-gray-400 focus:outline-none transition-all duration-200 placeholder-gray-500 text-sm"
+                  className="w-80 px-4 py-2 pl-4 pr-12 text-gray-800 bg-white rounded-lg border border-transparent focus:border-gray-400 focus:outline-none transition-all duration-200 placeholder-gray-500 text-sm"
                 />
                 <button
                   type="submit"
@@ -120,7 +120,7 @@ const Header = () => {
             <button
               type="button"
               onClick={handleShuffle}
-              className="w-8 h-8 bg-white rounded flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
+              className="w-8 h-8 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
             >
               <FaRandom className="text-mint text-sm" />
             </button>
@@ -132,7 +132,7 @@ const Header = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="검색할 문서 제목을 입력해주세요."
-                  className="w-full px-3 py-1.5 pl-3 pr-10 text-gray-800 bg-white rounded border border-transparent focus:border-gray-400 focus:outline-none transition-all duration-200 placeholder-gray-500 text-sm"
+                  className="w-full px-3 py-1.5 pl-3 pr-10 text-gray-800 bg-white rounded-lg border border-transparent focus:border-gray-400 focus:outline-none transition-all duration-200 placeholder-gray-500 text-sm"
                 />
                 <button
                   type="submit"
