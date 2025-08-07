@@ -29,6 +29,7 @@ async function getDocumentHistories(): Promise<DocumentHistoriesResponse | null>
         headers: {
           "Content-Type": "application/json",
         },
+        cache: "no-store",
       }
     );
 
@@ -109,7 +110,7 @@ export default async function WikiPage() {
                       key={item.documentId}
                       className="hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-6 py-3 whitespace-nowrap">
                         <Link
                           href={`/wiki/${item.documentId}`}
                           className="block text-sm font-medium text-gray-900 hover:underline"
@@ -117,7 +118,7 @@ export default async function WikiPage() {
                           {item.title}
                         </Link>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-center">
+                      <td className="px-6 py-3 whitespace-nowrap text-center">
                         {item.category === "런너" ? (
                           <Badge size="sm" color="blue">
                             {item.category}
@@ -128,7 +129,7 @@ export default async function WikiPage() {
                           </Badge>
                         )}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
                         {formatRelativeTime(item.updatedAt)}
                       </td>
                     </tr>
@@ -140,7 +141,7 @@ export default async function WikiPage() {
 
           {histories.items.length === 0 && (
             <div className="px-6 py-8 text-center text-gray-500">
-              편집된 문서가 없습니다.
+              편집된 문서가 존재하지 않습니다.
             </div>
           )}
         </div>

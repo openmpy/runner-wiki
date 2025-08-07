@@ -3,8 +3,8 @@ export function formatRelativeTime(dateString: string): string {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
-  // 30초 미만
-  if (diffInSeconds < 30) {
+  // 10초 미만
+  if (diffInSeconds < 10) {
     return "방금 전";
   }
 
