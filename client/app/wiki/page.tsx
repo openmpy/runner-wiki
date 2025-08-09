@@ -1,4 +1,5 @@
 import Badge from "@/components/ui/Badge";
+import { PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";
 
@@ -13,14 +14,9 @@ interface DocumentItem {
   updatedAt: string;
 }
 
-interface DocumentHistoriesResponse {
-  items: DocumentItem[];
-  page: number;
-  size: number;
-  totalCount: number;
-}
-
-async function getDocumentHistories(): Promise<DocumentHistoriesResponse | null> {
+async function getDocumentHistories(): Promise<PageResponse<
+  DocumentItem[]
+> | null> {
   try {
     const response = await fetch(
       `http://localhost:8080/api/v1/documents/latest?page=1`,

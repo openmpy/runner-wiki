@@ -1,6 +1,7 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
 import { formatKoreanDate } from "@/libs/utils";
+import Link from "next/link";
 import { BsClock } from "react-icons/bs";
 import { FaHistory, FaPlus } from "react-icons/fa";
 
@@ -53,13 +54,15 @@ export default async function WikiSlugPage({ params }: { params: Params }) {
           <div className="flex justify-between items-center mb-6">
             <h1 className="font-bm-hanna text-2xl">{document.title}</h1>
             <div className="flex gap-2">
-              <Button variant="secondary" className="flex items-center gap-2">
-                <FaHistory className="md:hidden" />
-                <span className="hidden md:inline">편집기록</span>
-              </Button>
+              <Link href={`/wiki/${slug}/history`}>
+                <Button variant="secondary" className="flex items-center gap-2">
+                  <FaHistory className="md:hidden" />
+                  <span className="hidden md:inline">편집기록</span>
+                </Button>
+              </Link>
               <Button variant="primary" className="flex items-center gap-2">
                 <FaPlus className="md:hidden" />
-                <span className="hidden md:inline">작성하기</span>
+                <span className="hidden md:inline">편집하기</span>
               </Button>
             </div>
           </div>

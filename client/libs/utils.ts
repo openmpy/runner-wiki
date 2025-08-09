@@ -13,6 +13,11 @@ export function formatRelativeTime(dateString: string): string {
     return `${diffInSeconds}초 전`;
   }
 
+  if (diffInSeconds < 3600) {
+    const minutes = Math.floor(diffInSeconds / 60);
+    return `${minutes}분 전`;
+  }
+
   // 24시간 미만 (86400초)
   if (diffInSeconds < 86400) {
     const hours = Math.floor(diffInSeconds / 3600);
