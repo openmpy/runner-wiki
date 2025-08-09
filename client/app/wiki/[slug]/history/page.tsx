@@ -1,10 +1,9 @@
 import BackButton from "@/components/ui/BackButton";
 import Badge from "@/components/ui/Badge";
-import Button from "@/components/ui/Button";
+import EditButton from "@/components/ui/EditButton";
 import { PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";
-import { FaPlus } from "react-icons/fa";
 
 type Params = Promise<{ slug: string }>;
 
@@ -60,10 +59,7 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
         <h1 className="font-bm-hanna text-2xl">편집 기록</h1>
         <div className="flex gap-2">
           <BackButton />
-          <Button variant="primary" className="flex items-center gap-2">
-            <FaPlus className="md:hidden" />
-            <span className="hidden md:inline">편집하기</span>
-          </Button>
+          <EditButton />
         </div>
       </div>
       {histories ? (
@@ -109,16 +105,16 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
               <table className="min-w-full divide-y divide-gray-200">
                 <thead>
                   <tr>
-                    <th className="px-4 py-3 text-center text-gray-900 font-bold tracking-wider w-1/12">
+                    <th className="px-6 py-3 text-center text-gray-900 font-bold tracking-wider w-1/12">
                       버전
                     </th>
-                    <th className="px-6 py-3 text-center text-gray-900 font-bold tracking-wider w-1/3">
+                    <th className="px-6 py-3 text-center text-gray-900 font-bold tracking-wider w-1/4">
                       작성자
                     </th>
-                    <th className="px-6 py-3 text-center text-gray-900 font-bold tracking-wider w-1/6">
+                    <th className="px-6 py-3 text-center text-gray-900 font-bold tracking-wider w-1/8">
                       크기
                     </th>
-                    <th className="px-6 py-3 text-left text-gray-900 font-bold tracking-wider w-1/3">
+                    <th className="px-6 py-3 text-left text-gray-900 font-bold tracking-wider w-1/6">
                       편집 시간
                     </th>
                   </tr>
@@ -130,7 +126,7 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
                         key={item.documentHistoryId}
                         className="hover:bg-gray-50 transition-colors"
                       >
-                        <td className="px-4 py-3 whitespace-nowrap text-center">
+                        <td className="px-6 py-3 whitespace-nowrap text-center">
                           <span className="text-sm font-medium text-gray-900">
                             {item.version}
                           </span>

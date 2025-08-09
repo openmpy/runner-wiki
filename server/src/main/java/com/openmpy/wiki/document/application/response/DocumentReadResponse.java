@@ -11,6 +11,7 @@ public record DocumentReadResponse(
         String category,
         String author,
         String content,
+        String status,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -23,6 +24,7 @@ public record DocumentReadResponse(
                 document.getCategory().getValue(),
                 null,
                 null,
+                document.getStatus().name(),
                 null,
                 document.getUpdatedAt()
         );
@@ -36,6 +38,7 @@ public record DocumentReadResponse(
                 document.getCategory().getValue(),
                 documentHistory.isDeleted() ? null : documentHistory.getAuthor(),
                 documentHistory.isDeleted() ? null : documentHistory.getContent(),
+                document.getStatus().name(),
                 documentHistory.getCreatedAt(),
                 document.getUpdatedAt()
         );

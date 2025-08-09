@@ -1,22 +1,13 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
+import EditButton from "@/components/ui/EditButton";
+import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
 import Link from "next/link";
 import { BsClock } from "react-icons/bs";
-import { FaHistory, FaPlus } from "react-icons/fa";
+import { FaHistory } from "react-icons/fa";
 
 type Params = Promise<{ slug: string; id: string }>;
-
-interface Document {
-  documentId: string;
-  documentHistoryId: string;
-  title: string;
-  category: string;
-  author: string | null;
-  content: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
 
 async function getDocumentHistory(
   documentHistoryId: string
@@ -66,10 +57,7 @@ export default async function WikiHistoryIdPage({
                   <span className="hidden md:inline">편집기록</span>
                 </Button>
               </Link>
-              <Button variant="primary" className="flex items-center gap-2">
-                <FaPlus className="md:hidden" />
-                <span className="hidden md:inline">편집하기</span>
-              </Button>
+              <EditButton />
             </div>
           </div>
           <div className="prose max-w-none mb-8">

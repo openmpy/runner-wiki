@@ -1,21 +1,10 @@
 import Badge from "@/components/ui/Badge";
-import { PageResponse } from "@/libs/types";
+import { Document, PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";
 
-interface DocumentItem {
-  documentId: string;
-  documentHistoryId: string | null;
-  title: string;
-  category: string;
-  author: string | null;
-  content: string | null;
-  createdAt: string | null;
-  updatedAt: string;
-}
-
 async function getDocumentHistories(): Promise<PageResponse<
-  DocumentItem[]
+  Document[]
 > | null> {
   try {
     const response = await fetch(
@@ -53,7 +42,7 @@ export default async function WikiPage() {
           {/* 모바일 카드 뷰 */}
           <div className="block md:hidden">
             <div className="space-y-4">
-              {histories.items.map((item: DocumentItem) => (
+              {histories.items.map((item: Document) => (
                 <div
                   key={item.documentId}
                   className="bg-white border border-gray-200 rounded-lg p-4 hover:bg-gray-50 transition-colors"
@@ -101,7 +90,7 @@ export default async function WikiPage() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {histories.items.map((item: DocumentItem) => (
+                  {histories.items.map((item: Document) => (
                     <tr
                       key={item.documentId}
                       className="hover:bg-gray-50 transition-colors"
