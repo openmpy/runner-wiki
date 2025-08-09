@@ -1,3 +1,5 @@
+export type DocumentStatus = "ACTIVE" | "READ_ONLY";
+
 export interface PageResponse<T> {
   items: T;
   page: number;
@@ -12,7 +14,7 @@ export interface Document {
   category: string;
   author: string | null;
   content: string | null;
-  status: "ACTIVE" | "READ_ONLY";
+  status: DocumentStatus;
   createdAt: string;
   updatedAt: string;
 }

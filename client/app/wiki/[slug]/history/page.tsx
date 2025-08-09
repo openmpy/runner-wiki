@@ -1,7 +1,7 @@
 import BackButton from "@/components/ui/BackButton";
 import Badge from "@/components/ui/Badge";
 import EditButton from "@/components/ui/EditButton";
-import { PageResponse } from "@/libs/types";
+import { DocumentStatus, PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";
 
@@ -18,6 +18,7 @@ interface DocumentHistoryItem {
 interface DocumentHistory {
   historyId: string;
   title: string;
+  status: DocumentStatus;
   histories: DocumentHistoryItem[];
 }
 
@@ -59,7 +60,7 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
         <h1 className="font-bm-hanna text-2xl">편집 기록</h1>
         <div className="flex gap-2">
           <BackButton />
-          <EditButton />
+          <EditButton status={histories?.items.status || "READ_ONLY"} />
         </div>
       </div>
       {histories ? (

@@ -51,7 +51,7 @@ export default async function WikiSlugPage({ params }: { params: Params }) {
                   <span className="hidden md:inline">편집기록</span>
                 </Button>
               </Link>
-              <EditButton />
+              <EditButton status={document.status} />
             </div>
           </div>
           <div className="prose max-w-none mb-8">
