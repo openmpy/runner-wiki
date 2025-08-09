@@ -7,6 +7,7 @@ import java.util.List;
 public record DocumentHistoryReadResponses(
         String historyId,
         String title,
+        String status,
         List<DocumentHistoryReadResponse> histories
 ) {
 
@@ -16,6 +17,7 @@ public record DocumentHistoryReadResponses(
         return new DocumentHistoryReadResponses(
                 document.getId(),
                 document.getTitle(),
+                document.getStatus().name(),
                 documentHistory.stream().map(DocumentHistoryReadResponse::from).toList()
         );
     }
