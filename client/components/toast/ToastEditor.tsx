@@ -7,10 +7,16 @@ import { useEffect, useRef } from "react";
 interface ToastEditorProps {
   initialValue: string;
   onChange?: (content: string) => void;
+  onImageUpload?: (imageIds: string[]) => void;
 }
 
-const ToastEditor = ({ initialValue, onChange }: ToastEditorProps) => {
+const ToastEditor = ({
+  initialValue,
+  onChange,
+  onImageUpload,
+}: ToastEditorProps) => {
   const editorRef = useRef<Editor>(null);
+  const uploadedImageIds = useRef<string[]>([]);
 
   useEffect(() => {
     if (editorRef.current && onChange) {
@@ -21,6 +27,51 @@ const ToastEditor = ({ initialValue, onChange }: ToastEditorProps) => {
       });
     }
   }, [onChange]);
+
+  useEffect(() => {
+    if (editorRef.current) {
+      const editor = editorRef.current.getInstance();
+
+      editor.addHook(
+        "addImageBlobHook",
+        async (blob: File, callback: (url: string) => void) => {
+          try {
+            const formData = new FormData();
+            formData.append("file", blob);
+
+            const response = await fetch(
+              "http://localhost:8080/api/v1/images",
+              {
+                method: "POST",
+                body: formData,
+              }
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+              const { imageId, key } = data;
+
+              uploadedImageIds.current.push(imageId);
+
+              if (onImageUpload) {
+                onImageUpload([...uploadedImageIds.current]);
+              }
+
+              const imageUrl = `https://runner-wiki.s3.ap-northeast-2.amazonaws.com/images/${key}`;
+              callback(imageUrl);
+            } else {
+              console.error("이미지 업로드 실패");
+              callback("");
+            }
+          } catch (error) {
+            console.error("이미지 업로드 중 오류 발생:", error);
+            callback("");
+          }
+          return false;
+        }
+      );
+    }
+  }, [onImageUpload]);
 
   return (
     <Editor
@@ -33,7 +84,7 @@ const ToastEditor = ({ initialValue, onChange }: ToastEditorProps) => {
       toolbarItems={[
         ["heading", "bold", "italic", "strike"],
         ["hr", "quote"],
-        ["ul", "ol", "task"],
+        ["ul", "ol", "task", "indent", "outdent"],
         ["table", "image", "link"],
         ["code", "codeblock"],
         ["scrollSync"],

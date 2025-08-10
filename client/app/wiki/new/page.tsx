@@ -13,10 +13,15 @@ export default function WikiNewPage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
+  const [imageIds, setImageIds] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCategorySelect = (category: DocumentCategory) => {
     setSelectedCategory(category);
+  };
+
+  const handleImageUpload = (uploadedImageIds: string[]) => {
+    setImageIds(uploadedImageIds);
   };
 
   const handleSubmit = async () => {
@@ -37,6 +42,7 @@ export default function WikiNewPage() {
           category: selectedCategory,
           author: author.trim(),
           content: content.trim(),
+          imageIds: imageIds,
         }),
       });
 
@@ -92,6 +98,7 @@ export default function WikiNewPage() {
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             className="w-full md:flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+            maxLength={10}
           />
           <input
             type="text"
@@ -99,9 +106,14 @@ export default function WikiNewPage() {
             value={author}
             onChange={(e) => setAuthor(e.target.value)}
             className="w-full md:w-1/3 px-3 py-2 border border-gray-300 rounded-md focus:outline-none"
+            maxLength={10}
           />
         </div>
-        <ToastEditor initialValue=" " onChange={setContent} />
+        <ToastEditor
+          initialValue=" "
+          onChange={setContent}
+          onImageUpload={handleImageUpload}
+        />
         <div className="flex gap-3 justify-end mt-4">
           <Button variant="secondary" size="lg" onClick={() => router.back()}>
             뒤로가기
