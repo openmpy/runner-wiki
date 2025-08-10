@@ -71,7 +71,7 @@ const Header = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="검색할 문서 제목을 입력해주세요."
-                  className="w-80 px-4 py-2 pl-4 pr-12 text-gray-800 bg-white rounded-lg border border-transparent focus:border-gray-400 focus:outline-none transition-all duration-200 placeholder-gray-500 text-sm"
+                  className="w-80 px-4 py-2 pl-4 pr-12 text-gray-800 bg-white rounded-lg border border-transparent focus:outline-none placeholder-gray-500 text-sm"
                 />
                 <button
                   type="submit"

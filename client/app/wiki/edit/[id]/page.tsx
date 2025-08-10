@@ -38,7 +38,7 @@ export default async function WikiEditPage({ params }: { params: Params }) {
     <div>
       <div className="flex justify-between items-center mb-6">
         <div className="flex flex-col gap-2">
-          <h1 className="font-bm-hanna text-2xl">편집하기</h1>
+          <h1 className="font-bm-hanna text-2xl">문서 편집</h1>
           <p className="text-sm text-red-500">
             문서 편집 시 IP가 기록되며, 악의적 이용 방지를 위해서만 사용됩니다.
           </p>
