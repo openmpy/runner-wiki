@@ -88,7 +88,7 @@ export default function Editor({
             길드
           </Button>
         </div>
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-2">
           <input
             type="text"
             value={documentHistory.title}

@@ -91,7 +91,7 @@ export default function WikiNewPage() {
             길드
           </Button>
         </div>
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col md:flex-row gap-4 md:gap-2">
           <input
             type="text"
             placeholder="제목을 입력하세요."
