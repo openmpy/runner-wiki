@@ -31,3 +31,11 @@ export interface DocumentHistory {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface DocumentHistoryItem {
+  documentHistoryId: string;
+  author: string;
+  version: string;
+  size: number;
+  createdAt: string;
+}

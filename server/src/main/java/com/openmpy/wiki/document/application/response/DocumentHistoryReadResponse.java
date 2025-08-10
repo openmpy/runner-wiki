@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 public record DocumentHistoryReadResponse(
         String documentHistoryId,
         String author,
-        Long version,
+        String version,
         Integer size,
         LocalDateTime createdAt
 ) {
@@ -15,7 +15,7 @@ public record DocumentHistoryReadResponse(
         return new DocumentHistoryReadResponse(
                 documentHistory.getId(),
                 documentHistory.getAuthor(),
-                documentHistory.getVersion(),
+                String.valueOf(documentHistory.getVersion()),
                 documentHistory.getContent().length(),
                 documentHistory.getCreatedAt()
         );

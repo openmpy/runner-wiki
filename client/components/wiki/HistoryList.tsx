@@ -2,18 +2,14 @@
 
 import Badge from "@/components/ui/Badge";
 import { Pagination } from "@/components/ui/Pagination";
-import { DocumentStatus, PageResponse } from "@/libs/types";
+import {
+  DocumentHistoryItem,
+  DocumentStatus,
+  PageResponse,
+} from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-
-interface DocumentHistoryItem {
-  documentHistoryId: string;
-  author: string;
-  version: number;
-  size: number;
-  createdAt: string;
-}
 
 interface DocumentHistory {
   historyId: string;

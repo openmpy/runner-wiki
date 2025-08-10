@@ -1,17 +1,13 @@
 import BackButton from "@/components/wiki/BackButton";
 import EditButton from "@/components/wiki/EditButton";
 import HistoryList from "@/components/wiki/HistoryList";
-import { DocumentStatus, PageResponse } from "@/libs/types";
+import {
+  DocumentHistoryItem,
+  DocumentStatus,
+  PageResponse,
+} from "@/libs/types";
 
 type Params = Promise<{ slug: string }>;
-
-interface DocumentHistoryItem {
-  documentHistoryId: string;
-  author: string;
-  version: number;
-  size: number;
-  createdAt: string;
-}
 
 interface DocumentHistory {
   historyId: string;
