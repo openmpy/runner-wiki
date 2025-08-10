@@ -9,6 +9,7 @@ import com.openmpy.wiki.image.domain.repository.ImageRepository;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -39,7 +40,7 @@ public class ImageService {
 
     @Transactional
     public ImageUploadResponse upload(final MultipartFile file, final String clientIp) {
-        final String originalFilename = file.getOriginalFilename();
+        final String originalFilename = getRemoveBlank(Objects.requireNonNull(file.getOriginalFilename()));
         final String extension = StringUtils.getFilenameExtension(originalFilename);
 
         validateExtension(extension);
@@ -100,5 +101,9 @@ public class ImageService {
         if (file.getSize() > MAX_FILE_SIZE) {
             throw new CustomException("파일 사이즈가 10MB를 초과했습니다.");
         }
+    }
+
+    private String getRemoveBlank(final String originalFilename) {
+        return originalFilename.replaceAll("\\s", "");
     }
 }
