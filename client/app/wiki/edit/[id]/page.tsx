@@ -45,11 +45,7 @@ export default async function WikiEditPage({ params }: { params: Params }) {
         </div>
       </div>
       {documentHistory ? (
-        <div className="bg-white rounded-lg overflow-hidden">
-          <div className="prose max-w-none mb-8">
-            <Editor documentHistory={documentHistory} />
-          </div>
-        </div>
+        <Editor documentHistory={documentHistory} />
       ) : (
         <div>
           <div className="bg-red-50 border border-red-200 rounded-lg p-4">
