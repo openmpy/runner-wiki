@@ -44,7 +44,7 @@ const Header = () => {
                 <span>최근 편집</span>
               </Link>
               <Link
-                href="/"
+                href="/wiki/new"
                 className="text-white text-lg font-bm-hanna hover:text-gray-200 flex items-center space-x-2 transition-colors duration-200"
               >
                 <FaEdit className="text-lg" />
@@ -106,7 +106,7 @@ const Header = () => {
                 <FaRegClock className="text-lg" />
               </Link>
               <Link
-                href="/"
+                href="/wiki/new"
                 className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
               >
                 <FaEdit className="text-lg" />

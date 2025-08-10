@@ -1,4 +1,5 @@
 export type DocumentStatus = "ACTIVE" | "READ_ONLY";
+export type DocumentCategory = "런너" | "길드";
 
 export interface PageResponse<T> {
   items: T;
@@ -11,7 +12,7 @@ export interface Document {
   documentId: string;
   documentHistoryId: string;
   title: string;
-  category: string;
+  category: DocumentCategory;
   author: string | null;
   content: string | null;
   status: DocumentStatus;

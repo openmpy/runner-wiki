@@ -1,5 +1,5 @@
 import { FaEye, FaPlus } from "react-icons/fa";
-import Button from "./Button";
+import Button from "../ui/Button";
 
 interface EditButtonProps {
   onClick?: () => void;

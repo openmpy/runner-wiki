@@ -1,6 +1,6 @@
-import BackButton from "@/components/ui/BackButton";
 import Badge from "@/components/ui/Badge";
-import EditButton from "@/components/ui/EditButton";
+import BackButton from "@/components/wiki/BackButton";
+import EditButton from "@/components/wiki/EditButton";
 import { DocumentStatus, PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
 import Link from "next/link";

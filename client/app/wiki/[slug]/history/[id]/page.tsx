@@ -1,6 +1,6 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
-import EditButton from "@/components/ui/EditButton";
+import EditButton from "@/components/wiki/EditButton";
 import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
 import Link from "next/link";

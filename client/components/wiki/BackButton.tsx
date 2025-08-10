@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FaArrowLeft } from "react-icons/fa";
-import Button from "./Button";
+import Button from "../ui/Button";
 
 interface BackButtonProps {
   className?: string;
