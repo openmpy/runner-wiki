@@ -19,3 +19,15 @@ export interface Document {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface DocumentHistory {
+  documentId: string;
+  documentHistoryId: string;
+  title: string;
+  category: DocumentCategory;
+  author: string;
+  content: string;
+  status: DocumentStatus;
+  createdAt: string;
+  updatedAt: string;
+}

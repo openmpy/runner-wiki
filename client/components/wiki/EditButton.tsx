@@ -1,24 +1,34 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { FaEye, FaPlus } from "react-icons/fa";
 import Button from "../ui/Button";
 
 interface EditButtonProps {
-  onClick?: () => void;
   className?: string;
   status?: "ACTIVE" | "READ_ONLY";
+  documentHistoryId?: string;
 }
 
 export default function EditButton({
-  onClick,
   className,
   status = "ACTIVE",
+  documentHistoryId,
 }: EditButtonProps) {
   const isDisabled = status === "READ_ONLY";
+  const router = useRouter();
+
+  const handleClick = () => {
+    if (documentHistoryId) {
+      router.push(`/wiki/edit/${documentHistoryId}`);
+    }
+  };
 
   return (
     <Button
       variant="primary"
       className={`flex items-center gap-2 ${className || ""}`}
-      onClick={onClick}
+      onClick={handleClick}
       disabled={isDisabled}
     >
       {status === "READ_ONLY" ? (

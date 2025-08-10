@@ -57,7 +57,10 @@ export default async function WikiHistoryIdPage({
                   <span className="hidden md:inline">편집기록</span>
                 </Button>
               </Link>
-              <EditButton status={document.status} />
+              <EditButton
+                status={document.status}
+                documentHistoryId={document.documentHistoryId}
+              />
             </div>
           </div>
           <div className="prose max-w-none mb-8">

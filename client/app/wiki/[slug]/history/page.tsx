@@ -60,7 +60,10 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
         <h1 className="font-bm-hanna text-2xl">편집 기록</h1>
         <div className="flex gap-2">
           <BackButton />
-          <EditButton status={histories?.items.status || "READ_ONLY"} />
+          <EditButton
+            status={histories?.items.status || "READ_ONLY"}
+            documentHistoryId={histories?.items.histories[0].documentHistoryId}
+          />
         </div>
       </div>
       {histories ? (
