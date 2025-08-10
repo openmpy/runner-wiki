@@ -31,7 +31,7 @@ public class DocumentService {
 
     @Transactional
     public DocumentCreateResponse createDocument(final DocumentCreateRequest request, final String clientIp) {
-        final DocumentCategory category = DocumentCategory.from(request.category());
+        final DocumentCategory category = DocumentCategory.of(request.category());
 
         if (documentRepository.existsByTitle_ValueAndCategory(request.title(), category)) {
             throw new CustomException("해당 카테고리에 이미 작성된 문서입니다.");

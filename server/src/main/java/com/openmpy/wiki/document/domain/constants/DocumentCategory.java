@@ -21,4 +21,11 @@ public enum DocumentCategory {
                 .findFirst()
                 .orElseThrow(() -> new CustomException("찾을 수 없는 문서 카테고리입니다."));
     }
+
+    public static DocumentCategory of(final String value) {
+        return Arrays.stream(DocumentCategory.values())
+                .filter(category -> category.getValue().equals(value))
+                .findFirst()
+                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 카테고리입니다."));
+    }
 }
