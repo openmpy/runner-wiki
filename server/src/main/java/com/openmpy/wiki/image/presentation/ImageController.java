@@ -1,5 +1,6 @@
 package com.openmpy.wiki.image.presentation;
 
+import com.openmpy.wiki.global.annotaion.PreventDuplicate;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
 import com.openmpy.wiki.image.application.ImageService;
 import com.openmpy.wiki.image.application.response.ImageUploadResponse;
@@ -18,6 +19,10 @@ public class ImageController {
 
     private final ImageService imageService;
 
+    @PreventDuplicate(keyExpression = "'image-upload' + '::' + "
+            + "T(com.openmpy.wiki.global.utils.ClientIpExtractor).getClientIp(#servletRequest) + '::' + "
+            + "#file.originalFilename + '::' + #file.size"
+    )
     @PostMapping
     public ResponseEntity<ImageUploadResponse> uploadImage(
             final MultipartFile file,
