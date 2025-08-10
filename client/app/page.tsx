@@ -17,6 +17,7 @@ export default function HomePage() {
             alt="런너위키"
             width={1002}
             height={400}
+            priority={true}
           />
         </Link>
 
