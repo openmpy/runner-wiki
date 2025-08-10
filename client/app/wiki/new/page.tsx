@@ -2,13 +2,15 @@
 
 import ToastEditor from "@/components/toast/ToastEditor";
 import Button from "@/components/ui/Button";
+import { DocumentCategory } from "@/libs/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function WikiNewPage() {
   const router = useRouter();
-  const [selectedCategory, setSelectedCategory] = useState<string>("runner");
-  const handleCategorySelect = (category: string) => {
+  const [selectedCategory, setSelectedCategory] =
+    useState<DocumentCategory>("런너");
+  const handleCategorySelect = (category: DocumentCategory) => {
     setSelectedCategory(category);
   };
 
@@ -25,18 +27,18 @@ export default function WikiNewPage() {
       <div className="flex flex-col gap-4">
         <div className="flex gap-2">
           <Button
-            variant={selectedCategory === "runner" ? "primary" : "secondary"}
+            variant={selectedCategory === "런너" ? "primary" : "secondary"}
             size="lg"
             className="flex-1"
-            onClick={() => handleCategorySelect("runner")}
+            onClick={() => handleCategorySelect("런너")}
           >
             런너
           </Button>
           <Button
-            variant={selectedCategory === "guild" ? "primary" : "secondary"}
+            variant={selectedCategory === "길드" ? "primary" : "secondary"}
             size="lg"
             className="flex-1"
-            onClick={() => handleCategorySelect("guild")}
+            onClick={() => handleCategorySelect("길드")}
           >
             길드
           </Button>
