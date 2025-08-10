@@ -1,12 +1,24 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function HomePage() {
   return (
     <div>
-      <h1 className="font-bm-hanna text-2xl mb-6">대문</h1>
+      <h1 className="font-bm-hanna text-2xl mb-4">대문</h1>
 
       <div className="flex flex-col gap-4">
-        <Image src="/images/home.png" alt="런너위키" width={400} height={400} />
+        <Link
+          href="https://tr.rhaon.co.kr/home"
+          target="_blank"
+          className="mb-2"
+        >
+          <Image
+            src="/images/home.jpg"
+            alt="런너위키"
+            width={1002}
+            height={400}
+          />
+        </Link>
 
         <div className="flex flex-col">
           <h2 className="font-bm-hanna text-xl mb-2">런너위키란?</h2>
