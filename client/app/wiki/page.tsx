@@ -8,7 +8,7 @@ async function getDocumentHistories(): Promise<PageResponse<
 > | null> {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents/latest?page=1`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/documents/latest?page=1`,
       {
         method: "GET",
         headers: {

@@ -40,7 +40,7 @@ const ToastEditor = ({
             formData.append("file", blob);
 
             const response = await fetch(
-              "http://localhost:8080/api/v1/images",
+              `${process.env.NEXT_PUBLIC_API_URL}/api/v1/images`,
               {
                 method: "POST",
                 body: formData,
@@ -57,7 +57,7 @@ const ToastEditor = ({
                 onImageUpload([...uploadedImageIds.current]);
               }
 
-              const imageUrl = `https://runner-wiki.s3.ap-northeast-2.amazonaws.com/images/${key}`;
+              const imageUrl = `${process.env.NEXT_PUBLIC_IMAGE_URL}/${key}`;
               callback(imageUrl);
             } else {
               console.error("이미지 업로드 실패");

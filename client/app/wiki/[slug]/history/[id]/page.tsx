@@ -14,7 +14,7 @@ async function getDocumentHistory(
 ): Promise<Document | null> {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents/histories/${documentHistoryId}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/api/v1/documents/histories/${documentHistoryId}`,
       {
         method: "GET",
         headers: {
