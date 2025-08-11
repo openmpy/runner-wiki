@@ -35,6 +35,12 @@ dependencies {
 
     // s3
     implementation("software.amazon.awssdk:s3:2.32.14")
+
+    // meilisearch
+    implementation("com.meilisearch.sdk:meilisearch-java:0.15.0")
+
+    // json
+    implementation("org.json:json:20250517")
 }
 
 tasks.withType<Test> {

@@ -5,6 +5,8 @@ import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.image.application.ImageService;
+import com.openmpy.wiki.search.application.SearchService;
+import com.openmpy.wiki.search.application.request.SearchAddRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,11 +17,17 @@ public class DocumentFacade {
 
     private final DocumentService documentService;
     private final ImageService imageService;
+    private final SearchService searchService;
 
     @Transactional
     public DocumentCreateResponse createDocument(final DocumentCreateRequest request, final String clientIp) {
         final DocumentCreateResponse response = documentService.createDocument(request, clientIp);
         imageService.uses(request.imageIds(), response.documentId());
+
+        final SearchAddRequest addRequest = new SearchAddRequest(
+                response.documentId(), request.title(), request.category()
+        );
+        searchService.addDocument("document", addRequest);
         return response;
     }
 
@@ -36,5 +44,6 @@ public class DocumentFacade {
     public void deleteDocument(final String documentId) {
         documentService.deleteDocument(documentId);
         imageService.delete(documentId);
+        searchService.deleteDocument("document", documentId);
     }
 }
