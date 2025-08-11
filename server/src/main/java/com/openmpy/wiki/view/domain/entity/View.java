@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @Entity
 @Table(name = "view")
-public class ViewCount {
+public class View {
 
     @Id
     private String documentId;
@@ -19,11 +19,11 @@ public class ViewCount {
     @Column
     private long count = 0L;
 
-    public static ViewCount init(final String documentId) {
-        final ViewCount viewCount = new ViewCount();
-        viewCount.documentId = documentId;
-        viewCount.count = 0L;
-        return viewCount;
+    public static View init(final String documentId) {
+        final View view = new View();
+        view.documentId = documentId;
+        view.count = 0L;
+        return view;
     }
 
     public void increment(final long count) {

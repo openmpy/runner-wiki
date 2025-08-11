@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.view.application.event.ViewEvent;
-import com.openmpy.wiki.view.domain.entity.ViewCount;
+import com.openmpy.wiki.view.domain.entity.View;
 import com.openmpy.wiki.view.domain.repository.ViewRepository;
 import java.time.Duration;
 import java.util.Objects;
@@ -52,7 +52,7 @@ public class ViewService {
     }
 
     @Transactional
-    public void syncDocumentViewCount() {
+    public void syncViewCount() {
         final String viewCountKey = String.format(DOCUMENT_VIEW_COUNT_KEY, "*");
         final Set<String> keys = redisTemplate.keys(viewCountKey);
 
@@ -66,12 +66,20 @@ public class ViewService {
 
             viewRepository.findById(documentId).ifPresentOrElse(it -> it.increment(viewCount),
                     () -> {
-                        final ViewCount documentViewCount = ViewCount.init(documentId);
-                        viewRepository.save(documentViewCount);
+                        final View view = View.init(documentId);
+                        viewRepository.save(view);
                     }
             );
             redisTemplate.delete(key);
         }
+    }
+
+    @Transactional
+    public void deleteView(final String documentId) {
+        viewRepository.findById(documentId).ifPresent(viewRepository::delete);
+
+        final String viewCountKey = String.format(DOCUMENT_VIEW_COUNT_KEY, documentId);
+        redisTemplate.delete(viewCountKey);
     }
 
     private boolean hasEmptyKeys(final Set<String> keys) {

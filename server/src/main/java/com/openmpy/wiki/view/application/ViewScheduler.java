@@ -11,7 +11,7 @@ public class ViewScheduler {
     private final ViewService viewService;
 
     @Scheduled(cron = "0 */10 * * * *")
-    public void syncDocumentViewCount() {
-        viewService.syncDocumentViewCount();
+    public void syncViewCount() {
+        viewService.syncViewCount();
     }
 }
