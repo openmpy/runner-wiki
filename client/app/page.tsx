@@ -49,12 +49,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="flex flex-col">
-          <h2 className="font-bm-hanna text-xl mb-2">문의 방법</h2>
+          <h2 className="font-bm-hanna text-xl mb-2">문의</h2>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-500">
-              문의 사항은 런너위키 디스코드 서버의{" "}
-              <span className="text-mint font-bold">#문의</span> 채널로
-              문의해주세요.
+              문의는 이메일을 통해 해주시길 바랍니다.
             </p>
           </div>
         </div>
