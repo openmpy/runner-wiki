@@ -6,7 +6,7 @@ export default function HomePage() {
     <div>
       <h1 className="font-bm-hanna text-2xl mb-4">대문</h1>
 
-      <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-6">
         <Link
           href="https://tr.rhaon.co.kr/home"
           target="_blank"

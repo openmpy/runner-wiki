@@ -22,7 +22,9 @@ async function getDocumentHistory(
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: {
+          revalidate: 60,
+        },
       }
     );
 
