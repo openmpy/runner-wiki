@@ -2,6 +2,7 @@
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
+import dynamic from "next/dynamic";
 import { useEffect, useRef } from "react";
 
 interface ToastEditorProps {
@@ -9,6 +10,13 @@ interface ToastEditorProps {
   onChange?: (content: string) => void;
   onImageUpload?: (imageIds: string[]) => void;
 }
+
+const ToastEditorImport = dynamic(
+  () => import("@toast-ui/react-editor").then((mod) => mod.Editor),
+  {
+    ssr: false,
+  }
+);
 
 const ToastEditor = ({
   initialValue,
@@ -74,7 +82,7 @@ const ToastEditor = ({
   }, [onImageUpload]);
 
   return (
-    <Editor
+    <ToastEditorImport
       ref={editorRef}
       initialValue={initialValue}
       initialEditType="wysiwyg"
