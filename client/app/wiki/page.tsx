@@ -14,7 +14,9 @@ async function getDocumentHistories(): Promise<PageResponse<
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: {
+          revalidate: 30,
+        },
       }
     );
 

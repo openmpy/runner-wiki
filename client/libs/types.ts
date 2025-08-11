@@ -20,6 +20,12 @@ export interface Document {
   updatedAt: string;
 }
 
+export interface PopularDocument {
+  documentId: string;
+  title: string;
+  updatedAt: string;
+}
+
 export interface DocumentHistory {
   documentId: string;
   documentHistoryId: string;

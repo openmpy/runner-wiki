@@ -119,7 +119,7 @@ const Header = () => {
     <header className="bg-mint border-b border-mint px-4 py-3">
       <div className="max-w-7xl mx-auto">
         {/* 데스크톱 레이아웃 (원래 디자인) */}
-        <div className="hidden md:flex items-center justify-between">
+        <div className="hidden lg:flex items-center justify-between">
           {/* 왼쪽 메뉴 */}
           <div className="flex items-center space-x-8">
             {/* 런너위키 로고 */}
@@ -202,7 +202,7 @@ const Header = () => {
         </div>
 
         {/* 모바일 레이아웃 */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           {/* 첫 번째 줄: 제목과 아이콘들 */}
           <div className="flex items-center justify-between mb-3">
             {/* 런너위키 로고 */}
