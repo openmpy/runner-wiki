@@ -1,6 +1,7 @@
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
+import ScrollToTop from "@/components/ui/ScrollToTop";
 import localFont from "next/font/local";
 import { Suspense } from "react";
 import "./globals.css";
@@ -57,6 +58,7 @@ export default function RootLayout({
           </div>
         </div>
         <Footer />
+        <ScrollToTop />
       </body>
     </html>
   );
