@@ -29,14 +29,16 @@ export default function RootLayout({
       >
         <Header />
         <div className="flex-1 py-5 lg:px-4">
-          <div className={`flex flex-col lg:flex-row gap-5 max-w-7xl mx-auto`}>
-            <main className="w-full p-5 bg-white border-y border-mint lg:border lg:rounded-lg lg:border-mint">
+          <div
+            className={`flex flex-col lg:flex-row gap-3 max-w-7xl mx-auto items-start`}
+          >
+            <main className="w-full p-5 bg-white border-y border-mint lg:border lg:rounded-lg lg:border-mint flex-1">
               {children}
             </main>
 
             <Suspense
               fallback={
-                <aside className="w-full lg:w-100 bg-white border-y border-mint lg:border p-5 lg:rounded-lg lg:border-mint lg:align-self-start lg:self-start">
+                <aside className="w-full lg:w-100 bg-white border-y border-mint lg:border p-5 lg:rounded-lg lg:border-mint lg:align-self-start lg:self-start lg:sticky lg:top-5">
                   <div>
                     <h1 className="font-bm-hanna text-2xl mb-4">인기 문서</h1>
                     <div className="flex flex-col gap-4">
