@@ -1,6 +1,7 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
 import EditButton from "@/components/wiki/EditButton";
+import { viewDocument } from "@/libs/api";
 import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
 import Link from "next/link";
@@ -37,6 +38,7 @@ async function getDocument(documentId: string): Promise<Document | null> {
 export default async function WikiSlugPage({ params }: { params: Params }) {
   const { slug } = await params;
   const document = await getDocument(slug);
+  await viewDocument(slug);
 
   return (
     <div>

@@ -1,6 +1,7 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
 import EditButton from "@/components/wiki/EditButton";
+import { viewDocument } from "@/libs/api";
 import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
 import Link from "next/link";
@@ -43,6 +44,7 @@ export default async function WikiHistoryIdPage({
 }) {
   const { slug, id } = await params;
   const document = await getDocumentHistory(id);
+  await viewDocument(slug);
 
   return (
     <div>
