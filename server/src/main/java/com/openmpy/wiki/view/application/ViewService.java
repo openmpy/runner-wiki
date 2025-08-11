@@ -1,5 +1,6 @@
 package com.openmpy.wiki.view.application;
 
+import com.openmpy.wiki.document.domain.repository.DocumentRepository;
 import com.openmpy.wiki.view.domain.entity.View;
 import com.openmpy.wiki.view.domain.repository.ViewRepository;
 import java.time.Duration;
@@ -20,6 +21,7 @@ public class ViewService {
     private static final String DOCUMENT_VIEW_COUNT_KEY = "document-view-count::%s";
 
     private final ViewRepository viewRepository;
+    private final DocumentRepository documentRepository;
     private final StringRedisTemplate redisTemplate;
 
     @Transactional
@@ -35,10 +37,13 @@ public class ViewService {
             final String documentId = key.split("::")[1];
             final Long viewCount = getViewCount(documentId);
 
-            viewRepository.findById(documentId).ifPresentOrElse(it -> it.increment(viewCount),
+            viewRepository.findById(documentId).ifPresentOrElse(
+                    it -> it.increment(viewCount),
                     () -> {
-                        final View view = View.init(documentId);
-                        viewRepository.save(view);
+                        if (documentRepository.existsById(documentId)) {
+                            final View view = View.init(documentId);
+                            viewRepository.save(view);
+                        }
                     }
             );
             redisTemplate.delete(key);
