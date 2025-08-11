@@ -39,3 +39,18 @@ export interface DocumentHistoryItem {
   size: number;
   createdAt: string;
 }
+
+export interface SearchResult {
+  id: string;
+  title: string;
+  category: DocumentCategory;
+}
+
+export interface SearchResponse {
+  hits: SearchResult[];
+  processingTimeMs: number;
+  query: string;
+  offset: number;
+  limit: number;
+  estimatedTotalHits: number;
+}
