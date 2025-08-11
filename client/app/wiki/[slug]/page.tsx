@@ -1,6 +1,7 @@
 import ToastViewer from "@/components/toast/ToastViwer";
 import Button from "@/components/ui/Button";
 import EditButton from "@/components/wiki/EditButton";
+import TableOfContents from "@/components/wiki/TableOfContents";
 import { viewDocument } from "@/libs/api";
 import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
@@ -59,6 +60,7 @@ export default async function WikiSlugPage({ params }: { params: Params }) {
               />
             </div>
           </div>
+          <TableOfContents content={document.content || ""} />
           <div className="prose max-w-none mb-8">
             <ToastViewer initialValue={document.content || ""} />
           </div>
