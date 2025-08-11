@@ -4,6 +4,7 @@ import com.openmpy.wiki.document.domain.repository.DocumentRepository;
 import com.openmpy.wiki.view.domain.entity.View;
 import com.openmpy.wiki.view.domain.repository.ViewRepository;
 import java.time.Duration;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,8 @@ public class ViewService {
     private static final String DOCUMENT_VIEW_DUPLICATION_KEY = "document-view::%s::%s";
     // document-view-count::documentId
     private static final String DOCUMENT_VIEW_COUNT_KEY = "document-view-count::%s";
+    // document-view-score::documentId
+    private static final String DOCUMENT_VIEW_SCORE_KEY = "document-view-score";
 
     private final ViewRepository viewRepository;
     private final DocumentRepository documentRepository;
@@ -68,6 +71,42 @@ public class ViewService {
         if (Boolean.TRUE.equals(duplicated)) {
             redisTemplate.opsForValue().increment(viewCountKey);
         }
+    }
+
+    public void incrementViewScore(final String documentId) {
+        redisTemplate.opsForZSet().incrementScore(DOCUMENT_VIEW_SCORE_KEY, documentId, 1.0);
+    }
+
+    public void decrementViewScore() {
+        final Set<String> documentIds = redisTemplate.opsForZSet().range(DOCUMENT_VIEW_SCORE_KEY, 0, -1);
+
+        if (hasEmptyKeys(documentIds)) {
+            return;
+        }
+
+        for (final String documentId : documentIds) {
+            final Double score = redisTemplate.opsForZSet().score(DOCUMENT_VIEW_SCORE_KEY, documentId);
+            if (score == null) {
+                continue;
+            }
+
+            final double decayedScore = score * 0.9;
+
+            if (decayedScore < 0.5) {
+                redisTemplate.opsForZSet().remove(DOCUMENT_VIEW_SCORE_KEY, documentId);
+            } else {
+                redisTemplate.opsForZSet().add(DOCUMENT_VIEW_SCORE_KEY, documentId, decayedScore);
+            }
+        }
+    }
+
+    public List<String> getViewScore() {
+        final Set<String> viewIds = redisTemplate.opsForZSet().reverseRange(DOCUMENT_VIEW_SCORE_KEY, 0, 9);
+        if (hasEmptyKeys(viewIds)) {
+            return List.of();
+        }
+
+        return List.copyOf(viewIds);
     }
 
     private boolean hasEmptyKeys(final Set<String> keys) {

@@ -5,6 +5,7 @@ import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
 import com.openmpy.wiki.document.application.response.DocumentHistoryReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentReadResponse;
+import com.openmpy.wiki.document.application.response.DocumentReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
 import com.openmpy.wiki.document.domain.entity.Document;
@@ -15,7 +16,12 @@ import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.global.snowflake.Snowflake;
 import com.openmpy.wiki.global.utils.PageLimitCalculator;
+import com.openmpy.wiki.view.application.ViewService;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -28,6 +34,7 @@ public class DocumentService {
     private final Snowflake snowflake = new Snowflake();
     private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
+    private final ViewService viewService;
 
     @Transactional
     public DocumentCreateResponse createDocument(final DocumentCreateRequest request, final String clientIp) {
@@ -138,6 +145,23 @@ public class DocumentService {
                         documentId, PageLimitCalculator.calculatePageLimit(page, size, 10)
                 )
         );
+    }
+
+    @Transactional(readOnly = true)
+    public DocumentReadResponses readPopularDocuments() {
+        final List<String> viewScore = viewService.getViewScore();
+
+        final Map<String, Document> documentMap = documentRepository.findByIdIn(viewScore)
+                .stream()
+                .collect(Collectors.toMap(Document::getId, Function.identity()));
+
+        final List<DocumentReadResponse> responses = viewScore.stream()
+                .map(documentMap::get)
+                .filter(Objects::nonNull) // 존재하지 않는 ID 필터링
+                .map(DocumentReadResponse::from)
+                .toList();
+
+        return new DocumentReadResponses(responses);
     }
 
     private Document getDocument(final String documentId) {

@@ -2,6 +2,7 @@ package com.openmpy.wiki.document.domain.repository;
 
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
 import com.openmpy.wiki.document.domain.entity.Document;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -38,4 +39,6 @@ public interface DocumentRepository extends JpaRepository<Document, String> {
             nativeQuery = true
     )
     Long count(@Param("limit") final int limit);
+
+    List<Document> findByIdIn(final Collection<String> ids);
 }

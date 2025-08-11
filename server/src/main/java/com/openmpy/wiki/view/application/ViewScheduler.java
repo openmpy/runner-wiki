@@ -14,4 +14,9 @@ public class ViewScheduler {
     public void syncViewCount() {
         viewService.syncViewCount();
     }
+
+    @Scheduled(cron = "0 0 * * * *")
+    public void decrementViewScore() {
+        viewService.decrementViewScore();
+    }
 }

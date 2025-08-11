@@ -19,6 +19,7 @@ public class ViewConsumer {
         try {
             final ViewEvent viewEvent = objectMapper.readValue(message, ViewEvent.class);
             viewService.incrementViewCount(viewEvent.documentId(), viewEvent.clientIp());
+            viewService.incrementViewScore(viewEvent.documentId());
         } catch (final Exception e) {
             throw new CustomException("view event parsing error: " + e.getMessage());
         }

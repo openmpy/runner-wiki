@@ -7,6 +7,7 @@ import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
 import com.openmpy.wiki.document.application.response.DocumentHistoryReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentReadResponse;
+import com.openmpy.wiki.document.application.response.DocumentReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
@@ -88,5 +89,11 @@ public class DocumentController {
             @RequestParam(value = "size", defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentService.readDocumentHistories(documentId, page, size));
+    }
+
+    @GetMapping("/popular")
+    public ResponseEntity<DocumentReadResponses> readPopularDocuments() {
+        final DocumentReadResponses responses = documentService.readPopularDocuments();
+        return ResponseEntity.ok(responses);
     }
 }
