@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @RequiredArgsConstructor
 @Component
-public class ViewListener {
+public class ViewConsumer {
 
     private final ViewService viewService;
     private final ObjectMapper objectMapper;

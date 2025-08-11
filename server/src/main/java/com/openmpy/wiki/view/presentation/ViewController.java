@@ -1,7 +1,7 @@
 package com.openmpy.wiki.view.presentation;
 
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
-import com.openmpy.wiki.view.application.ViewService;
+import com.openmpy.wiki.view.application.ViewProducer;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ViewController {
 
-    private final ViewService viewService;
+    private final ViewProducer viewProducer;
 
     @PostMapping("/documents/{documentId}/view")
     public ResponseEntity<Void> viewDocument(
@@ -23,7 +23,7 @@ public class ViewController {
             final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
-        viewService.viewDocument(documentId, clientIp);
+        viewProducer.viewDocument(documentId, clientIp);
         return ResponseEntity.noContent().build();
     }
 }
