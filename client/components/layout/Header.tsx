@@ -4,7 +4,13 @@ import SearchResults from "@/components/ui/SearchResults";
 import { SearchResponse, SearchResult } from "@/libs/types";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { FaEdit, FaRandom, FaRegClock, FaSearch } from "react-icons/fa";
+import {
+  FaDiscord,
+  FaEdit,
+  FaRandom,
+  FaRegClock,
+  FaSearch,
+} from "react-icons/fa";
 import { PiGraphBold } from "react-icons/pi";
 
 const Header = () => {
@@ -141,6 +147,14 @@ const Header = () => {
                 <FaEdit className="text-lg" />
                 <span>문서 작성</span>
               </Link>
+              <Link
+                href="https://discord.gg/NAtGdKrzkK"
+                target="_blank"
+                className="text-white text-lg font-bm-hanna hover:text-gray-200 flex items-center space-x-2 transition-colors duration-200"
+              >
+                <FaDiscord className="text-lg" />
+                <span>디스코드</span>
+              </Link>
             </nav>
           </div>
 
@@ -202,6 +216,13 @@ const Header = () => {
 
             {/* 아이콘들 */}
             <div className="flex items-center space-x-4">
+              <Link
+                href="https://discord.gg/NAtGdKrzkK"
+                target="_blank"
+                className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
+              >
+                <FaDiscord className="text-lg" />
+              </Link>
               <Link
                 href="/wiki"
                 className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
