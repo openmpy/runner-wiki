@@ -23,11 +23,7 @@ public class DocumentFacade {
     public DocumentCreateResponse createDocument(final DocumentCreateRequest request, final String clientIp) {
         final DocumentCreateResponse response = documentService.createDocument(request, clientIp);
         imageService.uses(request.imageIds(), response.documentId());
-
-        final SearchAddRequest addRequest = new SearchAddRequest(
-                response.documentId(), request.title(), request.category()
-        );
-        searchService.addDocument("document", addRequest);
+        addSearchDocument(request, response);
         return response;
     }
 
@@ -45,5 +41,12 @@ public class DocumentFacade {
         documentService.deleteDocument(documentId);
         imageService.delete(documentId);
         searchService.deleteDocument("document", documentId);
+    }
+
+    private void addSearchDocument(final DocumentCreateRequest request, final DocumentCreateResponse response) {
+        final SearchAddRequest addRequest = new SearchAddRequest(
+                response.documentId(), request.title(), request.category()
+        );
+        searchService.addDocument("document", addRequest);
     }
 }
