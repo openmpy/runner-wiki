@@ -65,13 +65,15 @@ jobs:
         uses: appleboy/ssh-action@v1
         env:
           COMPOSE: "/home/wiki/compose.yml"
-          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
           MEILI_MASTER_KEY: ${{ secrets.MEILI_MASTER_KEY }}
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKERHUB_USERNAME }}
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_SSH_USER }}
           key: ${{ secrets.EC2_SSH_PASSWORD }}
-          envs: COMPOSE,DOCKERHUB_USERNAME,MEILI_MASTER_KEY
+          envs: COMPOSE,MEILI_MASTER_KEY,DOCKERHUB_USERNAME,DOCKERHUB_TOKEN
           script: |
+            echo "$DOCKERHUB_TOKEN" | sudo docker login -u "$DOCKERHUB_USERNAME" --password-stdin
             sudo -E docker-compose -f $COMPOSE down --rmi all
             sudo -E docker-compose -f $COMPOSE up -d
