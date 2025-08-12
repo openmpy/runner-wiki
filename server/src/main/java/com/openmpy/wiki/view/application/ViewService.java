@@ -70,11 +70,8 @@ public class ViewService {
 
         if (Boolean.TRUE.equals(duplicated)) {
             redisTemplate.opsForValue().increment(viewCountKey);
+            redisTemplate.opsForZSet().incrementScore(DOCUMENT_VIEW_SCORE_KEY, documentId, 1.0);
         }
-    }
-
-    public void incrementViewScore(final String documentId) {
-        redisTemplate.opsForZSet().incrementScore(DOCUMENT_VIEW_SCORE_KEY, documentId, 1.0);
     }
 
     public void decrementViewScore() {
