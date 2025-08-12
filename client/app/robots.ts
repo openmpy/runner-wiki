@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://runner.wiki/sitemap.xml",
+    sitemap: "https://www.runner.wiki/sitemap.xml",
   };
 }
