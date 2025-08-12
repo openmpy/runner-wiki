@@ -2,9 +2,18 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import { Metadata } from "next";
 import localFont from "next/font/local";
 import { Suspense } from "react";
 import "./globals.css";
+
+export const metadata: Metadata = {
+  title: {
+    template: "%s - 런너위키",
+    default: "런너위키",
+  },
+  description: "누구나 자유롭게 기여할 수 있는 위키입니다.",
+};
 
 const bmHanna = localFont({
   src: "../public/fonts/BMHANNA_11yrs_otf.otf",

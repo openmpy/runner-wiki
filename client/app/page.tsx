@@ -1,5 +1,11 @@
+import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "대문 - 런너위키",
+  description: "누구나 자유롭게 기여할 수 있는 위키입니다.",
+};
 
 export default function HomePage() {
   return (

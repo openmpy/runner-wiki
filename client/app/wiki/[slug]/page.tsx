@@ -5,11 +5,25 @@ import TableOfContents from "@/components/wiki/TableOfContents";
 import { viewDocument } from "@/libs/api";
 import { Document } from "@/libs/types";
 import { formatKoreanDate } from "@/libs/utils";
+import { Metadata } from "next";
 import Link from "next/link";
 import { BsClock } from "react-icons/bs";
 import { FaHistory } from "react-icons/fa";
 
 type Params = Promise<{ slug: string }>;
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Params;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const document = await getDocument(slug);
+
+  return {
+    title: document?.title || "문서 정보",
+  };
+}
 
 async function getDocument(documentId: string): Promise<Document | null> {
   try {

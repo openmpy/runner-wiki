@@ -1,7 +1,12 @@
 import Editor from "@/components/wiki/Editor";
 import { DocumentHistory } from "@/libs/types";
+import { Metadata } from "next";
 
 type Params = Promise<{ id: string }>;
+
+export const metadata: Metadata = {
+  title: "문서 편집",
+};
 
 async function getDocumentHistory(
   documentHistoryId: string

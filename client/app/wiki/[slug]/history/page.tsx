@@ -6,6 +6,11 @@ import {
   DocumentStatus,
   PageResponse,
 } from "@/libs/types";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "편집 기록",
+};
 
 type Params = Promise<{ slug: string }>;
 

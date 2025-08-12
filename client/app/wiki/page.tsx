@@ -1,7 +1,12 @@
 import Badge from "@/components/ui/Badge";
 import { Document, PageResponse } from "@/libs/types";
 import { formatRelativeTime } from "@/libs/utils";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "최근 편집",
+};
 
 async function getDocumentHistories(): Promise<PageResponse<
   Document[]
