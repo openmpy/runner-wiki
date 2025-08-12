@@ -35,10 +35,10 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`antialiased ${bmHanna.variable} ${pretendard.variable} font-pretendard min-h-screen flex flex-col bg-gray-100`}
+        className={`antialiased ${bmHanna.variable} ${pretendard.variable} font-pretendard min-h-screen flex flex-col bg-mint`}
       >
         <Header />
-        <div className="flex-1 py-5 lg:px-4">
+        <div className="flex-1 py-5 lg:px-4 bg-gray-100">
           <div
             className={`flex flex-col lg:flex-row gap-3 max-w-7xl mx-auto items-start`}
           >
