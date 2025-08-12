@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 public final class ClientIpExtractor {
 
     private static final String[] HEADERS = new String[]{
+            "CF-Connecting-IP",
             "X-Forwarded-For",
             "Proxy-Client-IP",
             "WL-Proxy-Client-IP",
