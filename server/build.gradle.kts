@@ -48,3 +48,11 @@ dependencies {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.named<Jar>("jar") {
+    enabled = false
+}
+
+tasks.bootJar {
+    archiveFileName.set("app.jar")
+}
