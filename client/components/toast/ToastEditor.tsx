@@ -3,7 +3,7 @@
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import dynamic from "next/dynamic";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 interface ToastEditorProps {
   initialValue: string;
@@ -25,6 +25,7 @@ const ToastEditor = ({
 }: ToastEditorProps) => {
   const editorRef = useRef<Editor>(null);
   const uploadedImageIds = useRef<string[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
 
   useEffect(() => {
     if (editorRef.current && onChange) {
@@ -44,6 +45,7 @@ const ToastEditor = ({
         "addImageBlobHook",
         async (blob: File, callback: (url: string) => void) => {
           try {
+            setIsUploading(true);
             const formData = new FormData();
             formData.append("file", blob);
 
@@ -74,6 +76,8 @@ const ToastEditor = ({
           } catch (error) {
             console.error("이미지 업로드 중 오류 발생:", error);
             callback("");
+          } finally {
+            setIsUploading(false);
           }
           return false;
         }
@@ -82,22 +86,32 @@ const ToastEditor = ({
   }, [onImageUpload]);
 
   return (
-    <ToastEditorImport
-      ref={editorRef}
-      initialValue={initialValue}
-      initialEditType="wysiwyg"
-      hideModeSwitch={false}
-      previewStyle="vertical"
-      height="500px"
-      toolbarItems={[
-        ["heading", "bold", "italic", "strike"],
-        ["hr", "quote"],
-        ["ul", "ol", "task", "indent", "outdent"],
-        ["table", "image", "link"],
-        ["code", "codeblock"],
-        ["scrollSync"],
-      ]}
-    />
+    <>
+      {isUploading && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 flex flex-col items-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint mb-4"></div>
+            <p className="font-bm-hanna">이미지 업로드 중...</p>
+          </div>
+        </div>
+      )}
+      <ToastEditorImport
+        ref={editorRef}
+        initialValue={initialValue}
+        initialEditType="wysiwyg"
+        hideModeSwitch={false}
+        previewStyle="vertical"
+        height="500px"
+        toolbarItems={[
+          ["heading", "bold", "italic", "strike"],
+          ["hr", "quote"],
+          ["ul", "ol", "task", "indent", "outdent"],
+          ["table", "image", "link"],
+          ["code", "codeblock"],
+          ["scrollSync"],
+        ]}
+      />
+    </>
   );
 };
 
