@@ -44,11 +44,9 @@ services:
       - ./meilisearch/data:/meili_data
     networks:
       - runner-wiki-network
-  server:
+  springboot:
     container_name: springboot
-    build:
-      context: ./server
-      dockerfile: Dockerfile
+    image: ${DOCKERHUB_USERNAME}/wiki-server:latest
     restart: unless-stopped
     ports:
       - 8080:8080
