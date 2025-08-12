@@ -128,14 +128,14 @@ const Header = () => {
             {/* 메뉴 항목들 */}
             <nav className="flex items-center space-x-6">
               <Link
-                href="/wiki"
+                href="/document"
                 className="text-white text-lg font-bm-hanna hover:text-gray-200 flex items-center space-x-2 transition-colors duration-200"
               >
                 <FaRegClock className="text-lg" />
                 <span>최근 편집</span>
               </Link>
               <Link
-                href="/wiki/new"
+                href="/document/new"
                 className="text-white text-lg font-bm-hanna hover:text-gray-200 flex items-center space-x-2 transition-colors duration-200"
               >
                 <FaEdit className="text-lg" />
@@ -203,13 +203,13 @@ const Header = () => {
             {/* 아이콘들 */}
             <div className="flex items-center space-x-4">
               <Link
-                href="/wiki"
+                href="/document"
                 className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
               >
                 <FaRegClock className="text-lg" />
               </Link>
               <Link
-                href="/wiki/new"
+                href="/document/new"
                 className="text-white hover:text-gray-200 transition-colors duration-200 p-2"
               >
                 <FaEdit className="text-lg" />

@@ -68,7 +68,7 @@ export default async function WikiHistoryIdPage({
           <div className="flex justify-between items-center mb-6">
             <h1 className="font-bm-hanna text-2xl">{document.title}</h1>
             <div className="flex gap-2">
-              <Link href={`/wiki/${slug}/history`}>
+              <Link href={`/document/${slug}/history`}>
                 <Button variant="secondary" className="flex items-center gap-2">
                   <FaHistory className="md:hidden" />
                   <span className="hidden md:inline">편집기록</span>

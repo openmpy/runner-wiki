@@ -50,7 +50,7 @@ export default function Editor({
       if (response.ok) {
         const data = await response.json();
         alert("문서가 성공적으로 편집되었습니다.");
-        router.push(`/wiki/${data.documentId}`);
+        router.push(`/document/${data.documentId}`);
       } else {
         const error = await response.json();
         alert(`${error.message}`);

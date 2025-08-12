@@ -51,7 +51,7 @@ const Sidebar = async () => {
                     {index + 1}.
                   </span>
                   <Link
-                    href={`/wiki/${doc.documentId}`}
+                    href={`/document/${doc.documentId}`}
                     className="truncate hover:underline"
                   >
                     {doc.title}

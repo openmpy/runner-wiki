@@ -20,7 +20,7 @@ const SearchResults = ({
       {results.map((result) => (
         <Link
           key={result.id}
-          href={`/wiki/${result.id}`}
+          href={`/document/${result.id}`}
           onClick={onResultClick}
           className="block px-4 py-3 hover:bg-gray-50 border-b border-gray-100 last:border-b-0 transition-colors duration-200"
         >

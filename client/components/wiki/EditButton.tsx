@@ -20,7 +20,7 @@ export default function EditButton({
 
   const handleClick = () => {
     if (documentHistoryId) {
-      router.push(`/wiki/edit/${documentHistoryId}`);
+      router.push(`/document/edit/${documentHistoryId}`);
     }
   };
 

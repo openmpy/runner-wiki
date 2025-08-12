@@ -56,7 +56,7 @@ export default async function WikiPage() {
                 >
                   <div className="flex items-start justify-between mb-3">
                     <Link
-                      href={`/wiki/${item.documentId}`}
+                      href={`/document/${item.documentId}`}
                       className="text-lg font-medium text-gray-900 hover:underline flex-1 mr-3"
                     >
                       {item.title}
@@ -104,7 +104,7 @@ export default async function WikiPage() {
                     >
                       <td className="px-6 py-3 whitespace-nowrap">
                         <Link
-                          href={`/wiki/${item.documentId}`}
+                          href={`/document/${item.documentId}`}
                           className="block text-sm font-medium text-gray-900 hover:underline"
                         >
                           {item.title}

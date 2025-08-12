@@ -103,7 +103,7 @@ export default function HistoryList({
             >
               <div className="flex items-start justify-between mb-3">
                 <Link
-                  href={`/wiki/${documentId}/history/${item.documentHistoryId}`}
+                  href={`/document/${documentId}/history/${item.documentHistoryId}`}
                   className="text-lg font-medium text-gray-900 hover:underline flex-1 mr-3 block w-full h-full"
                 >
                   {item.author}
@@ -156,7 +156,7 @@ export default function HistoryList({
                   </td>
                   <td className="px-6 py-3 whitespace-nowrap text-center">
                     <Link
-                      href={`/wiki/${documentId}/history/${item.documentHistoryId}`}
+                      href={`/document/${documentId}/history/${item.documentHistoryId}`}
                       className="text-sm font-medium text-gray-900 hover:underline transition-all block w-full h-full"
                     >
                       {item.author}
