@@ -3,7 +3,7 @@ name: Deploy Server to EC2
 on:
   push:
     branches:
-      - main
+      - deploy/server
 
 jobs:
   deploy:
@@ -57,6 +57,6 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_SSH_USER }}
-          password: ${{ secrets.EC2_SSH_PASSWORD }}
+          key: ${{ secrets.EC2_SSH_PASSWORD }}
           source: "compose.yml"
           target: "/home/wiki"
