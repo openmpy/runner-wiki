@@ -110,7 +110,7 @@ const Header = () => {
   };
 
   return (
-    <header className="bg-mint border-b border-mint px-4 py-3">
+    <header className="bg-mint px-4 py-3">
       <div className="max-w-7xl mx-auto">
         {/* 데스크톱 레이아웃 (원래 디자인) */}
         <div className="hidden lg:flex items-center justify-between">
@@ -151,6 +151,7 @@ const Header = () => {
               type="button"
               onClick={handleShuffle}
               className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200"
+              aria-label="셔플"
             >
               <FaRandom className="text-mint text-lg" />
             </button>
@@ -168,6 +169,7 @@ const Header = () => {
                   <button
                     type="submit"
                     className="absolute right-2 text-gray-400 p-2 hover:text-mint transition-colors duration-200"
+                    aria-label="검색"
                   >
                     {isSearching ? (
                       <div className="w-4 h-4 border-2 border-gray-300 border-t-mint rounded-full animate-spin"></div>
@@ -224,6 +226,7 @@ const Header = () => {
               type="button"
               onClick={handleShuffle}
               className="w-8 h-8 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
+              aria-label="셔플"
             >
               <FaRandom className="text-mint text-sm" />
             </button>
@@ -241,6 +244,7 @@ const Header = () => {
                   <button
                     type="submit"
                     className="absolute right-1.5 text-gray-400 p-1.5 hover:text-mint transition-colors duration-200"
+                    aria-label="검색"
                   >
                     {isSearching ? (
                       <div className="w-3 h-3 border-2 border-gray-300 border-t-mint rounded-full animate-spin"></div>
