@@ -2,6 +2,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import Sidebar from "@/components/layout/Sidebar";
 import ScrollToTop from "@/components/ui/ScrollToTop";
+import { Analytics } from "@vercel/analytics/react";
 import { Metadata } from "next";
 import localFont from "next/font/local";
 import { Suspense } from "react";
@@ -68,6 +69,7 @@ export default function RootLayout({
         </div>
         <Footer />
         <ScrollToTop />
+        <Analytics />
       </body>
     </html>
   );
