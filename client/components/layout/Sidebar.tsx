@@ -56,9 +56,7 @@ const Sidebar = async () => {
                   </Link>
                 </div>
                 <span className="text-xs text-gray-500">
-                  {doc.updatedAt
-                    ? formatRelativeTime2(doc.updatedAt)
-                    : "최근 수정됨"}
+                  {formatRelativeTime2(doc.updatedAt)}
                 </span>
               </div>
             ))

@@ -3,6 +3,9 @@ export function formatRelativeTime(dateString: string): string {
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
 
+  console.log(now.getTime(), date.getTime());
+  console.log(diffInSeconds);
+
   // 10초 미만
   if (diffInSeconds < 10) {
     return "방금 전";
@@ -39,6 +42,9 @@ export function formatRelativeTime2(dateString: string): string {
   const date = new Date(dateString);
   const now = new Date();
   const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  console.log(now.getTime(), date.getTime());
+  console.log(diffInSeconds);
 
   // 10초 미만
   if (diffInSeconds < 10) {
