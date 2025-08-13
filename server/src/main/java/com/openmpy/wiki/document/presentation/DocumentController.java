@@ -96,4 +96,10 @@ public class DocumentController {
         final DocumentReadResponses responses = documentService.readPopularDocuments();
         return ResponseEntity.ok(responses);
     }
+
+    @GetMapping("/random")
+    public ResponseEntity<DocumentReadResponse> readRandomDocument() {
+        final DocumentReadResponse response = documentService.readRandomDocument();
+        return ResponseEntity.ok(response);
+    }
 }

@@ -164,6 +164,14 @@ public class DocumentService {
         return new DocumentReadResponses(responses);
     }
 
+    @Transactional(readOnly = true)
+    public DocumentReadResponse readRandomDocument() {
+        final Document document = documentRepository.findRandomDocument().orElseThrow(
+                () -> new CustomException("문서가 존재하지 않습니다.")
+        );
+        return DocumentReadResponse.from(document);
+    }
+
     private Document getDocument(final String documentId) {
         return documentRepository.findById(documentId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 번호입니다.")

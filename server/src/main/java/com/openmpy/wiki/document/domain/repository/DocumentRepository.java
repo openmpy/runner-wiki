@@ -17,6 +17,12 @@ public interface DocumentRepository extends JpaRepository<Document, String> {
     Optional<Document> findByIdWithHistory(@Param("id") final String id);
 
     @Query(
+            value = "SELECT * FROM document ORDER BY RAND() LIMIT 1",
+            nativeQuery = true
+    )
+    Optional<Document> findRandomDocument();
+
+    @Query(
             value = "SELECT d.id, d.title, d.category, d.status, d.created_at, d.updated_at " +
                     "FROM (" +
                     "  SELECT id FROM document " +
