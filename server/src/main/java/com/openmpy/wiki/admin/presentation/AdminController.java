@@ -2,6 +2,7 @@ package com.openmpy.wiki.admin.presentation;
 
 import com.openmpy.wiki.admin.application.AdminService;
 import com.openmpy.wiki.admin.application.request.AdminLoginRequest;
+import com.openmpy.wiki.admin.application.response.AdminLoginResponse;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,11 @@ public class AdminController {
     private final AdminService adminService;
 
     @PostMapping("/login")
-    public ResponseEntity<Void> login(
+    public ResponseEntity<AdminLoginResponse> login(
             @RequestBody final AdminLoginRequest request, final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
-        adminService.login(request, clientIp);
-        return ResponseEntity.noContent().build();
+        final AdminLoginResponse response = adminService.login(request, clientIp);
+        return ResponseEntity.ok(response);
     }
 }

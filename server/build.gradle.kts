@@ -43,6 +43,11 @@ dependencies {
 
     // json
     implementation("org.json:json:20250517")
+
+    // jwt
+    implementation("io.jsonwebtoken:jjwt:0.9.1")
+    implementation("javax.xml.bind:jaxb-api:2.3.1")
+    implementation("com.auth0:java-jwt:4.4.0")
 }
 
 tasks.withType<Test> {
