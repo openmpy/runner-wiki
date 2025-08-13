@@ -1,11 +1,17 @@
 package com.openmpy.wiki.admin.presentation;
 
+import static com.openmpy.wiki.auth.application.JwtService.ACCESS_TOKEN;
+
 import com.openmpy.wiki.admin.application.AdminService;
 import com.openmpy.wiki.admin.application.request.AdminLoginRequest;
 import com.openmpy.wiki.admin.application.response.AdminLoginResponse;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
+import com.openmpy.wiki.global.utils.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,12 +25,16 @@ public class AdminController {
 
     private final AdminService adminService;
 
+    @Value("${cookie.domain}")
+    private String domain;
+
     @PostMapping("/login")
     public ResponseEntity<AdminLoginResponse> login(
             @RequestBody final AdminLoginRequest request, final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         final AdminLoginResponse response = adminService.login(request, clientIp);
-        return ResponseEntity.ok(response);
+        final ResponseCookie cookie = CookieManager.createCookie(ACCESS_TOKEN, response.jwt(), domain);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }
 }

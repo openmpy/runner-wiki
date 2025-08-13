@@ -13,6 +13,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class JwtService {
 
+    public static final String ACCESS_TOKEN = "access-token";
+
     private final JwtProperties jwtProperties;
 
     public String createToken(final Map<String, Object> claims) {
