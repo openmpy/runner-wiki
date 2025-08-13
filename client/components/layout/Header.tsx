@@ -1,10 +1,11 @@
 "use client";
 
 import SearchResults from "@/components/ui/SearchResults";
+import ShuffleButton from "@/components/ui/ShuffleButton";
 import { SearchResponse, SearchResult } from "@/libs/types";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
-import { FaEdit, FaRandom, FaRegClock, FaSearch } from "react-icons/fa";
+import { FaEdit, FaRegClock, FaSearch } from "react-icons/fa";
 import { PiGraphBold } from "react-icons/pi";
 
 const Header = () => {
@@ -104,11 +105,6 @@ const Header = () => {
     }, 100);
   };
 
-  const handleShuffle = () => {
-    console.log("셔플 버튼 클릭");
-    // 셔플 로직 구현
-  };
-
   return (
     <header className="bg-mint px-4 py-3">
       <div className="max-w-7xl mx-auto">
@@ -147,14 +143,7 @@ const Header = () => {
           {/* 검색바 */}
           <div className="flex items-center space-x-3">
             {/* 셔플 버튼 */}
-            <button
-              type="button"
-              onClick={handleShuffle}
-              className="w-10 h-10 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200"
-              aria-label="셔플"
-            >
-              <FaRandom className="text-mint text-lg" />
-            </button>
+            <ShuffleButton />
 
             <div ref={searchContainerRef} className="relative">
               <form onSubmit={handleSearch} className="relative">
@@ -222,14 +211,7 @@ const Header = () => {
           {/* 두 번째 줄: 셔플과 검색바 */}
           <div className="flex items-center space-x-3">
             {/* 셔플 버튼 */}
-            <button
-              type="button"
-              onClick={handleShuffle}
-              className="w-8 h-8 bg-white rounded-lg flex items-center justify-center border border-transparent hover:bg-gray-200 transition-colors duration-200 flex-shrink-0"
-              aria-label="셔플"
-            >
-              <FaRandom className="text-mint text-sm" />
-            </button>
+            <ShuffleButton size="small" />
 
             <div ref={searchContainerRef} className="relative flex-1">
               <form onSubmit={handleSearch} className="relative">
