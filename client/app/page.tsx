@@ -5,6 +5,26 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "대문 - 런너위키",
   description: "누구나 자유롭게 기여할 수 있는 위키입니다.",
+  openGraph: {
+    title: "런너위키",
+    description: "누구나 자유롭게 기여할 수 있는 위키입니다.",
+    images: [
+      {
+        url: "/images/text.png",
+        width: 1200,
+        height: 630,
+        alt: "런너위키",
+      },
+    ],
+    type: "website",
+    locale: "ko_KR",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "런너위키",
+    description: "누구나 자유롭게 기여할 수 있는 위키입니다.",
+    images: ["/images/text.png"],
+  },
 };
 
 export default function HomePage() {
