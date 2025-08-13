@@ -1,6 +1,6 @@
 import { SearchResult } from "@/libs/types";
 import Link from "next/link";
-import Badge from "./Badge";
+import Badge from "../ui/Badge";
 
 interface SearchResultsProps {
   results: SearchResult[];

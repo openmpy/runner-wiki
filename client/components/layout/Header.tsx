@@ -1,7 +1,7 @@
 "use client";
 
-import SearchResults from "@/components/ui/SearchResults";
-import ShuffleButton from "@/components/ui/ShuffleButton";
+import SearchResults from "@/components/wiki/SearchResults";
+import ShuffleButton from "@/components/wiki/ShuffleButton";
 import { SearchResponse, SearchResult } from "@/libs/types";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
