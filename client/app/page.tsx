@@ -78,7 +78,14 @@ export default function HomePage() {
           <h2 className="font-bm-hanna text-xl mb-2">문의</h2>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-500">
-              문의는 이메일을 통해 해주시길 바랍니다.
+              문의는{" "}
+              <Link
+                href="mailto:runnerwiki@proton.me"
+                className="text-mint hover:underline"
+              >
+                #이메일
+              </Link>
+              을 통해 해주시길 바랍니다.
             </p>
           </div>
         </div>
