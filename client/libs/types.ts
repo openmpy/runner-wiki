@@ -10,13 +10,13 @@ export interface PageResponse<T> {
 
 export interface Document {
   documentId: string;
-  documentHistoryId: string | null;
+  documentHistoryId: string;
   title: string;
   category: DocumentCategory;
-  author: string | null;
-  content: string | null;
+  author: string;
+  content: string;
   status: DocumentStatus;
-  createdAt: string | null;
+  createdAt: string;
   updatedAt: string;
 }
 

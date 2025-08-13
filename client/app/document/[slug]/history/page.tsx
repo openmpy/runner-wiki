@@ -61,7 +61,7 @@ export default async function WikiHistoryPage({ params }: { params: Params }) {
           <BackButton />
           <EditButton
             status={histories?.items.status || "READ_ONLY"}
-            documentHistoryId={histories?.items.histories[0]?.documentHistoryId}
+            documentHistoryId={histories?.items.histories[0].documentHistoryId}
           />
         </div>
       </div>

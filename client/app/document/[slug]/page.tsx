@@ -70,7 +70,7 @@ export default async function WikiSlugPage({ params }: { params: Params }) {
               </Link>
               <EditButton
                 status={document.status}
-                documentHistoryId={document.documentHistoryId || ""}
+                documentHistoryId={document.documentHistoryId}
               />
             </div>
           </div>
