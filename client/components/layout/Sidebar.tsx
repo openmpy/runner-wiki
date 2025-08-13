@@ -11,7 +11,9 @@ async function getPopularDocuments(): Promise<PopularDocument[]> {
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-store",
+        next: {
+          revalidate: 60,
+        },
       }
     );
 
