@@ -2,8 +2,8 @@
 
 ## 기술 스택
 - Client
-  - Typescript
-  - Next.js
+  - Typescript 5.9.2
+  - Next.js 15
 - Server
   - Java 21
   - Springboot 3.5.4
