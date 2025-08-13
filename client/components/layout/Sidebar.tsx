@@ -1,5 +1,5 @@
 import { PopularDocument } from "@/libs/types";
-import { formatRelativeTime2 } from "@/libs/utils";
+import { formatRelativeCacheTime2 } from "@/libs/utils";
 import Link from "next/link";
 
 async function getPopularDocuments(): Promise<PopularDocument[]> {
@@ -58,7 +58,7 @@ const Sidebar = async () => {
                   </Link>
                 </div>
                 <span className="text-xs text-gray-500">
-                  {formatRelativeTime2(doc.updatedAt)}
+                  {formatRelativeCacheTime2(doc.updatedAt)}
                 </span>
               </div>
             ))

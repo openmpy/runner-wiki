@@ -1,6 +1,6 @@
 import Badge from "@/components/ui/Badge";
 import { Document, PageResponse } from "@/libs/types";
-import { formatRelativeTime } from "@/libs/utils";
+import { formatRelativeCacheTime } from "@/libs/utils";
 import { Metadata } from "next";
 import Link from "next/link";
 
@@ -72,7 +72,7 @@ export default async function WikiPage() {
                     )}
                   </div>
                   <div className="text-sm text-gray-500">
-                    {formatRelativeTime(item.updatedAt)}
+                    {formatRelativeCacheTime(item.updatedAt)}
                   </div>
                 </div>
               ))}
@@ -122,7 +122,7 @@ export default async function WikiPage() {
                         )}
                       </td>
                       <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-                        {formatRelativeTime(item.updatedAt)}
+                        {formatRelativeCacheTime(item.updatedAt)}
                       </td>
                     </tr>
                   ))}
