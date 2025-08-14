@@ -68,6 +68,10 @@ public class Document {
         updatedAt = LocalDateTime.now();
     }
 
+    public void updateStatus(final DocumentStatus status) {
+        this.status = status;
+    }
+
     public String getTitle() {
         return title.getValue();
     }

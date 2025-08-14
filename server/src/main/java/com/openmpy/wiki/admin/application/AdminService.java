@@ -37,6 +37,13 @@ public class AdminService {
     }
 
     @Transactional
+    public void updateDocumentStatus(final String documentId, final String clientIp) {
+        final String id = snowflake.nextId();
+        final AdminLog adminLog = AdminLog.create(id, AdminLogType.UPDATE_DOCUMENT_STATUS, documentId, clientIp);
+        adminLogRepository.save(adminLog);
+    }
+
+    @Transactional
     public void deleteDocument(final String documentId, final String clientIp) {
         final String id = snowflake.nextId();
         final AdminLog adminLog = AdminLog.create(id, AdminLogType.DELETE_DOCUMENT, documentId, clientIp);

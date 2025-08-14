@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public enum AdminLogType {
 
-    LOGIN, DELETE_DOCUMENT, READ_ONLY_DOCUMENT, DELETE_DOCUMENT_HISTORY;
+    LOGIN, DELETE_DOCUMENT, UPDATE_DOCUMENT_STATUS, DELETE_DOCUMENT_HISTORY;
 
     public static AdminLogType from(final String value) {
         return Arrays.stream(values())

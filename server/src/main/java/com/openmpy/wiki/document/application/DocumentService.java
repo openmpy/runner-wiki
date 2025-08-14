@@ -8,6 +8,7 @@ import com.openmpy.wiki.document.application.response.DocumentReadResponse;
 import com.openmpy.wiki.document.application.response.DocumentReadResponses;
 import com.openmpy.wiki.document.application.response.DocumentUpdateResponse;
 import com.openmpy.wiki.document.domain.constants.DocumentCategory;
+import com.openmpy.wiki.document.domain.constants.DocumentStatus;
 import com.openmpy.wiki.document.domain.entity.Document;
 import com.openmpy.wiki.document.domain.entity.DocumentHistory;
 import com.openmpy.wiki.document.domain.repository.DocumentHistoryRepository;
@@ -67,6 +68,13 @@ public class DocumentService {
         document.addHistory(documentHistory);
 
         return new DocumentUpdateResponse(documentId);
+    }
+
+    @Transactional
+    public void updateDocumentStatus(final String documentId, final String status) {
+        final Document document = getDocument(documentId);
+        final DocumentStatus documentStatus = DocumentStatus.from(status);
+        document.updateStatus(documentStatus);
     }
 
     @Transactional
