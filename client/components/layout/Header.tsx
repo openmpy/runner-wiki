@@ -28,7 +28,9 @@ const Header = () => {
       const response = await fetch(
         `${
           process.env.NEXT_PUBLIC_API_URL
-        }/api/v1/search/search?uid=document&query=${encodeURIComponent(query)}`,
+        }/api/v1/search/document?uid=document&query=${encodeURIComponent(
+          query
+        )}`,
         {
           method: "GET",
           headers: {
