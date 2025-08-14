@@ -37,6 +37,20 @@ public interface DocumentRepository extends JpaRepository<Document, String> {
     );
 
     @Query(
+            value = "SELECT d.id, d.title, d.category, d.status, d.created_at, d.updated_at " +
+                    "FROM (" +
+                    "  SELECT id FROM document " +
+                    "  ORDER BY created_at DESC " +
+                    "  LIMIT :limit OFFSET :offset" +
+                    ") t LEFT JOIN document d ON t.id = d.id",
+            nativeQuery = true
+    )
+    List<Document> findAllOrderByCreatedAtDesc(
+            @Param("offset") final int offset,
+            @Param("limit") final int limit
+    );
+
+    @Query(
             value = "SELECT count(*) " +
                     "FROM (" +
                     "  SELECT id FROM document " +

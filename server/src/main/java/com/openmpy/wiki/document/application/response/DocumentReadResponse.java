@@ -25,7 +25,7 @@ public record DocumentReadResponse(
                 null,
                 null,
                 document.getStatus().name(),
-                null,
+                document.getCreatedAt(),
                 document.getUpdatedAt()
         );
     }

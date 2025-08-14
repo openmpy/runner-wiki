@@ -136,6 +136,23 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
+    public PageResponse<List<DocumentReadResponse>> readDocuments(
+            final int page, final int size
+    ) {
+        final List<DocumentReadResponse> responses = documentRepository
+                .findAllOrderByCreatedAtDesc((page - 1) * size, size).stream()
+                .map(DocumentReadResponse::from)
+                .toList();
+
+        return new PageResponse<>(
+                responses,
+                page,
+                size,
+                documentRepository.count(PageLimitCalculator.calculatePageLimit(page, size, 10))
+        );
+    }
+
+    @Transactional(readOnly = true)
     public PageResponse<DocumentHistoryReadResponses> readDocumentHistories(
             final String documentId, final int page, final int size
     ) {

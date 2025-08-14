@@ -7,15 +7,19 @@ import com.openmpy.wiki.admin.application.request.AdminLoginRequest;
 import com.openmpy.wiki.admin.application.response.AdminLoginResponse;
 import com.openmpy.wiki.document.application.DocumentFacade;
 import com.openmpy.wiki.document.application.DocumentService;
+import com.openmpy.wiki.document.application.response.DocumentReadResponse;
+import com.openmpy.wiki.global.dto.PageResponse;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
 import com.openmpy.wiki.global.utils.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -81,5 +85,13 @@ public class AdminController {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         adminService.deleteDocumentHistory(documentHistoryId, clientIp);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping("/documents")
+    public ResponseEntity<PageResponse<List<DocumentReadResponse>>> readDocuments(
+            @RequestParam("page") final int page,
+            @RequestParam(value = "size", defaultValue = "100", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentService.readDocuments(page, size));
     }
 }
