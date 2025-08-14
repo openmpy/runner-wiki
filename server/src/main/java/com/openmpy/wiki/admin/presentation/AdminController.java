@@ -4,6 +4,7 @@ import static com.openmpy.wiki.auth.application.JwtService.ACCESS_TOKEN;
 
 import com.openmpy.wiki.admin.application.AdminService;
 import com.openmpy.wiki.admin.application.request.AdminLoginRequest;
+import com.openmpy.wiki.admin.application.response.AdminDocumentHistoryReadResponse;
 import com.openmpy.wiki.admin.application.response.AdminLoginResponse;
 import com.openmpy.wiki.document.application.DocumentFacade;
 import com.openmpy.wiki.document.application.DocumentService;
@@ -93,5 +94,13 @@ public class AdminController {
             @RequestParam(value = "size", defaultValue = "100", required = false) final int size
     ) {
         return ResponseEntity.ok(documentService.readDocuments(page, size));
+    }
+
+    @GetMapping("/documents/histories")
+    public ResponseEntity<PageResponse<List<AdminDocumentHistoryReadResponse>>> readDocumentHistories(
+            @RequestParam("page") final int page,
+            @RequestParam(value = "size", defaultValue = "100", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentService.readDocumentHistories(page, size));
     }
 }

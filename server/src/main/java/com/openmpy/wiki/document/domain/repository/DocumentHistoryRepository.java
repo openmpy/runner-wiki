@@ -43,6 +43,36 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
             @Param("limit") final int limit
     );
 
+    @Query(
+            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, d.title "
+                    +
+                    "FROM (" +
+                    "  SELECT id FROM document_history " +
+                    "  ORDER BY created_at DESC " +
+                    "  LIMIT :limit OFFSET :offset" +
+                    ") t " +
+                    "LEFT JOIN document_history dh ON t.id = dh.id " +
+                    "LEFT JOIN document d ON dh.document_id = d.id",
+            nativeQuery = true
+    )
+    List<DocumentHistory> findAll(
+            @Param("offset") final int offset,
+            @Param("limit") final int limit
+    );
+
+    @Query(
+            value = "SELECT COUNT(*) " +
+                    "FROM (" +
+                    "  SELECT id FROM document_history " +
+                    "  ORDER BY created_at DESC " +
+                    "  LIMIT :limit" +
+                    ") t",
+            nativeQuery = true
+    )
+    Long count(
+            @Param("limit") final int limit
+    );
+
     @Query("""
             SELECT dh
             FROM DocumentHistory dh

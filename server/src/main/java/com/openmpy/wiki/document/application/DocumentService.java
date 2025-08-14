@@ -1,5 +1,6 @@
 package com.openmpy.wiki.document.application;
 
+import com.openmpy.wiki.admin.application.response.AdminDocumentHistoryReadResponse;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
@@ -169,6 +170,25 @@ public class DocumentService {
                 documentHistoryRepository.countByDocumentAndDeletedFalse(
                         documentId, PageLimitCalculator.calculatePageLimit(page, size, 10)
                 )
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<List<AdminDocumentHistoryReadResponse>> readDocumentHistories(
+            final int page, final int size
+    ) {
+        final List<AdminDocumentHistoryReadResponse> responses = documentHistoryRepository.findAll(
+                        (page - 1) * size, size
+                )
+                .stream()
+                .map(AdminDocumentHistoryReadResponse::from)
+                .toList();
+
+        return new PageResponse<>(
+                responses,
+                page,
+                size,
+                documentHistoryRepository.count(PageLimitCalculator.calculatePageLimit(page, size, 10))
         );
     }
 
