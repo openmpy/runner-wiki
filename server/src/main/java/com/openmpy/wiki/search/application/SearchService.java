@@ -116,7 +116,7 @@ public class SearchService {
         }
     }
 
-    public Searchable search(final String uid, final String query) {
+    public Searchable searchDocument(final String uid, final String query) {
         try {
             final Index index = meilisearchClient.index(uid);
             final SearchRequest searchRequest = SearchRequest.builder()
