@@ -60,7 +60,10 @@ public class AdminService {
     }
 
     private String generateToken(final String id) {
-        final Map<String, Object> claims = Map.of("id", id);
+        final Map<String, Object> claims = Map.of(
+                "id", id,
+                "role", "admin"
+        );
         return jwtService.createToken(claims);
     }
 }

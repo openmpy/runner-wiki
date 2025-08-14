@@ -1,5 +1,7 @@
 package com.openmpy.wiki.global.utils;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.springframework.http.ResponseCookie;
@@ -24,5 +26,16 @@ public class CookieManager {
                 .maxAge(0)
                 .domain(domain)
                 .build();
+    }
+
+    public static String getJWT(final HttpServletRequest servletRequest, final String cookieName) {
+        if (servletRequest.getCookies() != null) {
+            for (final Cookie cookie : servletRequest.getCookies()) {
+                if (cookieName.equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }
