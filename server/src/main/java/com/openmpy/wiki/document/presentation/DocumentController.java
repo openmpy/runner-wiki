@@ -52,12 +52,6 @@ public class DocumentController {
         return ResponseEntity.ok(documentFacade.updateDocument(documentId, request, clientIp));
     }
 
-    @DeleteMapping("/{documentId}")
-    public ResponseEntity<Void> deleteDocument(@PathVariable final String documentId) {
-        documentFacade.deleteDocument(documentId);
-        return ResponseEntity.ok().build();
-    }
-
     @DeleteMapping("/histories/{documentHistoryId}")
     public ResponseEntity<Void> deleteDocumentHistory(@PathVariable final String documentHistoryId) {
         documentService.deleteDocumentHistory(documentHistoryId);

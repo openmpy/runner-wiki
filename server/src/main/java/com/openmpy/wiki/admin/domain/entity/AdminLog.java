@@ -24,6 +24,9 @@ public class AdminLog {
     @Column(nullable = false)
     private AdminLogType logType;
 
+    @Column
+    private String content;
+
     @Column(nullable = false)
     private String clientIp;
 
@@ -34,6 +37,18 @@ public class AdminLog {
         final AdminLog adminLog = new AdminLog();
         adminLog.id = id;
         adminLog.logType = logType;
+        adminLog.clientIp = clientIp;
+        adminLog.createdAt = LocalDateTime.now();
+        return adminLog;
+    }
+
+    public static AdminLog create(
+            final String id, final AdminLogType logType, final String content, final String clientIp
+    ) {
+        final AdminLog adminLog = new AdminLog();
+        adminLog.id = id;
+        adminLog.logType = logType;
+        adminLog.content = content;
         adminLog.clientIp = clientIp;
         adminLog.createdAt = LocalDateTime.now();
         return adminLog;
