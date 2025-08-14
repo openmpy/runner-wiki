@@ -15,7 +15,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,12 +49,6 @@ public class DocumentController {
     ) {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         return ResponseEntity.ok(documentFacade.updateDocument(documentId, request, clientIp));
-    }
-
-    @DeleteMapping("/histories/{documentHistoryId}")
-    public ResponseEntity<Void> deleteDocumentHistory(@PathVariable final String documentHistoryId) {
-        documentService.deleteDocumentHistory(documentHistoryId);
-        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{documentId}")

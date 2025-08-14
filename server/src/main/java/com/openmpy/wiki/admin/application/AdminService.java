@@ -43,6 +43,15 @@ public class AdminService {
         adminLogRepository.save(adminLog);
     }
 
+    @Transactional
+    public void deleteDocumentHistory(final String documentHistoryId, final String clientIp) {
+        final String id = snowflake.nextId();
+        final AdminLog adminLog = AdminLog.create(
+                id, AdminLogType.DELETE_DOCUMENT_HISTORY, documentHistoryId, clientIp
+        );
+        adminLogRepository.save(adminLog);
+    }
+
     private String generateToken(final String id) {
         final Map<String, Object> claims = Map.of("id", id);
         return jwtService.createToken(claims);

@@ -6,6 +6,7 @@ import com.openmpy.wiki.admin.application.AdminService;
 import com.openmpy.wiki.admin.application.request.AdminLoginRequest;
 import com.openmpy.wiki.admin.application.response.AdminLoginResponse;
 import com.openmpy.wiki.document.application.DocumentFacade;
+import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.global.utils.ClientIpExtractor;
 import com.openmpy.wiki.global.utils.CookieManager;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,6 +28,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
 
     private final AdminService adminService;
+    private final DocumentService documentService;
     private final DocumentFacade documentFacade;
 
     @Value("${cookie.domain}")
@@ -51,6 +53,18 @@ public class AdminController {
 
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         adminService.deleteDocument(documentId, clientIp);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/documents/histories/{documentHistoryId}")
+    public ResponseEntity<Void> deleteDocumentHistory(
+            @PathVariable final String documentHistoryId,
+            final HttpServletRequest servletRequest
+    ) {
+        documentService.deleteDocumentHistory(documentHistoryId);
+
+        final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
+        adminService.deleteDocumentHistory(documentHistoryId, clientIp);
         return ResponseEntity.ok().build();
     }
 }
