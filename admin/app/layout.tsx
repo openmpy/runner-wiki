@@ -5,7 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "런너위키 - 관리자",
+  title: "관리자 - 런너위키",
   description: "런너위키 관리자 페이지입니다.",
 };
 
