@@ -9,7 +9,7 @@ import { formatDate } from "@/libs/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import { AiOutlineLoading3Quarters, AiOutlineSearch } from "react-icons/ai";
 
 export default function DocumentHistoryPage() {
   const router = useRouter();
@@ -19,14 +19,16 @@ export default function DocumentHistoryPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
+  const [title, setTitle] = useState("");
+  const [searchInput, setSearchInput] = useState("");
 
-  const fetchDocumentHistories = async (page: number = 1) => {
+  const fetchDocumentHistories = async (title: string, page: number = 1) => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories?page=${page}&size=10`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories?title=${title}&page=${page}&size=10`,
         {
           credentials: "include",
           headers: {
@@ -50,8 +52,19 @@ export default function DocumentHistoryPage() {
     }
   };
 
+  const handleSearch = () => {
+    setTitle(searchInput);
+    setCurrentPage(1);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   const handlePageChange = (page: number) => {
-    fetchDocumentHistories(page);
+    fetchDocumentHistories(title, page);
   };
 
   const updateDocumentHistoryStatus = async (
@@ -110,7 +123,7 @@ export default function DocumentHistoryPage() {
           return;
         }
 
-        await fetchDocumentHistories(1);
+        await fetchDocumentHistories(title, 1);
       } catch (error) {
         console.error(error);
         router.push("/login");
@@ -118,7 +131,7 @@ export default function DocumentHistoryPage() {
     };
 
     checkHealth();
-  }, [router]);
+  }, [router, title]);
 
   if (loading) {
     return (
@@ -142,6 +155,23 @@ export default function DocumentHistoryPage() {
     <div>
       <div className="flex justify-between items-center mb-6">
         <h1 className="font-bm-hanna text-2xl">문서 기록</h1>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="제목을 입력해주세요."
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            className="px-3 py-1 pr-10 border border-gray-300 rounded-md focus:outline-none w-64"
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-1 top-1/2 transform -translate-y-1/2 p-1.5 text-mint"
+            title="검색"
+          >
+            <AiOutlineSearch className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-lg">
