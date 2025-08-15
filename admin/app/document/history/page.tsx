@@ -1,38 +1,136 @@
+"use client";
+
 import ActionButton from "@/components/ui/ActionButton";
+import Badge from "@/components/ui/Badge";
 import CopyableText from "@/components/ui/CopyableText";
 import { DocumentHistory, PageResponse } from "@/libs/types";
 import { formatDate } from "@/libs/utils";
 import Link from "next/link";
-
-const mockData: PageResponse<DocumentHistory[]> = {
-  items: [
-    {
-      documentId: "214552394810224640",
-      documentHistoryId: "214552394810224641",
-      title: "가나다라마바아자차",
-      author: "ㅇㅇ",
-      version: "1",
-      size: 2,
-      clientIp: "192.168.0.1",
-      createdAt: "2025-08-14T14:35:57.421296",
-    },
-    {
-      documentId: "214254587994529792",
-      documentHistoryId: "214255774922235904",
-      title: "테스트",
-      author: "ㅇㅇ",
-      version: "2",
-      size: 1,
-      clientIp: "192.168.0.2",
-      createdAt: "2025-08-14T14:35:57.421296",
-    },
-  ],
-  page: 1,
-  size: 100,
-  totalCount: 2,
-};
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function DocumentHistoryPage() {
+  const router = useRouter();
+  const [documentHistories, setDocumentHistories] = useState<PageResponse<
+    DocumentHistory[]
+  > | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchDocumentHistories = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories?page=1`,
+        {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setDocumentHistories(data);
+      } else {
+        setError("문서 기록 목록을 불러오는데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("문서 기록 목록을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateDocumentHistoryStatus = async (
+    documentHistoryId: string,
+    status: string
+  ) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories/${documentHistoryId}?status=${status}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        setDocumentHistories((prevHistories) => {
+          if (!prevHistories) return prevHistories;
+
+          return {
+            ...prevHistories,
+            items: prevHistories.items.map((history) =>
+              history.documentHistoryId === documentHistoryId
+                ? {
+                    ...history,
+                    status: status === "RECOVER" ? "ACTIVE" : "DELETE",
+                  }
+                : history
+            ),
+          };
+        });
+      } else {
+        setError("문서 기록 상태 변경에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("문서 기록 상태 변경에 실패했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/health`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (response.status !== 200) {
+          router.push("/login");
+          return;
+        }
+
+        await fetchDocumentHistories();
+      } catch (error) {
+        console.error(error);
+        router.push("/login");
+      }
+    };
+
+    checkHealth();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="flex flex-col items-center space-y-4">
+          <AiOutlineLoading3Quarters className="animate-spin text-4xl text-mint" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -56,6 +154,9 @@ export default function DocumentHistoryPage() {
                 <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
                   버전
                 </th>
+                <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
+                  상태
+                </th>
                 <th className="px-6 py-3 text-left font-bold text-gray-900">
                   IP
                 </th>
@@ -68,7 +169,7 @@ export default function DocumentHistoryPage() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {mockData.items.map((document) => (
+              {documentHistories?.items.map((document) => (
                 <tr
                   key={document.documentHistoryId}
                   className="hover:bg-gray-50"
@@ -92,7 +193,14 @@ export default function DocumentHistoryPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-center w-20 text-sm text-gray-900">
                     {document.version}
                   </td>
-
+                  <td className="px-6 py-4 whitespace-nowrap text-center">
+                    <Badge
+                      color={document.status === "ACTIVE" ? "green" : "red"}
+                      size="sm"
+                    >
+                      {document.status === "ACTIVE" ? "활성" : "삭제"}
+                    </Badge>
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-gray-900">
                     <CopyableText text={document.clientIp} />
                   </td>
@@ -101,7 +209,28 @@ export default function DocumentHistoryPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center text-gray-900">
                     <div className="flex space-x-2 justify-center">
-                      <ActionButton variant="delete">삭제</ActionButton>
+                      <ActionButton
+                        variant="active"
+                        onClick={() =>
+                          updateDocumentHistoryStatus(
+                            document.documentHistoryId,
+                            "RECOVER"
+                          )
+                        }
+                      >
+                        복구
+                      </ActionButton>
+                      <ActionButton
+                        variant="delete"
+                        onClick={() =>
+                          updateDocumentHistoryStatus(
+                            document.documentHistoryId,
+                            "DELETE"
+                          )
+                        }
+                      >
+                        삭제
+                      </ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -110,10 +239,10 @@ export default function DocumentHistoryPage() {
           </table>
         </div>
 
-        {mockData.items.length === 0 && (
+        {(!documentHistories || documentHistories.items.length === 0) && (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg">
-              문서가 존재하지 않습니다.
+              문서 기록이 존재하지 않습니다.
             </div>
           </div>
         )}

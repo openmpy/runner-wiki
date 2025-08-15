@@ -1,4 +1,5 @@
 export type DocumentStatus = "ACTIVE" | "READ_ONLY";
+export type DocumentHistoryStatus = "ACTIVE" | "DELETE";
 export type DocumentCategory = "런너" | "길드";
 
 export interface PageResponse<T> {
@@ -28,5 +29,6 @@ export interface DocumentHistory {
   version: string;
   size: number;
   clientIp: string;
+  status: DocumentHistoryStatus;
   createdAt: string;
 }
