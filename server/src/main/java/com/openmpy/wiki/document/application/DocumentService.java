@@ -146,10 +146,10 @@ public class DocumentService {
 
     @Transactional(readOnly = true)
     public PageResponse<List<DocumentReadResponse>> readDocuments(
-            final int page, final int size
+            final String title, final int page, final int size
     ) {
         final List<DocumentReadResponse> responses = documentRepository
-                .findAllOrderByCreatedAtDesc((page - 1) * size, size).stream()
+                .findByTitleContainingOrderByCreatedAtDesc(title, (page - 1) * size, size).stream()
                 .map(DocumentReadResponse::from)
                 .toList();
 
@@ -157,7 +157,7 @@ public class DocumentService {
                 responses,
                 page,
                 size,
-                documentRepository.count(PageLimitCalculator.calculatePageLimit(page, size, 10))
+                documentRepository.countByTitleContaining(title, PageLimitCalculator.calculatePageLimit(page, size, 10))
         );
     }
 
@@ -182,11 +182,11 @@ public class DocumentService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<List<AdminDocumentHistoryReadResponse>> readDocumentHistories(
-            final int page, final int size
+    public PageResponse<List<AdminDocumentHistoryReadResponse>> readDocumentHistoryAdmin(
+            final String title, final int page, final int size
     ) {
-        final List<AdminDocumentHistoryReadResponse> responses = documentHistoryRepository.findAll(
-                        (page - 1) * size, size
+        final List<AdminDocumentHistoryReadResponse> responses = documentHistoryRepository.findByTitleContainingOrderByCreatedAtDesc(
+                        title, (page - 1) * size, size
                 )
                 .stream()
                 .map(AdminDocumentHistoryReadResponse::from)
@@ -196,7 +196,9 @@ public class DocumentService {
                 responses,
                 page,
                 size,
-                documentHistoryRepository.count(PageLimitCalculator.calculatePageLimit(page, size, 10))
+                documentHistoryRepository.countByTitleContaining(
+                        title, PageLimitCalculator.calculatePageLimit(page, size, 10)
+                )
         );
     }
 

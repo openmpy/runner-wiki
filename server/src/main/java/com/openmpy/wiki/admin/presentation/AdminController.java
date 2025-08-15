@@ -100,17 +100,19 @@ public class AdminController {
 
     @GetMapping("/documents")
     public ResponseEntity<PageResponse<List<DocumentReadResponse>>> readDocuments(
+            @RequestParam(value = "title", defaultValue = "") final String title,
             @RequestParam("page") final int page,
             @RequestParam(value = "size", defaultValue = "100", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentService.readDocuments(page, size));
+        return ResponseEntity.ok(documentService.readDocuments(title, page, size));
     }
 
     @GetMapping("/documents/histories")
     public ResponseEntity<PageResponse<List<AdminDocumentHistoryReadResponse>>> readDocumentHistories(
+            @RequestParam(value = "title", defaultValue = "") final String title,
             @RequestParam("page") final int page,
             @RequestParam(value = "size", defaultValue = "100", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentService.readDocumentHistories(page, size));
+        return ResponseEntity.ok(documentService.readDocumentHistoryAdmin(title, page, size));
     }
 }

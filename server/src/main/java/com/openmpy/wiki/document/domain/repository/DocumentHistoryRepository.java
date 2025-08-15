@@ -46,16 +46,15 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
     @Query(
             value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, d.id AS documentId, d.title "
                     +
-                    "FROM (" +
-                    "  SELECT id FROM document_history " +
-                    "  ORDER BY created_at DESC " +
-                    "  LIMIT :limit OFFSET :offset" +
-                    ") t " +
-                    "LEFT JOIN document_history dh ON t.id = dh.id " +
-                    "LEFT JOIN document d ON dh.document_id = d.id",
+                    "FROM document_history dh " +
+                    "LEFT JOIN document d ON dh.document_id = d.id " +
+                    "WHERE d.title LIKE %:title% " +
+                    "ORDER BY dh.created_at DESC " +
+                    "LIMIT :limit OFFSET :offset",
             nativeQuery = true
     )
-    List<DocumentHistory> findAll(
+    List<DocumentHistory> findByTitleContainingOrderByCreatedAtDesc(
+            @Param("title") final String title,
             @Param("offset") final int offset,
             @Param("limit") final int limit
     );
@@ -70,6 +69,22 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
             nativeQuery = true
     )
     Long count(
+            @Param("limit") final int limit
+    );
+
+    @Query(
+            value = "SELECT COUNT(*) " +
+                    "FROM (" +
+                    "  SELECT dh.id FROM document_history dh " +
+                    "  LEFT JOIN document d ON dh.document_id = d.id " +
+                    "  WHERE d.title LIKE %:title% " +
+                    "  ORDER BY dh.created_at DESC " +
+                    "  LIMIT :limit" +
+                    ") t",
+            nativeQuery = true
+    )
+    Long countByTitleContaining(
+            @Param("title") final String title,
             @Param("limit") final int limit
     );
 

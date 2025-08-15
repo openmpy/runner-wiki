@@ -40,12 +40,14 @@ public interface DocumentRepository extends JpaRepository<Document, String> {
             value = "SELECT d.id, d.title, d.category, d.status, d.created_at, d.updated_at " +
                     "FROM (" +
                     "  SELECT id FROM document " +
+                    "  WHERE title LIKE %:title% " +
                     "  ORDER BY created_at DESC " +
                     "  LIMIT :limit OFFSET :offset" +
                     ") t LEFT JOIN document d ON t.id = d.id",
             nativeQuery = true
     )
-    List<Document> findAllOrderByCreatedAtDesc(
+    List<Document> findByTitleContainingOrderByCreatedAtDesc(
+            @Param("title") final String title,
             @Param("offset") final int offset,
             @Param("limit") final int limit
     );
@@ -59,6 +61,17 @@ public interface DocumentRepository extends JpaRepository<Document, String> {
             nativeQuery = true
     )
     Long count(@Param("limit") final int limit);
+
+    @Query(
+            value = "SELECT count(*) " +
+                    "FROM (" +
+                    "  SELECT id FROM document " +
+                    "  WHERE title LIKE %:title% " +
+                    "  LIMIT :limit" +
+                    ") t",
+            nativeQuery = true
+    )
+    Long countByTitleContaining(@Param("title") final String title, @Param("limit") final int limit);
 
     List<Document> findByIdIn(final Collection<String> ids);
 }
