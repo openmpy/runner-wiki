@@ -1,41 +1,172 @@
+"use client";
+
 import ActionButton from "@/components/ui/ActionButton";
 import Badge from "@/components/ui/Badge";
 import CopyableText from "@/components/ui/CopyableText";
 import { Document, PageResponse } from "@/libs/types";
 import { formatDate } from "@/libs/utils";
 import Link from "next/link";
-
-const mockData: PageResponse<Document[]> = {
-  items: [
-    {
-      documentId: "214552394810224640",
-      documentHistoryId: null,
-      title: "가나다라마바사아자차",
-      category: "런너",
-      author: null,
-      content: null,
-      status: "ACTIVE",
-      createdAt: "2025-08-14T14:31:26.522798",
-      updatedAt: "2025-08-14T14:31:26.522823",
-    },
-    {
-      documentId: "214254587994529792",
-      documentHistoryId: null,
-      title: "테스트",
-      category: "길드",
-      author: null,
-      content: null,
-      status: "READ_ONLY",
-      createdAt: "2025-08-14T14:31:14.436",
-      updatedAt: "2025-08-14T14:31:20.753028",
-    },
-  ],
-  page: 1,
-  size: 100,
-  totalCount: 2,
-};
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 export default function DocumentPage() {
+  const router = useRouter();
+  const [documents, setDocuments] = useState<PageResponse<Document[]> | null>(
+    null
+  );
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchDocuments = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents?page=1`,
+        {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        const data = await response.json();
+        setDocuments(data);
+      } else {
+        setError("문서 목록을 불러오는데 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("문서 목록을 불러오는데 실패했습니다.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateDocumentStatus = async (documentId: string, status: string) => {
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/${documentId}?status=${status}`,
+        {
+          method: "PATCH",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        // 상태 변경 성공 시 해당 문서의 상태만 업데이트
+        setDocuments((prevDocuments) => {
+          if (!prevDocuments) return prevDocuments;
+
+          return {
+            ...prevDocuments,
+            items: prevDocuments.items.map((doc) =>
+              doc.documentId === documentId
+                ? {
+                    ...doc,
+                    status: status === "ACTIVE" ? "ACTIVE" : "READ_ONLY",
+                  }
+                : doc
+            ),
+          };
+        });
+      } else {
+        setError("문서 상태 변경에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("문서 상태 변경에 실패했습니다.");
+    }
+  };
+
+  const deleteDocument = async (documentId: string) => {
+    if (!confirm("정말로 이 문서를 삭제하시겠습니까?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/${documentId}`,
+        {
+          method: "DELETE",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 204) {
+        setDocuments((prevDocuments) => {
+          if (!prevDocuments) return prevDocuments;
+
+          return {
+            ...prevDocuments,
+            items: prevDocuments.items.filter(
+              (doc) => doc.documentId !== documentId
+            ),
+            totalCount: prevDocuments.totalCount - 1,
+          };
+        });
+      } else {
+        setError("문서 삭제에 실패했습니다.");
+      }
+    } catch (error) {
+      console.error(error);
+      setError("문서 삭제에 실패했습니다.");
+    }
+  };
+
+  useEffect(() => {
+    const checkHealth = async () => {
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/health`,
+          {
+            credentials: "include",
+          }
+        );
+
+        if (response.status !== 200) {
+          router.push("/login");
+          return;
+        }
+
+        await fetchDocuments();
+      } catch (error) {
+        console.error(error);
+        router.push("/login");
+      }
+    };
+
+    checkHealth();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="flex flex-col items-center space-y-4">
+          <AiOutlineLoading3Quarters className="animate-spin text-4xl text-mint" />
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <div className="text-red-500 text-lg">{error}</div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
@@ -72,7 +203,7 @@ export default function DocumentPage() {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {mockData.items.map((document) => (
+              {documents?.items.map((document) => (
                 <tr key={document.documentId} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <CopyableText text={document.documentId} />
@@ -112,9 +243,28 @@ export default function DocumentPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
                     <div className="flex space-x-2 justify-center">
-                      <ActionButton variant="active">활성</ActionButton>
-                      <ActionButton variant="read">읽기</ActionButton>
-                      <ActionButton variant="delete">삭제</ActionButton>
+                      <ActionButton
+                        variant="active"
+                        onClick={() =>
+                          updateDocumentStatus(document.documentId, "ACTIVE")
+                        }
+                      >
+                        활성
+                      </ActionButton>
+                      <ActionButton
+                        variant="read"
+                        onClick={() =>
+                          updateDocumentStatus(document.documentId, "READ_ONLY")
+                        }
+                      >
+                        읽기
+                      </ActionButton>
+                      <ActionButton
+                        variant="delete"
+                        onClick={() => deleteDocument(document.documentId)}
+                      >
+                        삭제
+                      </ActionButton>
                     </div>
                   </td>
                 </tr>
@@ -123,7 +273,7 @@ export default function DocumentPage() {
           </table>
         </div>
 
-        {mockData.items.length === 0 && (
+        {(!documents || documents.items.length === 0) && (
           <div className="text-center py-12">
             <div className="text-gray-500 text-lg">
               문서가 존재하지 않습니다.
