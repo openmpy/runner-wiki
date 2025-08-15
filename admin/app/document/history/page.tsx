@@ -3,6 +3,7 @@
 import ActionButton from "@/components/ui/ActionButton";
 import Badge from "@/components/ui/Badge";
 import CopyableText from "@/components/ui/CopyableText";
+import Pagination from "@/components/ui/Pagination";
 import { DocumentHistory, PageResponse } from "@/libs/types";
 import { formatDate } from "@/libs/utils";
 import Link from "next/link";
@@ -17,14 +18,15 @@ export default function DocumentHistoryPage() {
   > | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchDocumentHistories = async () => {
+  const fetchDocumentHistories = async (page: number = 1) => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories?page=1`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents/histories?page=${page}&size=10`,
         {
           credentials: "include",
           headers: {
@@ -36,6 +38,7 @@ export default function DocumentHistoryPage() {
       if (response.status === 200) {
         const data = await response.json();
         setDocumentHistories(data);
+        setCurrentPage(page);
       } else {
         setError("문서 기록 목록을 불러오는데 실패했습니다.");
       }
@@ -45,6 +48,10 @@ export default function DocumentHistoryPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handlePageChange = (page: number) => {
+    fetchDocumentHistories(page);
   };
 
   const updateDocumentHistoryStatus = async (
@@ -103,7 +110,7 @@ export default function DocumentHistoryPage() {
           return;
         }
 
-        await fetchDocumentHistories();
+        await fetchDocumentHistories(1);
       } catch (error) {
         console.error(error);
         router.push("/login");
@@ -244,6 +251,18 @@ export default function DocumentHistoryPage() {
             <div className="text-gray-500 text-lg">
               문서 기록이 존재하지 않습니다.
             </div>
+          </div>
+        )}
+
+        {documentHistories && documentHistories.items.length > 0 && (
+          <div className="px-6 py-4 border-t border-gray-200">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(
+                documentHistories.totalCount / documentHistories.size
+              )}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
       </div>

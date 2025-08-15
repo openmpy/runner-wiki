@@ -3,6 +3,7 @@
 import ActionButton from "@/components/ui/ActionButton";
 import Badge from "@/components/ui/Badge";
 import CopyableText from "@/components/ui/CopyableText";
+import Pagination from "@/components/ui/Pagination";
 import { Document, PageResponse } from "@/libs/types";
 import { formatDate } from "@/libs/utils";
 import Link from "next/link";
@@ -17,14 +18,15 @@ export default function DocumentPage() {
   );
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const fetchDocuments = async () => {
+  const fetchDocuments = async (page: number = 1) => {
     try {
       setLoading(true);
       setError(null);
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents?page=1`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/v1/admin/documents?page=${page}&size=10`,
         {
           credentials: "include",
           headers: {
@@ -86,6 +88,10 @@ export default function DocumentPage() {
     }
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
   const deleteDocument = async (documentId: string) => {
     if (!confirm("정말로 이 문서를 삭제하시겠습니까?")) {
       return;
@@ -139,7 +145,7 @@ export default function DocumentPage() {
           return;
         }
 
-        await fetchDocuments();
+        await fetchDocuments(currentPage);
       } catch (error) {
         console.error(error);
         router.push("/login");
@@ -147,7 +153,7 @@ export default function DocumentPage() {
     };
 
     checkHealth();
-  }, [router]);
+  }, [router, currentPage]);
 
   if (loading) {
     return (
@@ -278,6 +284,17 @@ export default function DocumentPage() {
             <div className="text-gray-500 text-lg">
               문서가 존재하지 않습니다.
             </div>
+          </div>
+        )}
+
+        {/* 페이지네이션 */}
+        {documents && documents.totalCount > 0 && (
+          <div className="mt-6">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(documents.totalCount / documents.size)}
+              onPageChange={handlePageChange}
+            />
           </div>
         )}
       </div>
