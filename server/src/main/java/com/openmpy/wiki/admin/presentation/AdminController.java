@@ -41,6 +41,11 @@ public class AdminController {
     @Value("${cookie.domain}")
     private String domain;
 
+    @GetMapping("/health")
+    public ResponseEntity<Void> health() {
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/login")
     public ResponseEntity<AdminLoginResponse> login(
             @RequestBody final AdminLoginRequest request, final HttpServletRequest servletRequest
