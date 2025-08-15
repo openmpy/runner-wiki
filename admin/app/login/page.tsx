@@ -1,7 +1,6 @@
 "use client";
 
 import Button from "@/components/ui/Button";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -10,7 +9,6 @@ export default function LoginPage() {
     password: "",
   });
   const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -47,7 +45,7 @@ export default function LoginPage() {
 
       if (response.ok) {
         alert("로그인에 성공했습니다.");
-        router.push("/");
+        window.location.href = "/";
       } else {
         alert(data.message);
       }
