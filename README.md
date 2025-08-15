@@ -4,8 +4,8 @@
 - [홈페이지](https://www.runner.wiki)
 - [어드민 페이지](https://admin.runner.wiki)
 
-<img width="48%" alt="Image" src="https://github.com/user-attachments/assets/5a478b2e-80da-4c2d-8564-0250570ddb08" />
-<img width="48%" alt="Image" src="https://github.com/user-attachments/assets/a28d252d-620a-42af-9130-12401bd65513" />
+<img width="49%" alt="Image" src="https://github.com/user-attachments/assets/5174ab09-3fd1-46c4-856f-d3adac2af7ad" />
+<img width="49%" alt="Image" src="https://github.com/user-attachments/assets/0058d03b-f578-410d-bcf9-1287aaa68735" />
 
 ## 기술 스택
 
