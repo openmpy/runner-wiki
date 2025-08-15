@@ -1,0 +1,19 @@
+@import "tailwindcss";
+
+@theme {
+  --color-mint: #00a495;
+}
+
+@layer utilities {
+  .font-bm-hanna {
+    font-family: var(--font-bm-hanna);
+  }
+
+  .font-pretendard {
+    font-family: var(--font-pretendard);
+  }
+}
+
+button {
+  cursor: pointer;
+}
