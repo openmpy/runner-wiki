@@ -1,33 +1,30 @@
 import ActionButton from "@/components/ui/ActionButton";
-import Badge from "@/components/ui/Badge";
 import CopyableText from "@/components/ui/CopyableText";
-import { Document, PageResponse } from "@/libs/types";
+import { DocumentHistory, PageResponse } from "@/libs/types";
 import { formatDate } from "@/libs/utils";
 import Link from "next/link";
 
-const mockData: PageResponse<Document[]> = {
+const mockData: PageResponse<DocumentHistory[]> = {
   items: [
     {
       documentId: "214552394810224640",
-      documentHistoryId: null,
-      title: "가나다라마바사아자차",
-      category: "런너",
-      author: null,
-      content: null,
-      status: "ACTIVE",
-      createdAt: "2025-08-14T14:31:26.522798",
-      updatedAt: "2025-08-14T14:31:26.522823",
+      documentHistoryId: "214552394810224641",
+      title: "가나다라마바아자차",
+      author: "ㅇㅇ",
+      version: "1",
+      size: 2,
+      clientIp: "192.168.0.1",
+      createdAt: "2025-08-14T14:35:57.421296",
     },
     {
       documentId: "214254587994529792",
-      documentHistoryId: null,
+      documentHistoryId: "214255774922235904",
       title: "테스트",
-      category: "길드",
-      author: null,
-      content: null,
-      status: "READ_ONLY",
-      createdAt: "2025-08-14T14:31:14.436",
-      updatedAt: "2025-08-14T14:31:20.753028",
+      author: "ㅇㅇ",
+      version: "2",
+      size: 1,
+      clientIp: "192.168.0.2",
+      createdAt: "2025-08-14T14:35:57.421296",
     },
   ],
   page: 1,
@@ -35,11 +32,11 @@ const mockData: PageResponse<Document[]> = {
   totalCount: 2,
 };
 
-export default function DocumentPage() {
+export default function DocumentHistoryPage() {
   return (
     <div>
       <div className="flex justify-between items-center mb-6">
-        <h1 className="font-bm-hanna text-2xl">문서</h1>
+        <h1 className="font-bm-hanna text-2xl">문서 기록</h1>
       </div>
 
       <div className="bg-white rounded-lg">
@@ -51,20 +48,19 @@ export default function DocumentPage() {
                   ID
                 </th>
                 <th className="px-6 py-3 text-left font-bold text-gray-900">
+                  HID
+                </th>
+                <th className="px-6 py-3 text-left font-bold text-gray-900 w-1/3">
                   제목
                 </th>
-                <th className="px-6 py-3 text-center font-bold text-gray-900">
-                  분류
-                </th>
-
-                <th className="px-6 py-3 text-center font-bold text-gray-900">
-                  상태
+                <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
+                  버전
                 </th>
                 <th className="px-6 py-3 text-left font-bold text-gray-900">
+                  IP
+                </th>
+                <th className="px-6 py-3 text-left font-bold text-gray-900 w-32">
                   생성일
-                </th>
-                <th className="px-6 py-3 text-left font-bold text-gray-900">
-                  수정일
                 </th>
                 <th className="px-6 py-3 text-center font-bold text-gray-900">
                   작업
@@ -73,13 +69,19 @@ export default function DocumentPage() {
             </thead>
             <tbody className="bg-white">
               {mockData.items.map((document) => (
-                <tr key={document.documentId} className="hover:bg-gray-50">
+                <tr
+                  key={document.documentHistoryId}
+                  className="hover:bg-gray-50"
+                >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     <CopyableText text={document.documentId} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                    <CopyableText text={document.documentHistoryId} />
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap w-1/3">
                     <Link
-                      href={`${process.env.NEXT_PUBLIC_APP_URL}/document/${document.documentId}`}
+                      href={`${process.env.NEXT_PUBLIC_APP_URL}/document/${document.documentId}/history/${document.documentHistoryId}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="hover:underline text-sm font-medium text-gray-900"
@@ -87,33 +89,18 @@ export default function DocumentPage() {
                       {document.title}
                     </Link>
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <Badge
-                      color={document.category === "런너" ? "blue" : "purple"}
-                      size="sm"
-                    >
-                      {document.category}
-                    </Badge>
+                  <td className="px-6 py-4 whitespace-nowrap text-center w-20 text-sm text-gray-900">
+                    {document.version}
                   </td>
 
-                  <td className="px-6 py-4 whitespace-nowrap text-center">
-                    <Badge
-                      color={document.status === "ACTIVE" ? "green" : "orange"}
-                      size="sm"
-                    >
-                      {document.status === "ACTIVE" ? "활성" : "읽기"}
-                    </Badge>
+                  <td className="px-6 py-4 whitespace-nowrap text-left text-sm text-gray-900">
+                    <CopyableText text={document.clientIp} />
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 w-32">
                     {formatDate(document.createdAt)}
                   </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    {formatDate(document.updatedAt)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-center text-gray-900">
                     <div className="flex space-x-2 justify-center">
-                      <ActionButton variant="active">활성</ActionButton>
-                      <ActionButton variant="read">읽기</ActionButton>
                       <ActionButton variant="delete">삭제</ActionButton>
                     </div>
                   </td>

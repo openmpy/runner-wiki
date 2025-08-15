@@ -19,3 +19,14 @@ export interface Document {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface DocumentHistory {
+  documentId: string;
+  documentHistoryId: string;
+  title: string;
+  author: string;
+  version: string;
+  size: number;
+  clientIp: string;
+  createdAt: string;
+}
