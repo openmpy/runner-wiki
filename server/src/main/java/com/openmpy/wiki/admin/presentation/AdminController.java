@@ -81,15 +81,14 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/documents/histories/{documentHistoryId}")
-    public ResponseEntity<Void> deleteDocumentHistory(
+    @PatchMapping("/documents/histories/{documentHistoryId}")
+    public ResponseEntity<Void> updateDocumentHistoryStatus(
             @PathVariable final String documentHistoryId,
+            @RequestParam final String status,
             final HttpServletRequest servletRequest
     ) {
-        documentService.deleteDocumentHistory(documentHistoryId);
-
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
-        adminService.deleteDocumentHistory(documentHistoryId, clientIp);
+        adminService.updateDocumentHistory(documentHistoryId, status, clientIp);
         return ResponseEntity.noContent().build();
     }
 

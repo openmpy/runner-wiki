@@ -93,11 +93,19 @@ public class DocumentService {
         final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
         );
-        if (documentHistory.isDeleted()) {
-            throw new CustomException("이미 삭제된 문서 기록입니다.");
-        }
 
         documentHistory.delete();
+    }
+
+    @Transactional
+    public void recoverDocumentHistory(
+            final String documentHistoryId
+    ) {
+        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
+                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
+        );
+
+        documentHistory.recover();
     }
 
     @Transactional(readOnly = true)

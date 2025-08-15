@@ -44,7 +44,7 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
     );
 
     @Query(
-            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, d.title "
+            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, d.id AS documentId, d.title "
                     +
                     "FROM (" +
                     "  SELECT id FROM document_history " +

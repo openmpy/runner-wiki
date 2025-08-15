@@ -76,6 +76,10 @@ public class DocumentHistory {
         deleted = true;
     }
 
+    public void recover() {
+        deleted = false;
+    }
+
     public String getAuthor() {
         return author.getValue();
     }

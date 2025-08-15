@@ -6,10 +6,12 @@ import com.openmpy.wiki.admin.domain.constants.AdminLogType;
 import com.openmpy.wiki.admin.domain.entity.AdminLog;
 import com.openmpy.wiki.admin.domain.repository.AdminLogRepository;
 import com.openmpy.wiki.auth.application.JwtService;
+import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.global.properties.AdminProperties;
 import com.openmpy.wiki.global.snowflake.Snowflake;
 import java.util.Map;
+import java.util.Objects;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,6 +23,7 @@ public class AdminService {
     private final Snowflake snowflake = new Snowflake();
     private final AdminProperties adminProperties;
     private final AdminLogRepository adminLogRepository;
+    private final DocumentService documentService;
     private final JwtService jwtService;
 
     @Transactional
@@ -51,12 +54,27 @@ public class AdminService {
     }
 
     @Transactional
-    public void deleteDocumentHistory(final String documentHistoryId, final String clientIp) {
+    public void updateDocumentHistory(final String documentHistoryId, final String status, final String clientIp) {
+        if (!"delete".equalsIgnoreCase(status) && !"recover".equalsIgnoreCase(status)) {
+            throw new CustomException("status 값이 올바르지 않습니다.");
+        }
+
         final String id = snowflake.nextId();
-        final AdminLog adminLog = AdminLog.create(
-                id, AdminLogType.DELETE_DOCUMENT_HISTORY, documentHistoryId, clientIp
-        );
-        adminLogRepository.save(adminLog);
+        AdminLog adminLog = null;
+
+        if ("delete".equalsIgnoreCase(status)) {
+            documentService.deleteDocumentHistory(documentHistoryId);
+            adminLog = AdminLog.create(
+                    id, AdminLogType.DELETE_DOCUMENT_HISTORY, documentHistoryId, clientIp
+            );
+        } else if ("recover".equalsIgnoreCase(status)) {
+            documentService.recoverDocumentHistory(documentHistoryId);
+            adminLog = AdminLog.create(
+                    id, AdminLogType.RECOVER_DOCUMENT_HISTORY, documentHistoryId, clientIp
+            );
+        }
+
+        adminLogRepository.save(Objects.requireNonNull(adminLog));
     }
 
     private String generateToken(final String id) {
