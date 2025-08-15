@@ -1,3 +1,5 @@
+import Footer from "@/components/layout/Footer";
+import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -27,9 +29,19 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body
-        className={`antialiased ${bmHanna.variable} ${pretendard.variable} font-pretendard`}
+        className={`antialiased ${bmHanna.variable} ${pretendard.variable} min-h-screen font-pretendard flex flex-col bg-mint`}
       >
-        {children}
+        <Header />
+        <div className="flex-1 py-5 lg:px-4 bg-gray-100">
+          <div
+            className={`flex flex-col lg:flex-row gap-3 max-w-7xl mx-auto items-start`}
+          >
+            <main className="w-full p-5 bg-white border-y border-mint lg:border lg:rounded-lg lg:border-mint flex-1">
+              {children}
+            </main>
+          </div>
+        </div>
+        <Footer />
       </body>
     </html>
   );
