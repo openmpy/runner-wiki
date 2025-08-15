@@ -1,5 +1,12 @@
 # 런너위키
 
+## 접속
+- [홈페이지](https://www.runner.wiki)
+- [어드민 페이지](https://admin.runner.wiki)
+
+<img width="48%" alt="Image" src="https://github.com/user-attachments/assets/5a478b2e-80da-4c2d-8564-0250570ddb08" />
+<img width="48%" alt="Image" src="https://github.com/user-attachments/assets/a28d252d-620a-42af-9130-12401bd65513" />
+
 ## 기술 스택
 
 - Client
