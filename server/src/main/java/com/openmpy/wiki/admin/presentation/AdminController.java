@@ -56,6 +56,12 @@ public class AdminController {
         return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).body(response);
     }
 
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout() {
+        final ResponseCookie cookie = CookieManager.deleteCooke(ACCESS_TOKEN, domain);
+        return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, cookie.toString()).build();
+    }
+
     @PatchMapping("/documents/{documentId}")
     public ResponseEntity<Void> updateDocumentStatus(
             @PathVariable final String documentId,
