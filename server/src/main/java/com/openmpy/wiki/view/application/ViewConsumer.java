@@ -1,5 +1,6 @@
 package com.openmpy.wiki.view.application;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.openmpy.wiki.global.exception.CustomException;
 import com.openmpy.wiki.view.application.event.ViewEvent;
@@ -19,8 +20,8 @@ public class ViewConsumer {
         try {
             final ViewEvent viewEvent = objectMapper.readValue(message, ViewEvent.class);
             viewService.incrementViewCount(viewEvent.documentId(), viewEvent.clientIp());
-        } catch (final Exception e) {
-            throw new CustomException("view event parsing error: " + e.getMessage());
+        } catch (final JsonProcessingException e) {
+            throw new CustomException("view document event json parsing error: " + e.getMessage());
         }
     }
 }

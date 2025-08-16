@@ -43,6 +43,9 @@ public class DocumentHistory {
     private String clientIp;
 
     @Column
+    private Double score;
+
+    @Column
     private boolean deleted;
 
     @Column(nullable = false)
@@ -78,6 +81,10 @@ public class DocumentHistory {
 
     public void recover() {
         deleted = false;
+    }
+
+    public void updateScore(final Double score) {
+        this.score = score;
     }
 
     public String getAuthor() {

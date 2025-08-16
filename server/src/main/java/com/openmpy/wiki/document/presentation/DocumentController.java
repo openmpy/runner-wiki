@@ -1,8 +1,10 @@
 package com.openmpy.wiki.document.presentation;
 
 import com.openmpy.wiki.document.application.DocumentFacade;
+import com.openmpy.wiki.document.application.DocumentProducer;
 import com.openmpy.wiki.document.application.DocumentService;
 import com.openmpy.wiki.document.application.request.DocumentCreateRequest;
+import com.openmpy.wiki.document.application.request.DocumentHistoryUpdateScoreRequest;
 import com.openmpy.wiki.document.application.request.DocumentUpdateRequest;
 import com.openmpy.wiki.document.application.response.DocumentCreateResponse;
 import com.openmpy.wiki.document.application.response.DocumentHistoryReadResponses;
@@ -16,6 +18,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -31,6 +34,7 @@ public class DocumentController {
 
     private final DocumentService documentService;
     private final DocumentFacade documentFacade;
+    private final DocumentProducer documentProducer;
 
     @PostMapping
     public ResponseEntity<DocumentCreateResponse> createDocument(
@@ -49,6 +53,15 @@ public class DocumentController {
     ) {
         final String clientIp = ClientIpExtractor.getClientIp(servletRequest);
         return ResponseEntity.ok(documentFacade.updateDocument(documentId, request, clientIp));
+    }
+
+    @PatchMapping("/histories/{documentHistoryId}/score")
+    public ResponseEntity<Void> updateDocumentHistoryScore(
+            @PathVariable final String documentHistoryId,
+            @RequestBody final DocumentHistoryUpdateScoreRequest request
+    ) {
+        documentProducer.moderateDocumentHistory(documentHistoryId, request.content());
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{documentId}")

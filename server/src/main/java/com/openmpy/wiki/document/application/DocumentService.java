@@ -46,14 +46,17 @@ public class DocumentService {
             throw new CustomException("해당 카테고리에 이미 작성된 문서입니다.");
         }
 
-        final Document document = Document.create(snowflake.nextId(), request.title(), category);
+        final String documentId = snowflake.nextId();
+        final String documentHistoryId = snowflake.nextId();
+
+        final Document document = Document.create(documentId, request.title(), category);
         final DocumentHistory documentHistory = DocumentHistory.create(
-                snowflake.nextId(), request.author(), request.content(), clientIp, 1, document
+                documentHistoryId, request.author(), request.content(), clientIp, 1, document
         );
         document.addHistory(documentHistory);
         documentRepository.save(document);
 
-        return new DocumentCreateResponse(document.getId());
+        return new DocumentCreateResponse(documentId, documentHistoryId);
     }
 
     @Transactional
@@ -63,12 +66,13 @@ public class DocumentService {
         final Document document = getDocument(documentId);
         final long version = documentHistoryRepository.getLatestVersionByDocumentId(document) + 1;
 
+        final String documentHistoryId = snowflake.nextId();
         final DocumentHistory documentHistory = DocumentHistory.create(
-                snowflake.nextId(), request.author(), request.content(), clientIp, version, document
+                documentHistoryId, request.author(), request.content(), clientIp, version, document
         );
         document.addHistory(documentHistory);
 
-        return new DocumentUpdateResponse(documentId);
+        return new DocumentUpdateResponse(documentId, documentHistoryId);
     }
 
     @Transactional
@@ -79,9 +83,7 @@ public class DocumentService {
     }
 
     @Transactional
-    public void deleteDocument(
-            final String documentId
-    ) {
+    public void deleteDocument(final String documentId) {
         final Document document = getDocumentWithHistory(documentId);
         documentRepository.delete(document);
     }
@@ -90,22 +92,21 @@ public class DocumentService {
     public void deleteDocumentHistory(
             final String documentHistoryId
     ) {
-        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
-        );
+        final DocumentHistory documentHistory = getDocumentHistory(documentHistoryId);
 
         documentHistory.delete();
     }
 
     @Transactional
-    public void recoverDocumentHistory(
-            final String documentHistoryId
-    ) {
-        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
-        );
-
+    public void recoverDocumentHistory(final String documentHistoryId) {
+        final DocumentHistory documentHistory = getDocumentHistory(documentHistoryId);
         documentHistory.recover();
+    }
+
+    @Transactional
+    public void updateHistoryScore(final String documentHistoryId, final Double score) {
+        final DocumentHistory documentHistory = getDocumentHistory(documentHistoryId);
+        documentHistory.updateScore(score);
     }
 
     @Transactional(readOnly = true)
@@ -236,6 +237,12 @@ public class DocumentService {
     private Document getDocumentWithHistory(final String documentId) {
         return documentRepository.findByIdWithHistory(documentId).orElseThrow(
                 () -> new CustomException("찾을 수 없는 문서 번호입니다.")
+        );
+    }
+
+    private DocumentHistory getDocumentHistory(final String documentHistoryId) {
+        return documentHistoryRepository.findById(documentHistoryId).orElseThrow(
+                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
         );
     }
 }
