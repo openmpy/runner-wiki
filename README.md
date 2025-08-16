@@ -30,6 +30,17 @@
 
 <img width="1257" height="827" alt="Image" src="https://github.com/user-attachments/assets/bcacd23a-50bd-417d-9ec3-a23784681444" />
 
+## 주요 기능
+
+### AI 기반 문서 검증 시스템
+
+- Kafka를 통한 이벤트 기반 문서 검증
+    - `document-moderation` 토픽으로 문서 내용 검증을 비동기 처리
+    - `프로듀서-컨슈머` 패턴으로 시스템 부하 분산
+- `omni-moderation-latest` OpenAI 모델을 사용하여 문서 폭력성 점수 분석
+    - 다양한 카테고리별 위험도 점수 산출
+- 조정 점수가 50.0 이상인 경우 자동으로 문서 삭제
+
 ## 트러블 슈팅
 
 ### 조회수 시스템 분리 및 비동기 처리
