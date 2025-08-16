@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory, String> {
 
     @Query(
-            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version "
+            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, dh.score "
                     +
                     "FROM (" +
                     "  SELECT id FROM document_history " +
@@ -44,7 +44,9 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
     );
 
     @Query(
-            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, d.id AS documentId, d.title "
+            value = "SELECT dh.id, dh.document_id, dh.author, dh.client_ip, dh.content, dh.created_at, dh.deleted, dh.version, dh.score "
+                    +
+                    "d.id AS documentId, d.title "
                     +
                     "FROM document_history dh " +
                     "LEFT JOIN document d ON dh.document_id = d.id " +

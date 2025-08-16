@@ -30,8 +30,15 @@ public class DocumentConsumer {
 
             final DocumentModerateResultResponse response = documentModerationService.getViolenceScore(request);
             documentService.updateHistoryScore(event.documentHistoryId(), response.score());
+            deleteDocumentIfScoreExceedsThreshold(event.documentHistoryId(), response.score());
         } catch (final JsonProcessingException e) {
             throw new CustomException("document moderation event json parsing error: " + e.getMessage());
+        }
+    }
+
+    private void deleteDocumentIfScoreExceedsThreshold(final String documentHistoryId, final Double score) {
+        if (score >= 50.0) {
+            documentService.deleteDocumentHistory(documentHistoryId);
         }
     }
 }
