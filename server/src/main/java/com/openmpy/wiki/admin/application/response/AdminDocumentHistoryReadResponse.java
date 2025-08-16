@@ -12,6 +12,7 @@ public record AdminDocumentHistoryReadResponse(
         Integer size,
         String clientIp,
         String status,
+        Double score,
         LocalDateTime createdAt
 ) {
 
@@ -25,6 +26,7 @@ public record AdminDocumentHistoryReadResponse(
                 documentHistory.getContent().length(),
                 documentHistory.getClientIp(),
                 documentHistory.isDeleted() ? "DELETE" : "ACTIVE",
+                documentHistory.getScore(),
                 documentHistory.getCreatedAt()
         );
     }
