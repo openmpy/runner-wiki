@@ -80,7 +80,7 @@ export default function WikiNewPage() {
   };
 
   return (
-    <div>
+    <div className="min-w-0">
       <div className="flex justify-between items-center mb-6">
         <div className="flex flex-col gap-2">
           <h1 className="font-bm-hanna text-2xl">문서 작성</h1>

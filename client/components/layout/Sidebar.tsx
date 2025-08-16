@@ -34,7 +34,7 @@ const Sidebar = async () => {
 
   return (
     <aside
-      className={`w-full lg:w-80 bg-white border-y border-mint lg:border p-5 lg:rounded-lg lg:border-mint lg:align-self-start lg:self-start lg:sticky lg:top-5`}
+      className={`w-full lg:w-80 bg-white border-y border-mint lg:border p-5 lg:rounded-lg lg:border-mint lg:align-self-start lg:self-start lg:sticky lg:top-5 flex-shrink-0`}
     >
       <div>
         <h1 className="font-bm-hanna text-2xl mb-4">인기 문서</h1>
