@@ -180,16 +180,16 @@ export default function DocumentHistoryPage() {
             <thead>
               <tr className="border-b border-gray-200">
                 <th className="px-6 py-3 text-left font-bold text-gray-900">
-                  ID
-                </th>
-                <th className="px-6 py-3 text-left font-bold text-gray-900">
-                  HID
+                  ID / HID
                 </th>
                 <th className="px-6 py-3 text-left font-bold text-gray-900 w-1/3">
                   제목
                 </th>
                 <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
                   버전
+                </th>
+                <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
+                  점수
                 </th>
                 <th className="px-6 py-3 text-center font-bold text-gray-900 w-20 whitespace-nowrap">
                   상태
@@ -212,10 +212,14 @@ export default function DocumentHistoryPage() {
                   className="hover:bg-gray-50"
                 >
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <CopyableText text={document.documentId} />
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                    <CopyableText text={document.documentHistoryId} />
+                    <div className="space-y-1">
+                      <div>
+                        <CopyableText text={document.documentId} />
+                      </div>
+                      <div>
+                        <CopyableText text={document.documentHistoryId} />
+                      </div>
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap w-1/3">
                     <Link
@@ -229,6 +233,19 @@ export default function DocumentHistoryPage() {
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center w-20 text-sm text-gray-900">
                     {document.version}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-center w-20 text-sm">
+                    <span
+                      className={`font-semibold ${
+                        document.score >= 50
+                          ? "text-red-600"
+                          : document.score >= 25
+                          ? "text-orange-600"
+                          : "text-green-600"
+                      }`}
+                    >
+                      {document.score?.toFixed(1)}
+                    </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">
                     <Badge

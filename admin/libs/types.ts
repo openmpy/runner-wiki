@@ -30,5 +30,6 @@ export interface DocumentHistory {
   size: number;
   clientIp: string;
   status: DocumentHistoryStatus;
+  score: number;
   createdAt: string;
 }
