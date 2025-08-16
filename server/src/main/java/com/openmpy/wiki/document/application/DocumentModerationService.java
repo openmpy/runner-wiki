@@ -31,7 +31,7 @@ public class DocumentModerationService {
 
     public DocumentModerateResultResponse getViolenceScore(final DocumentModerateRequest request) {
         final Consumer<HttpHeaders> headers = httpHeaders -> {
-            httpHeaders.set(HttpHeaders.CONTENT_TYPE, "application/json"); // json 오타 수정
+            httpHeaders.set(HttpHeaders.CONTENT_TYPE, "application/json");
             httpHeaders.set(HttpHeaders.AUTHORIZATION, "Bearer " + apiKey);
         };
 
