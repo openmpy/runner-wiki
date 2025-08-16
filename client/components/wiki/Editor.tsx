@@ -1,5 +1,6 @@
 "use client";
 
+import { updateDocumentHistoryScore } from "@/libs/api";
 import { DocumentHistory } from "@/libs/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -51,6 +52,11 @@ export default function Editor({
         const data = await response.json();
         alert("문서가 성공적으로 편집되었습니다.");
         router.push(`/document/${data.documentId}`);
+
+        await updateDocumentHistoryScore(
+          data.documentHistoryId,
+          content.trim()
+        );
       } else {
         const error = await response.json();
         alert(`${error.message}`);

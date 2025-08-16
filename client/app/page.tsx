@@ -66,7 +66,8 @@ export default function HomePage() {
           <h2 className="font-bm-hanna text-xl mb-2">주의점</h2>
           <div className="flex flex-col gap-1">
             <p className="text-sm text-gray-500">
-              부적절한 내용을 작성할 경우 삭제될 수 있습니다.
+              모든 문서 내용은 AI 검증이 진행되며, 부적절한 내용은 자동으로
+              삭제됩니다.
             </p>
             <p className="text-sm text-gray-500">
               문서 작업 시 IP가 기록되며, 악의적 이용 방지를 위해서만

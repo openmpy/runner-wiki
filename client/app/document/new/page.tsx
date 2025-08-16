@@ -2,6 +2,7 @@
 
 import ToastEditor from "@/components/toast/ToastEditor";
 import Button from "@/components/ui/Button";
+import { updateDocumentHistoryScore } from "@/libs/api";
 import { DocumentCategory } from "@/libs/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,8 +26,16 @@ export default function WikiNewPage() {
   };
 
   const handleSubmit = async () => {
-    if (!title.trim() || !author.trim() || !content.trim()) {
-      alert("모든 내용을 입력해주세요.");
+    if (!title.trim()) {
+      alert("제목을 입력해주세요.");
+      return;
+    }
+    if (!author.trim()) {
+      alert("작성자명을 입력해주세요.");
+      return;
+    }
+    if (!content.trim()) {
+      alert("내용을 입력해주세요.");
       return;
     }
 
@@ -53,6 +62,11 @@ export default function WikiNewPage() {
         const data = await response.json();
         alert("문서가 성공적으로 작성되었습니다.");
         router.push(`/document/${data.documentId}`);
+
+        await updateDocumentHistoryScore(
+          data.documentHistoryId,
+          content.trim()
+        );
       } else {
         const error = await response.json();
         alert(`${error.message}`);
