@@ -4,19 +4,28 @@ import com.openmpy.server.document.application.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.response.DocumentGetResponse;
+import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
+import com.openmpy.server.document.domain.constants.DocumentCategory;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.global.dto.response.PageResponse;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
 public class DocumentService {
+
+    private static final String DOCUMENT_CATEGORY_ALL = "all";
 
     private final DocumentRepository documentRepository;
 
@@ -62,7 +71,27 @@ public class DocumentService {
     public DocumentGetResponse getLatest(final Long documentId) {
         final Document document = findDocumentById(documentId);
 
-        return DocumentGetResponse.of(document);
+        return DocumentGetResponse.from(document);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentPageResponse> getLatestDocuments(
+            final String category,
+            final int page,
+            final int size
+    ) {
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+
+        if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {
+            final Page<Document> documentPage = documentRepository.findAll(pageRequest);
+
+            return convertToDocumentPageResponse(documentPage);
+        }
+
+        final DocumentCategory selectedCategory = DocumentCategory.valueOf(category.toUpperCase());
+        final Page<Document> documentPage = documentRepository.findAllByCategory(selectedCategory, pageRequest);
+
+        return convertToDocumentPageResponse(documentPage);
     }
 
     private Document findDocumentById(final Long documentId) {
@@ -73,5 +102,18 @@ public class DocumentService {
 
     private long getContentByteSize(final String content) {
         return content.getBytes(StandardCharsets.UTF_8).length;
+    }
+
+    private PageResponse<DocumentPageResponse> convertToDocumentPageResponse(final Page<Document> documentPage) {
+        final List<DocumentPageResponse> documentResponses = documentPage.getContent().stream()
+                .map(DocumentPageResponse::from)
+                .toList();
+
+        return PageResponse.of(
+                documentResponses,
+                documentPage.getNumber(),
+                documentPage.getSize(),
+                documentPage.getTotalElements()
+        );
     }
 }

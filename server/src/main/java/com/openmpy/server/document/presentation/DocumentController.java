@@ -5,7 +5,9 @@ import com.openmpy.server.document.application.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.response.DocumentGetResponse;
+import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
+import com.openmpy.server.global.dto.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
@@ -44,5 +47,14 @@ public class DocumentController {
     @GetMapping("/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(@PathVariable final Long documentId) {
         return ResponseEntity.ok(documentService.getLatest(documentId));
+    }
+
+    @GetMapping
+    public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
+            @RequestParam(defaultValue = "all") final String category,
+            @RequestParam(defaultValue = "0", required = false) final int page,
+            @RequestParam(defaultValue = "10", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentService.getLatestDocuments(category, page, size));
     }
 }

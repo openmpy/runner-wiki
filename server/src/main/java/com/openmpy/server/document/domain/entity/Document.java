@@ -37,6 +37,9 @@ public class Document {
     @Column(nullable = false)
     private LocalDateTime createdAt;
 
+    @Column
+    private LocalDateTime updatedAt;
+
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DocumentHistory> histories = new ArrayList<>();
 
@@ -57,8 +60,10 @@ public class Document {
             final Long size,
             final String clientIp
     ) {
-        Document document = new Document(title, category);
+        final Document document = new Document(title, category);
+
         document.addHistory(author, content, INITIAL_VERSION, size, clientIp);
+        document.updatedAt = LocalDateTime.now();
         return document;
     }
 
@@ -73,6 +78,7 @@ public class Document {
 
         history.assignTo(this);
         histories.add(history);
+        updatedAt = LocalDateTime.now();
     }
 
     public Long getMaximumVersion() {
