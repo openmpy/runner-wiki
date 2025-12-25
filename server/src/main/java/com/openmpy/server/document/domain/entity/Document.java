@@ -21,6 +21,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Document {
 
+    private static final long INITIAL_VERSION = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -56,19 +58,27 @@ public class Document {
             final String clientIp
     ) {
         Document document = new Document(title, category);
-        document.addHistory(author, content, size, clientIp);
+        document.addHistory(author, content, INITIAL_VERSION, size, clientIp);
         return document;
     }
 
     public void addHistory(
             final String author,
             final String content,
+            final Long version,
             final Long size,
             final String clientIp
     ) {
-        final DocumentHistory history = DocumentHistory.create(author, content, size, clientIp);
+        final DocumentHistory history = DocumentHistory.create(author, content, version, size, clientIp);
 
         history.assignTo(this);
         histories.add(history);
+    }
+
+    public Long getMaximumVersion() {
+        return histories.stream()
+                .mapToLong(DocumentHistory::getVersion)
+                .max()
+                .orElse(0L);
     }
 }

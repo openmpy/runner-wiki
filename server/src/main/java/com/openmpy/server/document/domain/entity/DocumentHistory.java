@@ -46,12 +46,13 @@ public class DocumentHistory {
     private DocumentHistory(
             final String author,
             final String content,
+            final Long version,
             final Long size,
             final String clientIp
     ) {
         this.author = author;
         this.content = content;
-        this.version = 1L;
+        this.version = version;
         this.size = size;
         this.clientIp = clientIp;
         this.createdAt = LocalDateTime.now();
@@ -60,10 +61,11 @@ public class DocumentHistory {
     protected static DocumentHistory create(
             final String author,
             final String content,
+            final Long version,
             final Long size,
             final String clientIp
     ) {
-        return new DocumentHistory(author, content, size, clientIp);
+        return new DocumentHistory(author, content, version, size, clientIp);
     }
 
     protected void assignTo(final Document document) {

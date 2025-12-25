@@ -1,7 +1,9 @@
 package com.openmpy.server.document.application;
 
 import com.openmpy.server.document.application.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
+import com.openmpy.server.document.application.response.DocumentUpdateResponse;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,17 @@ public class DocumentService {
         final Document savedDocument = documentRepository.save(document);
 
         return new DocumentCreateResponse(savedDocument.getId());
+    }
+
+    @Transactional
+    public DocumentUpdateResponse update(final Long documentId, final DocumentUpdateRequest request) {
+        final Document document = documentRepository.findById(documentId).orElseThrow(
+                () -> new IllegalArgumentException("찾을 수 없는 문서 번호입니다.")
+        );
+
+        final Long documentVersion = document.getMaximumVersion() + 1;
+
+        document.addHistory(request.author(), request.content(), documentVersion, 0L, "");
+        return new DocumentUpdateResponse(document.getId());
     }
 }
