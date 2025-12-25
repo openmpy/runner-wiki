@@ -18,20 +18,18 @@ public record DocumentGetResponse(
         LocalDateTime lastModifiedAt
 ) {
 
-    public static DocumentGetResponse from(final Document document) {
-        final DocumentHistory lastHistory = document.getLastHistory();
-
+    public static DocumentGetResponse from(final Document document, final DocumentHistory documentHistory) {
         return new DocumentGetResponse(
                 document.getId(),
-                lastHistory.getId(),
+                documentHistory.getId(),
                 document.getTitle(),
                 document.getCategory(),
-                lastHistory.getAuthor(),
-                lastHistory.getContent(),
-                lastHistory.getVersion(),
-                lastHistory.getSize(),
+                documentHistory.getAuthor(),
+                documentHistory.getContent(),
+                documentHistory.getVersion(),
+                documentHistory.getSize(),
                 document.getCreatedAt(),
-                lastHistory.getCreatedAt()
+                documentHistory.getCreatedAt()
         );
     }
 }

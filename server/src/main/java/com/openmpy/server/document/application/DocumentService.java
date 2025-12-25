@@ -71,7 +71,7 @@ public class DocumentService {
     public DocumentGetResponse getLatest(final Long documentId) {
         final Document document = findDocumentById(documentId);
 
-        return DocumentGetResponse.from(document);
+        return DocumentGetResponse.from(document, document.getLastHistory());
     }
 
     @Transactional(readOnly = true)
