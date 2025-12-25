@@ -81,4 +81,8 @@ public class Document {
                 .max()
                 .orElse(0L);
     }
+
+    public DocumentHistory getLastHistory() {
+        return histories.getLast();
+    }
 }
