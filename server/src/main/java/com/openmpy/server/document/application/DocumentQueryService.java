@@ -1,9 +1,15 @@
 package com.openmpy.server.document.application;
 
 import com.openmpy.server.document.application.response.DocumentGetResponse;
+import com.openmpy.server.document.application.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.domain.entity.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
+import com.openmpy.server.global.dto.response.PageResponse;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,5 +26,23 @@ public class DocumentQueryService {
         );
 
         return DocumentGetResponse.from(documentHistory.getDocument(), documentHistory);
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentHistoryPageResponse> getHistories(
+            final Long documentId,
+            final int page,
+            final int size
+    ) {
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
+        final Page<DocumentHistory> documentHistoryPage = documentHistoryRepository.findAllByDocumentId(
+                documentId,
+                pageRequest
+        );
+        final List<DocumentHistoryPageResponse> documentHistoryResponses = documentHistoryPage.getContent().stream()
+                .map(DocumentHistoryPageResponse::from)
+                .toList();
+
+        return PageResponse.of(documentHistoryResponses, page, size, documentHistoryPage.getTotalElements());
     }
 }
