@@ -11,9 +11,11 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SQLRestriction("deleted_at IS NULL")
 @Entity
 public class DocumentHistory {
 
@@ -38,6 +40,9 @@ public class DocumentHistory {
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    @Column
+    private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", nullable = false)
@@ -66,6 +71,10 @@ public class DocumentHistory {
             final String clientIp
     ) {
         return new DocumentHistory(author, content, version, size, clientIp);
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
     protected void assignTo(final Document document) {

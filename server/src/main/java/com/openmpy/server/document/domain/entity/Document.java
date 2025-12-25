@@ -15,9 +15,11 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SQLRestriction("deleted_at IS NULL")
 @Entity
 public class Document {
 
@@ -39,6 +41,9 @@ public class Document {
 
     @Column
     private LocalDateTime updatedAt;
+
+    @Column
+    private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DocumentHistory> histories = new ArrayList<>();
@@ -79,6 +84,10 @@ public class Document {
         history.assignTo(this);
         histories.add(history);
         updatedAt = LocalDateTime.now();
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 
     public Long getMaximumVersion() {

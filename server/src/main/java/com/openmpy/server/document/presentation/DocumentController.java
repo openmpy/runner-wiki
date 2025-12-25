@@ -11,6 +11,7 @@ import com.openmpy.server.global.dto.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,13 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/documents")
+@RequestMapping("/api/v1")
 @RestController
 public class DocumentController {
 
     private final DocumentService documentService;
 
-    @PostMapping
+    @PostMapping("/documents")
     public ResponseEntity<DocumentCreateResponse> create(
             @RequestBody final DocumentCreateRequest request,
             final HttpServletRequest servletRequest
@@ -35,7 +36,7 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.create(request, servletRequest));
     }
 
-    @PutMapping("/{documentId}")
+    @PutMapping("/documents/{documentId}")
     public ResponseEntity<DocumentUpdateResponse> update(
             @PathVariable final Long documentId,
             @RequestBody final DocumentUpdateRequest request,
@@ -44,17 +45,29 @@ public class DocumentController {
         return ResponseEntity.ok(documentService.update(documentId, request, servletRequest));
     }
 
-    @GetMapping("/{documentId}")
+    @GetMapping("/documents/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(@PathVariable final Long documentId) {
         return ResponseEntity.ok(documentService.getLatest(documentId));
     }
 
-    @GetMapping
+    @GetMapping("/documents")
     public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
             @RequestParam(defaultValue = "all") final String category,
             @RequestParam(defaultValue = "0", required = false) final int page,
             @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentService.getLatestDocuments(category, page, size));
+    }
+
+    @DeleteMapping("/documents/{documentId}")
+    public ResponseEntity<Void> delete(@PathVariable final Long documentId) {
+        documentService.delete(documentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/document-histories/{historyId}")
+    public ResponseEntity<Void> deleteHistory(@PathVariable final Long historyId) {
+        documentService.deleteHistory(historyId);
+        return ResponseEntity.ok().build();
     }
 }

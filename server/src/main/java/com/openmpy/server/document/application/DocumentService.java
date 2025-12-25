@@ -8,6 +8,8 @@ import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
 import com.openmpy.server.document.domain.constants.DocumentCategory;
 import com.openmpy.server.document.domain.entity.Document;
+import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.dto.response.PageResponse;
 import com.openmpy.server.global.util.ClientIpUtil;
@@ -28,6 +30,7 @@ public class DocumentService {
     private static final String DOCUMENT_CATEGORY_ALL = "all";
 
     private final DocumentRepository documentRepository;
+    private final DocumentHistoryRepository documentHistoryRepository;
 
     @Transactional
     public DocumentCreateResponse create(final DocumentCreateRequest request, final HttpServletRequest servletRequest) {
@@ -92,6 +95,22 @@ public class DocumentService {
         final Page<Document> documentPage = documentRepository.findAllByCategory(selectedCategory, pageRequest);
 
         return convertToDocumentPageResponse(documentPage);
+    }
+
+    @Transactional
+    public void delete(final Long documentId) {
+        final Document document = findDocumentById(documentId);
+
+        document.delete();
+    }
+
+    @Transactional
+    public void deleteHistory(final Long documentHistoryId) {
+        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
+                () -> new IllegalArgumentException("찾을 수 없는 문서 기록 번호입니다.")
+        );
+
+        documentHistory.delete();
     }
 
     private Document findDocumentById(final Long documentId) {
