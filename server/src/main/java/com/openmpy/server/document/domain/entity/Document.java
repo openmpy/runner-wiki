@@ -23,8 +23,6 @@ import org.hibernate.annotations.SQLRestriction;
 @Entity
 public class Document {
 
-    private static final long INITIAL_VERSION = 1L;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -35,6 +33,9 @@ public class Document {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DocumentCategory category;
+
+    @Column(nullable = false)
+    private Long latestVersion = 0L;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -67,7 +68,7 @@ public class Document {
     ) {
         final Document document = new Document(title, category);
 
-        document.addHistory(author, content, INITIAL_VERSION, size, clientIp);
+        document.addHistory(author, content, size, clientIp);
         document.updatedAt = LocalDateTime.now();
         return document;
     }
@@ -75,26 +76,21 @@ public class Document {
     public void addHistory(
             final String author,
             final String content,
-            final Long version,
             final Long size,
             final String clientIp
     ) {
-        final DocumentHistory history = DocumentHistory.create(author, content, version, size, clientIp);
+        latestVersion++;
+
+        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size, clientIp);
 
         history.assignTo(this);
         histories.add(history);
+
         updatedAt = LocalDateTime.now();
     }
 
     public void delete() {
         deletedAt = LocalDateTime.now();
-    }
-
-    public Long getMaximumVersion() {
-        return histories.stream()
-                .mapToLong(DocumentHistory::getVersion)
-                .max()
-                .orElse(0L);
     }
 
     public DocumentHistory getLastHistory() {

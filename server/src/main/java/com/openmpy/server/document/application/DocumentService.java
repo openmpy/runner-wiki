@@ -58,12 +58,10 @@ public class DocumentService {
             final HttpServletRequest servletRequest
     ) {
         final Document document = findDocumentById(documentId);
-        final Long documentVersion = document.getMaximumVersion() + 1;
 
         document.addHistory(
                 request.author(),
                 request.content(),
-                documentVersion,
                 getContentByteSize(request.content()),
                 ClientIpUtil.getClientIp(servletRequest)
         );
