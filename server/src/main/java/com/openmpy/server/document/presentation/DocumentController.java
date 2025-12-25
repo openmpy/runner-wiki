@@ -6,6 +6,7 @@ import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,16 +25,20 @@ public class DocumentController {
     private final DocumentService documentService;
 
     @PostMapping
-    public ResponseEntity<DocumentCreateResponse> create(@RequestBody final DocumentCreateRequest request) {
-        return ResponseEntity.ok(documentService.create(request));
+    public ResponseEntity<DocumentCreateResponse> create(
+            @RequestBody final DocumentCreateRequest request,
+            final HttpServletRequest servletRequest
+    ) {
+        return ResponseEntity.ok(documentService.create(request, servletRequest));
     }
 
     @PutMapping("/{documentId}")
     public ResponseEntity<DocumentUpdateResponse> update(
             @PathVariable final Long documentId,
-            @RequestBody final DocumentUpdateRequest request
+            @RequestBody final DocumentUpdateRequest request,
+            final HttpServletRequest servletRequest
     ) {
-        return ResponseEntity.ok(documentService.update(documentId, request));
+        return ResponseEntity.ok(documentService.update(documentId, request, servletRequest));
     }
 
     @GetMapping("/{documentId}")

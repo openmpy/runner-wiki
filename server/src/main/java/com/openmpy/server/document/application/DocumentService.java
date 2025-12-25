@@ -7,6 +7,8 @@ import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.global.util.ClientIpUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +20,7 @@ public class DocumentService {
     private final DocumentRepository documentRepository;
 
     @Transactional
-    public DocumentCreateResponse create(final DocumentCreateRequest request) {
+    public DocumentCreateResponse create(final DocumentCreateRequest request, final HttpServletRequest servletRequest) {
         if (documentRepository.existsByTitleAndCategory(request.title(), request.category())) {
             throw new IllegalArgumentException("이미 작성된 문서입니다.");
         }
@@ -29,7 +31,7 @@ public class DocumentService {
                 request.author(),
                 request.content(),
                 0L,
-                ""
+                ClientIpUtil.getClientIp(servletRequest)
         );
         final Document savedDocument = documentRepository.save(document);
 
@@ -37,11 +39,21 @@ public class DocumentService {
     }
 
     @Transactional
-    public DocumentUpdateResponse update(final Long documentId, final DocumentUpdateRequest request) {
+    public DocumentUpdateResponse update(
+            final Long documentId,
+            final DocumentUpdateRequest request,
+            final HttpServletRequest servletRequest
+    ) {
         final Document document = findDocumentById(documentId);
         final Long documentVersion = document.getMaximumVersion() + 1;
 
-        document.addHistory(request.author(), request.content(), documentVersion, 0L, "");
+        document.addHistory(
+                request.author(),
+                request.content(),
+                documentVersion,
+                0L,
+                ClientIpUtil.getClientIp(servletRequest)
+        );
         return new DocumentUpdateResponse(document.getId());
     }
 
