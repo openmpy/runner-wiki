@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
 import com.openmpy.server.document.domain.type.DocumentCategory;
+import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,7 +22,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @Entity
-public class Document {
+public class Document extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,12 +34,6 @@ public class Document {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DocumentCategory category;
-
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column
-    private LocalDateTime updatedAt;
 
     @Column
     private LocalDateTime deletedAt;
@@ -55,8 +50,6 @@ public class Document {
     ) {
         this.title = title;
         this.category = category;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = createdAt;
     }
 
     public static Document create(final String title, final DocumentCategory category) {
@@ -78,8 +71,6 @@ public class Document {
 
         history.assignTo(this);
         histories.add(history);
-
-        updatedAt = LocalDateTime.now();
     }
 
     public void attachImages(final List<DocumentImage> images) {
@@ -91,8 +82,6 @@ public class Document {
             image.markAsUsed(this);
             this.images.add(image);
         }
-
-        updatedAt = LocalDateTime.now();
     }
 
     public void delete() {
@@ -101,8 +90,6 @@ public class Document {
         }
 
         deletedAt = LocalDateTime.now();
-        updatedAt = deletedAt;
-
         histories.forEach(DocumentHistory::delete);
         images.forEach(DocumentImage::delete);
     }

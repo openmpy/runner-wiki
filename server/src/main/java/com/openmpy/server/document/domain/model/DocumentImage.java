@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
 import com.openmpy.server.document.domain.type.DocumentImageStatus;
+import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,11 +15,13 @@ import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.SQLRestriction;
 
 @Getter
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@SQLRestriction("deleted_at IS NULL")
 @Entity
-public class DocumentImage {
+public class DocumentImage extends BaseTimeEntity {
 
     private static final int EXPIRATION_HOURS = 2;
 
@@ -36,9 +39,6 @@ public class DocumentImage {
     @Column(nullable = false)
     private String clientIp;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Column
     private LocalDateTime expiredAt;
 
@@ -53,7 +53,6 @@ public class DocumentImage {
         this.url = url;
         this.status = DocumentImageStatus.TEMP;
         this.clientIp = clientIp;
-        this.createdAt = LocalDateTime.now();
         this.expiredAt = LocalDateTime.now().plusHours(EXPIRATION_HOURS);
     }
 

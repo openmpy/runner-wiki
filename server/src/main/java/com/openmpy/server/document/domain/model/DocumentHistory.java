@@ -1,5 +1,6 @@
 package com.openmpy.server.document.domain.model;
 
+import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -17,7 +18,7 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @Entity
-public class DocumentHistory {
+public class DocumentHistory extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,9 +39,6 @@ public class DocumentHistory {
     @Column(nullable = false)
     private String clientIp;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
     @Column
     private LocalDateTime deletedAt;
 
@@ -60,7 +58,6 @@ public class DocumentHistory {
         this.version = version;
         this.size = size;
         this.clientIp = clientIp;
-        this.createdAt = LocalDateTime.now();
     }
 
     protected static DocumentHistory create(

@@ -1,5 +1,7 @@
 package com.openmpy.server.document.application.command;
 
+import static com.openmpy.server.document.domain.type.DocumentImageStatus.TEMP;
+
 import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.command.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.command.response.DocumentCreateResponse;
@@ -104,7 +106,11 @@ public class DocumentCommandService {
             return;
         }
 
-        final List<DocumentImage> images = documentImageRepository.findAllById(imageIds);
+        final List<DocumentImage> images = documentImageRepository.findAllByIdInAndStatus(imageIds, TEMP);
+
+        if (images.size() != imageIds.size()) {
+            throw new IllegalArgumentException("이미지 업로드 갯수가 올바르지 않습니다.");
+        }
 
         document.attachImages(images);
     }
