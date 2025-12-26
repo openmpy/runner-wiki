@@ -5,10 +5,12 @@ import com.openmpy.server.document.application.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.response.DocumentGetResponse;
+import com.openmpy.server.document.application.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
 import com.openmpy.server.global.dto.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -69,5 +72,14 @@ public class DocumentController {
     public ResponseEntity<Void> deleteHistory(@PathVariable final Long historyId) {
         documentService.deleteHistory(historyId);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/document-images")
+    public ResponseEntity<DocumentImageUploadResponses> uploadImages(
+            @RequestBody final List<MultipartFile> images,
+            final HttpServletRequest servletRequest
+    ) {
+        final DocumentImageUploadResponses responses = documentService.uploadImages(images, servletRequest);
+        return ResponseEntity.ok(responses);
     }
 }

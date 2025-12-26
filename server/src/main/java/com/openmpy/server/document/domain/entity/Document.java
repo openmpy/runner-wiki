@@ -49,6 +49,9 @@ public class Document {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
     private final List<DocumentHistory> histories = new ArrayList<>();
 
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    private final List<DocumentImage> images = new ArrayList<>();
+
     private Document(
             final String title,
             final DocumentCategory category
@@ -87,6 +90,11 @@ public class Document {
         histories.add(history);
 
         updatedAt = LocalDateTime.now();
+    }
+
+    public void assignImage(final DocumentImage image) {
+        image.assignTo(this);
+        images.add(image);
     }
 
     public void delete() {
