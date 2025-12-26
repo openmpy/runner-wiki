@@ -61,7 +61,17 @@ public class DocumentImage {
         return new DocumentImage(url, clientIp);
     }
 
-    protected void assignTo(final Document document) {
+    protected void markAsUsed(final Document document) {
+        if (deletedAt != null) {
+            throw new IllegalArgumentException("이미 삭제된 이미지입니다.");
+        }
+        if (status != DocumentImageStatus.TEMP) {
+            throw new IllegalArgumentException("TEMP 이미지만 사용할 수 있습니다.");
+        }
+        if (expiredAt != null && expiredAt.isBefore(LocalDateTime.now())) {
+            throw new IllegalArgumentException("만료된 이미지입니다.");
+        }
+
         this.document = document;
 
         status = DocumentImageStatus.USED;
@@ -69,6 +79,10 @@ public class DocumentImage {
     }
 
     public void delete() {
+        if (deletedAt != null) {
+            return;
+        }
+
         deletedAt = LocalDateTime.now();
     }
 }

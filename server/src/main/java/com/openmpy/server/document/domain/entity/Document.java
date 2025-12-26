@@ -83,6 +83,10 @@ public class Document {
             final Long size,
             final String clientIp
     ) {
+        if (deletedAt != null) {
+            throw new IllegalArgumentException("삭제된 문서는 수정할 수 없습니다.");
+        }
+
         latestVersion++;
 
         final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size, clientIp);
@@ -94,14 +98,26 @@ public class Document {
     }
 
     public void attachImages(final List<DocumentImage> images) {
+        if (deletedAt != null) {
+            throw new IllegalArgumentException("삭제된 문서에 이미지를 추가할 수 없습니다.");
+        }
+
         for (final DocumentImage image : images) {
-            image.assignTo(this);
+            image.markAsUsed(this);
             this.images.add(image);
         }
+
+        updatedAt = LocalDateTime.now();
     }
 
     public void delete() {
+        if (deletedAt != null) {
+            return;
+        }
+
         deletedAt = LocalDateTime.now();
+        updatedAt = deletedAt;
+
         histories.forEach(DocumentHistory::delete);
         images.forEach(DocumentImage::delete);
     }

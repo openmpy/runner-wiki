@@ -78,6 +78,10 @@ public class DocumentHistory {
     }
 
     public void delete() {
+        if (deletedAt != null) {
+            return;
+        }
+
         deletedAt = LocalDateTime.now();
     }
 }
