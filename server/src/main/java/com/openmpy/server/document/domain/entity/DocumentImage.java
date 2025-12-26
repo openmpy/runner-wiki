@@ -42,6 +42,9 @@ public class DocumentImage {
     @Column
     private LocalDateTime expiredAt;
 
+    @Column
+    private LocalDateTime deletedAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id")
     private Document document;
@@ -63,5 +66,9 @@ public class DocumentImage {
 
         status = DocumentImageStatus.USED;
         expiredAt = null;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 }

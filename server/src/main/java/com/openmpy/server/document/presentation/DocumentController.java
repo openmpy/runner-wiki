@@ -1,6 +1,5 @@
 package com.openmpy.server.document.presentation;
 
-import com.openmpy.server.document.application.DocumentService;
 import com.openmpy.server.document.application.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.response.DocumentCreateResponse;
@@ -8,6 +7,7 @@ import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
+import com.openmpy.server.document.application.service.DocumentService;
 import com.openmpy.server.global.dto.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;

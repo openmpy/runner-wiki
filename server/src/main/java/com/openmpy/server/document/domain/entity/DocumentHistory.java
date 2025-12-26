@@ -73,11 +73,11 @@ public class DocumentHistory {
         return new DocumentHistory(author, content, version, size, clientIp);
     }
 
-    public void delete() {
-        deletedAt = LocalDateTime.now();
-    }
-
     protected void assignTo(final Document document) {
         this.document = document;
+    }
+
+    public void delete() {
+        deletedAt = LocalDateTime.now();
     }
 }

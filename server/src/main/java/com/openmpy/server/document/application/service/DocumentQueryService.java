@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application;
+package com.openmpy.server.document.application.service;
 
 import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentHistoryPageResponse;

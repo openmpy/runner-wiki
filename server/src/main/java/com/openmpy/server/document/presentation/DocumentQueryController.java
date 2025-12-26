@@ -1,8 +1,8 @@
 package com.openmpy.server.document.presentation;
 
-import com.openmpy.server.document.application.DocumentQueryService;
 import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.application.service.DocumentQueryService;
 import com.openmpy.server.global.dto.response.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

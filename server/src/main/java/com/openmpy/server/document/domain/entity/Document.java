@@ -12,6 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ public class Document {
     private DocumentCategory category;
 
     @Column(nullable = false)
-    private Long latestVersion = 0L;
+    private Long latestVersion;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
@@ -46,10 +47,10 @@ public class Document {
     @Column
     private LocalDateTime deletedAt;
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private final List<DocumentHistory> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private final List<DocumentImage> images = new ArrayList<>();
 
     private Document(
@@ -58,6 +59,7 @@ public class Document {
     ) {
         this.title = title;
         this.category = category;
+        this.latestVersion = 0L;
         this.createdAt = LocalDateTime.now();
     }
 
@@ -72,7 +74,6 @@ public class Document {
         final Document document = new Document(title, category);
 
         document.addHistory(author, content, size, clientIp);
-        document.updatedAt = LocalDateTime.now();
         return document;
     }
 
@@ -92,16 +93,22 @@ public class Document {
         updatedAt = LocalDateTime.now();
     }
 
-    public void assignImage(final DocumentImage image) {
-        image.assignTo(this);
-        images.add(image);
+    public void attachImages(final List<DocumentImage> images) {
+        for (final DocumentImage image : images) {
+            image.assignTo(this);
+            this.images.add(image);
+        }
     }
 
     public void delete() {
         deletedAt = LocalDateTime.now();
+        histories.forEach(DocumentHistory::delete);
+        images.forEach(DocumentImage::delete);
     }
 
     public DocumentHistory getLastHistory() {
-        return histories.getLast();
+        return histories.stream()
+                .max(Comparator.comparing(DocumentHistory::getVersion))
+                .orElseThrow(() -> new IllegalStateException("문서 히스토리가 없습니다."));
     }
 }
