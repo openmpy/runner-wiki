@@ -1,6 +1,6 @@
 package com.openmpy.server.document.domain.repository;
 
-import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.domain.model.DocumentHistory;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -1,4 +1,4 @@
-package com.openmpy.server.document.domain.entity;
+package com.openmpy.server.document.domain.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

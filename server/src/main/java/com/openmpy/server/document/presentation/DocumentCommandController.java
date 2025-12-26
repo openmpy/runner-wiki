@@ -1,39 +1,32 @@
 package com.openmpy.server.document.presentation;
 
-import com.openmpy.server.document.application.request.DocumentCreateRequest;
-import com.openmpy.server.document.application.request.DocumentUpdateRequest;
-import com.openmpy.server.document.application.response.DocumentCreateResponse;
-import com.openmpy.server.document.application.response.DocumentGetResponse;
-import com.openmpy.server.document.application.response.DocumentImageUploadResponses;
-import com.openmpy.server.document.application.response.DocumentPageResponse;
-import com.openmpy.server.document.application.response.DocumentUpdateResponse;
-import com.openmpy.server.document.application.service.DocumentCommandService;
-import com.openmpy.server.document.application.service.DocumentImageCommandService;
-import com.openmpy.server.document.application.service.DocumentQueryService;
-import com.openmpy.server.global.dto.response.PageResponse;
+import com.openmpy.server.document.application.command.DocumentCommandService;
+import com.openmpy.server.document.application.command.DocumentImageCommandService;
+import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.request.DocumentUpdateRequest;
+import com.openmpy.server.document.application.command.response.DocumentCreateResponse;
+import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
+import com.openmpy.server.document.application.command.response.DocumentUpdateResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
 @RestController
-public class DocumentController {
+public class DocumentCommandController {
 
     private final DocumentCommandService documentCommandService;
     private final DocumentImageCommandService documentImageCommandService;
-    private final DocumentQueryService documentQueryService;
 
     @PostMapping("/documents")
     public ResponseEntity<DocumentCreateResponse> create(
@@ -50,20 +43,6 @@ public class DocumentController {
             final HttpServletRequest servletRequest
     ) {
         return ResponseEntity.ok(documentCommandService.update(documentId, request, servletRequest));
-    }
-
-    @GetMapping("/documents/{documentId}")
-    public ResponseEntity<DocumentGetResponse> getLatest(@PathVariable final Long documentId) {
-        return ResponseEntity.ok(documentQueryService.getLatest(documentId));
-    }
-
-    @GetMapping("/documents")
-    public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
-            @RequestParam(defaultValue = "all") final String category,
-            @RequestParam(defaultValue = "0", required = false) final int page,
-            @RequestParam(defaultValue = "10", required = false) final int size
-    ) {
-        return ResponseEntity.ok(documentQueryService.getLatestDocuments(category, page, size));
     }
 
     @DeleteMapping("/documents/{documentId}")

@@ -1,14 +1,13 @@
-package com.openmpy.server.document.application.service;
+package com.openmpy.server.document.application.query;
 
-import com.openmpy.server.document.application.response.DocumentGetResponse;
-import com.openmpy.server.document.application.response.DocumentHistoryPageResponse;
-import com.openmpy.server.document.application.response.DocumentPageResponse;
-import com.openmpy.server.document.domain.constants.DocumentCategory;
-import com.openmpy.server.document.domain.entity.Document;
-import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.application.query.response.DocumentGetResponse;
+import com.openmpy.server.document.application.query.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.application.query.response.DocumentPageResponse;
+import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.model.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
-import com.openmpy.server.document.domain.repository.DocumentQueryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.dto.response.PageResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

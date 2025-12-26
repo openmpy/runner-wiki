@@ -1,6 +1,6 @@
-package com.openmpy.server.document.application.response;
+package com.openmpy.server.document.application.query.response;
 
-import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.domain.model.DocumentHistory;
 import java.time.LocalDateTime;
 
 public record DocumentHistoryPageResponse(

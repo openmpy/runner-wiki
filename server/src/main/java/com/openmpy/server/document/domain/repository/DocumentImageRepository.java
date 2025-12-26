@@ -1,7 +1,7 @@
 package com.openmpy.server.document.domain.repository;
 
-import com.openmpy.server.document.domain.constants.DocumentImageStatus;
-import com.openmpy.server.document.domain.entity.DocumentImage;
+import com.openmpy.server.document.domain.model.DocumentImage;
+import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

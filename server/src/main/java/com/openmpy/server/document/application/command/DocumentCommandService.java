@@ -1,12 +1,12 @@
-package com.openmpy.server.document.application.service;
+package com.openmpy.server.document.application.command;
 
-import com.openmpy.server.document.application.request.DocumentCreateRequest;
-import com.openmpy.server.document.application.request.DocumentUpdateRequest;
-import com.openmpy.server.document.application.response.DocumentCreateResponse;
-import com.openmpy.server.document.application.response.DocumentUpdateResponse;
-import com.openmpy.server.document.domain.entity.Document;
-import com.openmpy.server.document.domain.entity.DocumentHistory;
-import com.openmpy.server.document.domain.entity.DocumentImage;
+import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.request.DocumentUpdateRequest;
+import com.openmpy.server.document.application.command.response.DocumentCreateResponse;
+import com.openmpy.server.document.application.command.response.DocumentUpdateResponse;
+import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.model.DocumentHistory;
+import com.openmpy.server.document.domain.model.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;

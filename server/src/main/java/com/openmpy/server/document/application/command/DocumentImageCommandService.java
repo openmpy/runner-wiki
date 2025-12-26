@@ -1,10 +1,10 @@
-package com.openmpy.server.document.application.service;
+package com.openmpy.server.document.application.command;
 
+import com.openmpy.server.document.application.command.response.DocumentImageUploadResponse;
+import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.port.ImageStorage;
 import com.openmpy.server.document.application.port.UploadedImage;
-import com.openmpy.server.document.application.response.DocumentImageUploadResponse;
-import com.openmpy.server.document.application.response.DocumentImageUploadResponses;
-import com.openmpy.server.document.domain.entity.DocumentImage;
+import com.openmpy.server.document.domain.model.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;

@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application.request;
+package com.openmpy.server.document.application.command.request;
 
 import jakarta.annotation.Nullable;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.openmpy.server.global.infrastructure;
+package com.openmpy.server.document.infrastructure;
 
 import com.openmpy.server.document.application.port.ImageStorage;
 import com.openmpy.server.document.application.port.UploadedImage;

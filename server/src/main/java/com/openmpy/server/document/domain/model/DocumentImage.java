@@ -1,6 +1,6 @@
-package com.openmpy.server.document.domain.entity;
+package com.openmpy.server.document.domain.model;
 
-import com.openmpy.server.document.domain.constants.DocumentImageStatus;
+import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

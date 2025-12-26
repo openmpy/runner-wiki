@@ -1,9 +1,9 @@
-package com.openmpy.server.document.domain.repository;
+package com.openmpy.server.document.application.query;
 
-import static com.openmpy.server.document.domain.entity.QDocument.document;
-import static com.openmpy.server.document.domain.entity.QDocumentHistory.documentHistory;
+import static com.openmpy.server.document.domain.model.QDocument.document;
+import static com.openmpy.server.document.domain.model.QDocumentHistory.documentHistory;
 
-import com.openmpy.server.document.application.response.DocumentGetResponse;
+import com.openmpy.server.document.application.query.response.DocumentGetResponse;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQueryFactory;
 import lombok.RequiredArgsConstructor;

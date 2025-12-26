@@ -1,6 +1,6 @@
-package com.openmpy.server.document.domain.entity;
+package com.openmpy.server.document.domain.model;
 
-import com.openmpy.server.document.domain.constants.DocumentCategory;
+import com.openmpy.server.document.domain.type.DocumentCategory;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

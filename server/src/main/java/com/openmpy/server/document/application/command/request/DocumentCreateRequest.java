@@ -1,6 +1,6 @@
-package com.openmpy.server.document.application.request;
+package com.openmpy.server.document.application.command.request;
 
-import com.openmpy.server.document.domain.constants.DocumentCategory;
+import com.openmpy.server.document.domain.type.DocumentCategory;
 import jakarta.annotation.Nullable;
 import java.util.List;
 
