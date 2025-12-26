@@ -7,7 +7,9 @@ import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.response.DocumentPageResponse;
 import com.openmpy.server.document.application.response.DocumentUpdateResponse;
-import com.openmpy.server.document.application.service.DocumentService;
+import com.openmpy.server.document.application.service.DocumentCommandService;
+import com.openmpy.server.document.application.service.DocumentImageCommandService;
+import com.openmpy.server.document.application.service.DocumentQueryService;
 import com.openmpy.server.global.dto.response.PageResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -29,14 +31,16 @@ import org.springframework.web.multipart.MultipartFile;
 @RestController
 public class DocumentController {
 
-    private final DocumentService documentService;
+    private final DocumentCommandService documentCommandService;
+    private final DocumentImageCommandService documentImageCommandService;
+    private final DocumentQueryService documentQueryService;
 
     @PostMapping("/documents")
     public ResponseEntity<DocumentCreateResponse> create(
             @RequestBody final DocumentCreateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        return ResponseEntity.ok(documentService.create(request, servletRequest));
+        return ResponseEntity.ok(documentCommandService.create(request, servletRequest));
     }
 
     @PutMapping("/documents/{documentId}")
@@ -45,12 +49,12 @@ public class DocumentController {
             @RequestBody final DocumentUpdateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        return ResponseEntity.ok(documentService.update(documentId, request, servletRequest));
+        return ResponseEntity.ok(documentCommandService.update(documentId, request, servletRequest));
     }
 
     @GetMapping("/documents/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(@PathVariable final Long documentId) {
-        return ResponseEntity.ok(documentService.getLatest(documentId));
+        return ResponseEntity.ok(documentQueryService.getLatest(documentId));
     }
 
     @GetMapping("/documents")
@@ -59,18 +63,18 @@ public class DocumentController {
             @RequestParam(defaultValue = "0", required = false) final int page,
             @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentService.getLatestDocuments(category, page, size));
+        return ResponseEntity.ok(documentQueryService.getLatestDocuments(category, page, size));
     }
 
     @DeleteMapping("/documents/{documentId}")
     public ResponseEntity<Void> delete(@PathVariable final Long documentId) {
-        documentService.delete(documentId);
+        documentCommandService.delete(documentId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/document-histories/{historyId}")
     public ResponseEntity<Void> deleteHistory(@PathVariable final Long historyId) {
-        documentService.deleteHistory(historyId);
+        documentCommandService.deleteHistory(historyId);
         return ResponseEntity.ok().build();
     }
 
@@ -79,7 +83,7 @@ public class DocumentController {
             @RequestBody final List<MultipartFile> images,
             final HttpServletRequest servletRequest
     ) {
-        final DocumentImageUploadResponses responses = documentService.uploadImages(images, servletRequest);
+        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(images, servletRequest);
         return ResponseEntity.ok(responses);
     }
 }

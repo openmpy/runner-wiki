@@ -2,8 +2,13 @@ package com.openmpy.server.document.application.service;
 
 import com.openmpy.server.document.application.response.DocumentGetResponse;
 import com.openmpy.server.document.application.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.application.response.DocumentPageResponse;
+import com.openmpy.server.document.domain.constants.DocumentCategory;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
+import com.openmpy.server.document.domain.repository.DocumentQueryRepository;
+import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.dto.response.PageResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +22,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class DocumentQueryService {
 
+    private static final String DOCUMENT_CATEGORY_ALL = "all";
+
+    private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
+    private final DocumentQueryRepository documentQueryRepository;
 
     @Transactional(readOnly = true)
     public DocumentGetResponse getHistory(final Long documentHistoryId) {
@@ -44,5 +53,48 @@ public class DocumentQueryService {
                 .toList();
 
         return PageResponse.of(documentHistoryResponses, page, size, documentHistoryPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public DocumentGetResponse getLatest(final Long documentId) {
+        final DocumentGetResponse response = documentQueryRepository.findLatestDocumentById(documentId);
+
+        if (response == null) {
+            throw new IllegalArgumentException("문서 또는 문서 기록이 존재하지 않습니다.");
+        }
+        return response;
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentPageResponse> getLatestDocuments(
+            final String category,
+            final int page,
+            final int size
+    ) {
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+
+        if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {
+            final Page<Document> documentPage = documentRepository.findAll(pageRequest);
+
+            return convertToDocumentPageResponse(documentPage);
+        }
+
+        final DocumentCategory selectedCategory = DocumentCategory.valueOf(category.toUpperCase());
+        final Page<Document> documentPage = documentRepository.findAllByCategory(selectedCategory, pageRequest);
+
+        return convertToDocumentPageResponse(documentPage);
+    }
+
+    private PageResponse<DocumentPageResponse> convertToDocumentPageResponse(final Page<Document> documentPage) {
+        final List<DocumentPageResponse> documentResponses = documentPage.getContent().stream()
+                .map(DocumentPageResponse::from)
+                .toList();
+
+        return PageResponse.of(
+                documentResponses,
+                documentPage.getNumber(),
+                documentPage.getSize(),
+                documentPage.getTotalElements()
+        );
     }
 }

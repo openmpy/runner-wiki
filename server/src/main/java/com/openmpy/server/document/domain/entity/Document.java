@@ -12,7 +12,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,9 +35,6 @@ public class Document {
     private DocumentCategory category;
 
     @Column(nullable = false)
-    private Long latestVersion;
-
-    @Column(nullable = false)
     private LocalDateTime createdAt;
 
     @Column
@@ -59,27 +55,18 @@ public class Document {
     ) {
         this.title = title;
         this.category = category;
-        this.latestVersion = 0L;
         this.createdAt = LocalDateTime.now();
+        this.updatedAt = createdAt;
     }
 
-    public static Document create(
-            final String title,
-            final DocumentCategory category,
-            final String author,
-            final String content,
-            final Long size,
-            final String clientIp
-    ) {
-        final Document document = new Document(title, category);
-
-        document.addHistory(author, content, size, clientIp);
-        return document;
+    public static Document create(final String title, final DocumentCategory category) {
+        return new Document(title, category);
     }
 
     public void addHistory(
             final String author,
             final String content,
+            final Long version,
             final Long size,
             final String clientIp
     ) {
@@ -87,9 +74,7 @@ public class Document {
             throw new IllegalArgumentException("삭제된 문서는 수정할 수 없습니다.");
         }
 
-        latestVersion++;
-
-        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size, clientIp);
+        final DocumentHistory history = DocumentHistory.create(author, content, version, size, clientIp);
 
         history.assignTo(this);
         histories.add(history);
@@ -120,11 +105,5 @@ public class Document {
 
         histories.forEach(DocumentHistory::delete);
         images.forEach(DocumentImage::delete);
-    }
-
-    public DocumentHistory getLastHistory() {
-        return histories.stream()
-                .max(Comparator.comparing(DocumentHistory::getVersion))
-                .orElseThrow(() -> new IllegalStateException("문서 히스토리가 없습니다."));
     }
 }
