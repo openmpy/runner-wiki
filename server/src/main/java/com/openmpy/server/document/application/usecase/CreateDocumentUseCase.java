@@ -5,7 +5,6 @@ import com.openmpy.server.document.application.command.response.DocumentCreateRe
 import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
-import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CreateDocumentUseCase {
 
     private final DocumentRepository documentRepository;
-    private final DocumentHistoryRepository documentHistoryRepository;
 
     private final ImageAttacher imageAttacher;
     private final ContentSizeCalculator contentSizeCalculator;
@@ -35,12 +33,9 @@ public class CreateDocumentUseCase {
         final Document document = Document.create(request.title(), request.category());
         final Document savedDocument = documentRepository.save(document);
 
-        final long nextVersion = documentHistoryRepository.findMaxVersion(savedDocument.getId()) + 1;
-
         savedDocument.addHistory(
                 request.author(),
                 request.content(),
-                nextVersion,
                 contentSizeCalculator.calculateUtf8Bytes(request.content()),
                 clientIp
         );

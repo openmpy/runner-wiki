@@ -5,7 +5,6 @@ import com.openmpy.server.document.application.command.response.DocumentUpdateRe
 import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
-import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +17,6 @@ import org.springframework.stereotype.Service;
 public class UpdateDocumentUseCase {
 
     private final DocumentRepository documentRepository;
-    private final DocumentHistoryRepository documentHistoryRepository;
 
     private final ImageAttacher imageAttacher;
     private final ContentSizeCalculator contentSizeCalculator;
@@ -32,12 +30,9 @@ public class UpdateDocumentUseCase {
         final Document document = findDocumentById(documentId);
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
 
-        final long nextVersion = documentHistoryRepository.findMaxVersion(document.getId()) + 1;
-
         document.addHistory(
                 request.author(),
                 request.content(),
-                nextVersion,
                 contentSizeCalculator.calculateUtf8Bytes(request.content()),
                 clientIp
         );

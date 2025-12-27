@@ -35,6 +35,9 @@ public class Document extends BaseTimeEntity {
     @Column(nullable = false)
     private DocumentCategory category;
 
+    @Column(nullable = false)
+    private Long latestVersion;
+
     @Column
     private LocalDateTime deletedAt;
 
@@ -50,6 +53,7 @@ public class Document extends BaseTimeEntity {
     ) {
         this.title = title;
         this.category = category;
+        this.latestVersion = 0L;
     }
 
     public static Document create(final String title, final DocumentCategory category) {
@@ -59,7 +63,6 @@ public class Document extends BaseTimeEntity {
     public void addHistory(
             final String author,
             final String content,
-            final Long version,
             final Long size,
             final String clientIp
     ) {
@@ -67,7 +70,9 @@ public class Document extends BaseTimeEntity {
             throw new IllegalArgumentException("삭제된 문서는 수정할 수 없습니다.");
         }
 
-        final DocumentHistory history = DocumentHistory.create(author, content, version, size, clientIp);
+        latestVersion++;
+
+        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size, clientIp);
 
         history.assignTo(this);
         histories.add(history);
