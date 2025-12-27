@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
 import com.openmpy.server.document.domain.type.DocumentImageStatus;
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -62,13 +63,13 @@ public class DocumentImage extends BaseTimeEntity {
 
     protected void markAsUsed(final Document document) {
         if (deletedAt != null) {
-            throw new IllegalArgumentException("이미 삭제된 이미지입니다.");
+            throw new CustomException("이미 삭제된 이미지입니다.");
         }
         if (status != DocumentImageStatus.TEMP) {
-            throw new IllegalArgumentException("TEMP 이미지만 사용할 수 있습니다.");
+            throw new CustomException("TEMP 이미지만 사용할 수 있습니다.");
         }
         if (expiredAt != null && expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalArgumentException("만료된 이미지입니다.");
+            throw new CustomException("만료된 이미지입니다.");
         }
 
         this.document = document;

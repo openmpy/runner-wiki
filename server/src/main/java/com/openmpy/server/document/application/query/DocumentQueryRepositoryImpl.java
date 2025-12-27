@@ -4,6 +4,7 @@ import static com.openmpy.server.document.domain.model.QDocument.document;
 import static com.openmpy.server.document.domain.model.QDocumentHistory.documentHistory;
 
 import com.openmpy.server.document.application.query.response.DocumentGetResponse;
+import com.openmpy.server.global.exception.CustomException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +27,7 @@ public class DocumentQueryRepositoryImpl implements DocumentQueryRepository {
                 .fetchOne();
 
         if (latestHistoryId == null) {
-            throw new IllegalArgumentException("문서 또는 문서 기록이 존재하지 않습니다.");
+            throw new CustomException("문서 또는 문서 기록이 존재하지 않습니다.");
         }
 
         return query

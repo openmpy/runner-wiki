@@ -6,6 +6,7 @@ import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
@@ -42,7 +43,7 @@ public class UpdateDocumentUseCase {
 
     private Document findDocumentById(final Long documentId) {
         return documentRepository.findById(documentId).orElseThrow(
-                () -> new IllegalArgumentException("찾을 수 없는 문서 번호입니다.")
+                () -> new CustomException("찾을 수 없는 문서 번호입니다.")
         );
     }
 }

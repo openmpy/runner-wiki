@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
 import com.openmpy.server.document.domain.type.DocumentCategory;
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -67,7 +68,7 @@ public class Document extends BaseTimeEntity {
             final String clientIp
     ) {
         if (deletedAt != null) {
-            throw new IllegalArgumentException("삭제된 문서는 수정할 수 없습니다.");
+            throw new CustomException("삭제된 문서는 수정할 수 없습니다.");
         }
 
         latestVersion++;
@@ -80,7 +81,7 @@ public class Document extends BaseTimeEntity {
 
     public void attachImages(final List<DocumentImage> images) {
         if (deletedAt != null) {
-            throw new IllegalArgumentException("삭제된 문서에 이미지를 추가할 수 없습니다.");
+            throw new CustomException("삭제된 문서에 이미지를 추가할 수 없습니다.");
         }
 
         for (final DocumentImage image : images) {

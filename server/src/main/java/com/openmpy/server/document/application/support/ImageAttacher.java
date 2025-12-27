@@ -4,6 +4,7 @@ import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.model.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import com.openmpy.server.document.domain.type.DocumentImageStatus;
+import com.openmpy.server.global.exception.CustomException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ public class ImageAttacher {
         );
 
         if (images.size() != imageIds.size()) {
-            throw new IllegalArgumentException("이미지 업로드 갯수가 올바르지 않습니다.");
+            throw new CustomException("이미지 업로드 갯수가 올바르지 않습니다.");
         }
 
         document.attachImages(images);

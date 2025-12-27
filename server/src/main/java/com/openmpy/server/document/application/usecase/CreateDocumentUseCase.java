@@ -6,6 +6,7 @@ import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -45,7 +46,7 @@ public class CreateDocumentUseCase {
 
     private void validateDuplicate(final DocumentCreateRequest request) {
         if (documentRepository.existsByTitleAndCategory(request.title(), request.category())) {
-            throw new IllegalArgumentException("이미 작성된 문서입니다.");
+            throw new CustomException("이미 작성된 문서입니다.");
         }
     }
 }

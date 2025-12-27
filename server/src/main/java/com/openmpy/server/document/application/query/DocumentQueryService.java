@@ -9,6 +9,7 @@ import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.dto.PageResponse;
+import com.openmpy.server.global.exception.CustomException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -30,7 +31,7 @@ public class DocumentQueryService {
     @Transactional(readOnly = true)
     public DocumentGetResponse getHistory(final Long documentHistoryId) {
         final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new IllegalArgumentException("찾을 수 없는 문서 기록 번호입니다.")
+                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
         );
 
         return DocumentGetResponse.from(documentHistory.getDocument(), documentHistory);
@@ -59,7 +60,7 @@ public class DocumentQueryService {
         final DocumentGetResponse response = documentQueryRepository.findLatestDocumentById(documentId);
 
         if (response == null) {
-            throw new IllegalArgumentException("문서 또는 문서 기록이 존재하지 않습니다.");
+            throw new CustomException("문서 또는 문서 기록이 존재하지 않습니다.");
         }
         return response;
     }
