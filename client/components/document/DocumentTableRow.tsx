@@ -1,4 +1,5 @@
 import { DocumentPage } from "@/lib/types/document";
+import { formatRelativeTime } from "@/lib/utils/date";
 import Link from "next/link";
 import DocumentCategoryBadge from "./DocumentCategoryBadge";
 
@@ -22,7 +23,7 @@ export default function DocumentTableRow({ document }: DocumentTableRowProps) {
           <DocumentCategoryBadge category={document.category} />
         </td>
         <td className="px-3 py-3 whitespace-nowrap text-gray-500 text-xs">
-          {document.lastModifiedAt}
+          {formatRelativeTime(document.lastModifiedAt)}
         </td>
       </tr>
     </>

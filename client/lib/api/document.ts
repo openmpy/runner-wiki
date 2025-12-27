@@ -1,7 +1,7 @@
 export async function getLatestDocuments(category: string) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents?category=${category}&page=0`,
+      `http://localhost:8080/api/v1/documents?category=${category}&page=0&size=15`,
       {
         method: "GET",
         headers: {

@@ -1,4 +1,5 @@
 import { DocumentPage } from "@/lib/types/document";
+import { formatRelativeTime } from "@/lib/utils/date";
 import Link from "next/link";
 import DocumentCategoryBadge from "./DocumentCategoryBadge";
 
@@ -19,7 +20,9 @@ export default function DocumentCard({ document }: DocumentCardProps) {
           </Link>
           <DocumentCategoryBadge category={document.category} />
         </div>
-        <p className="text-gray-500 text-xs">{document.lastModifiedAt}</p>
+        <p className="text-gray-500 text-xs">
+          {formatRelativeTime(document.lastModifiedAt)}
+        </p>
       </div>
     </>
   );

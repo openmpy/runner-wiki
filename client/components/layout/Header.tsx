@@ -34,7 +34,7 @@ export default function Header() {
             </h1>
           </Link>
           <div className="flex items-center justify-between gap-8">
-            <Link href="/">
+            <Link href="/document">
               <LuBook className="text-xl text-white font-bold hover:text-gray-200 transition-colors" />
             </Link>
             <Link href="/">
