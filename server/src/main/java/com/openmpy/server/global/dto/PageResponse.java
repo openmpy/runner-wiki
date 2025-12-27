@@ -1,4 +1,4 @@
-package com.openmpy.server.global.dto.response;
+package com.openmpy.server.global.dto;
 
 import java.util.List;
 

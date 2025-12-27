@@ -8,7 +8,7 @@ import com.openmpy.server.document.domain.model.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
-import com.openmpy.server.global.dto.response.PageResponse;
+import com.openmpy.server.global.dto.PageResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

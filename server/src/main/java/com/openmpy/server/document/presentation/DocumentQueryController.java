@@ -4,7 +4,7 @@ import com.openmpy.server.document.application.query.DocumentQueryService;
 import com.openmpy.server.document.application.query.response.DocumentGetResponse;
 import com.openmpy.server.document.application.query.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.application.query.response.DocumentPageResponse;
-import com.openmpy.server.global.dto.response.PageResponse;
+import com.openmpy.server.global.dto.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
