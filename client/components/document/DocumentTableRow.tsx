@@ -1,0 +1,30 @@
+import { DocumentPage } from "@/lib/types/document";
+import Link from "next/link";
+import DocumentCategoryBadge from "./DocumentCategoryBadge";
+
+interface DocumentTableRowProps {
+  document: DocumentPage;
+}
+
+export default function DocumentTableRow({ document }: DocumentTableRowProps) {
+  return (
+    <>
+      <tr className="hover:bg-gray-100 transition-colors">
+        <td className="px-3 py-3">
+          <Link
+            href="/"
+            className="block hover:underline transition-colors text-sm whitespace-nowrap"
+          >
+            {document.title}
+          </Link>
+        </td>
+        <td className="px-3 py-3 text-center">
+          <DocumentCategoryBadge category={document.category} />
+        </td>
+        <td className="px-3 py-3 whitespace-nowrap text-gray-500 text-xs">
+          {document.lastModifiedAt}
+        </td>
+      </tr>
+    </>
+  );
+}
