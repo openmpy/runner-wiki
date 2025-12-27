@@ -1,5 +1,15 @@
 @import "tailwindcss";
 
+@layer utilities {
+  .font-bmhanna {
+    font-family: var(--font-bmhanna);
+  }
+
+  .font-noto-sans {
+    font-family: var(--font-noto-sans);
+  }
+}
+
 @theme {
   --color-mint: #00a495;
 }

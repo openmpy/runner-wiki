@@ -1,6 +1,7 @@
+import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
-import { bmhanna, geist } from "./font";
+import { bmhanna, notoSans } from "./font";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,9 +16,30 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`${geist.variable} ${bmhanna.className} antialiased`}>
+      <body
+        className={`${notoSans.variable} ${bmhanna.variable} antialiased min-h-screen flex flex-col bg-mint`}
+      >
+        {/* 헤더 */}
         <Header />
-        {children}
+
+        {/* 본문 */}
+        <main className="flex-1 bg-gray-100 font-noto-sans py-4 lg:p-4">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex flex-col lg:flex-row lg:justify-between gap-2">
+              {/* 내용 */}
+              <div className="border-t border-b border-mint bg-white lg:rounded-sm lg:border lg:flex-1 p-4">
+                {children}
+              </div>
+              {/* 사이드바 */}
+              <div className="border-t border-b border-mint bg-white lg:rounded-sm lg:border lg:w-80 p-4">
+                사이드바
+              </div>
+            </div>
+          </div>
+        </main>
+
+        {/* 푸터 */}
+        <Footer />
       </body>
     </html>
   );
