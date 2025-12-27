@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
-    boolean existsByTitleAndCategory(final String title, final DocumentCategory category);
+    boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
 
     Page<Document> findAllByCategory(final DocumentCategory category, final Pageable pageable);
 }

@@ -45,7 +45,7 @@ public class CreateDocumentUseCase {
     }
 
     private void validateDuplicate(final DocumentCreateRequest request) {
-        if (documentRepository.existsByTitleAndCategory(request.title(), request.category())) {
+        if (documentRepository.existsByTitle_ValueAndCategory(request.title(), request.category())) {
             throw new CustomException("이미 작성된 문서입니다.");
         }
     }
