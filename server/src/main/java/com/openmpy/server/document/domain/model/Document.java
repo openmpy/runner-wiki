@@ -1,10 +1,13 @@
 package com.openmpy.server.document.domain.model;
 
+import com.openmpy.server.document.domain.DocumentTitle;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
@@ -29,8 +32,9 @@ public class Document extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String title;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false))
+    private DocumentTitle title;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -52,7 +56,7 @@ public class Document extends BaseTimeEntity {
             final String title,
             final DocumentCategory category
     ) {
-        this.title = title;
+        this.title = new DocumentTitle(title);
         this.category = category;
         this.latestVersion = 0L;
     }
@@ -98,5 +102,9 @@ public class Document extends BaseTimeEntity {
         deletedAt = LocalDateTime.now();
         histories.forEach(DocumentHistory::delete);
         images.forEach(DocumentImage::delete);
+    }
+
+    public String getTitle() {
+        return title.getValue();
     }
 }

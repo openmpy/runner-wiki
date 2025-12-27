@@ -1,7 +1,11 @@
 package com.openmpy.server.document.domain.model;
 
+import com.openmpy.server.document.domain.DocumentHistoryAuthor;
+import com.openmpy.server.document.domain.DocumentHistoryContent;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
+import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
+import jakarta.persistence.Embedded;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,11 +28,13 @@ public class DocumentHistory extends BaseTimeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false)
-    private String author;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "author", nullable = false))
+    private DocumentHistoryAuthor author;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
-    private String content;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "content", nullable = false))
+    private DocumentHistoryContent content;
 
     @Column(nullable = false)
     private Long version;
@@ -53,8 +59,8 @@ public class DocumentHistory extends BaseTimeEntity {
             final Long size,
             final String clientIp
     ) {
-        this.author = author;
-        this.content = content;
+        this.author = new DocumentHistoryAuthor(author);
+        this.content = new DocumentHistoryContent(content);
         this.version = version;
         this.size = size;
         this.clientIp = clientIp;
@@ -80,5 +86,13 @@ public class DocumentHistory extends BaseTimeEntity {
         }
 
         deletedAt = LocalDateTime.now();
+    }
+
+    public String getAuthor() {
+        return author.getValue();
+    }
+
+    public String getContent() {
+        return content.getValue();
     }
 }
