@@ -13,7 +13,7 @@ export default function Header() {
             </h1>
           </Link>
           <div className="flex items-center justify-start gap-4">
-            <Link href="/">
+            <Link href="/document">
               <p className="text-xl font-bmhanna text-white hover:text-gray-200 transition-colors">
                 최근편집
               </p>
