@@ -24,7 +24,7 @@ export default function DocumentHistoryCard({
             버전 {documentHistory.version}
           </span>
         </div>
-        <p className="text-gray-500 text-xs mb-1">
+        <p className="text-gray-700 text-xs mb-1">
           {formatFileSize(documentHistory.size)}
         </p>
         <p className="text-gray-500 text-xs">
