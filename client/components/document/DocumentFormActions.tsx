@@ -22,9 +22,8 @@ export default function DocumentFormActions({
         disabled={isSubmitting}
         className="bg-mint font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-1"
       >
-        작성하기
+        제출하기
       </button>
     </div>
   );
 }
-
