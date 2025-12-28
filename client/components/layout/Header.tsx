@@ -18,7 +18,7 @@ export default function Header() {
                 최근편집
               </p>
             </Link>
-            <Link href="/">
+            <Link href="/document/new">
               <p className="text-xl font-bmhanna text-white hover:text-gray-200 transition-colors">
                 문서작성
               </p>
@@ -37,7 +37,7 @@ export default function Header() {
             <Link href="/document">
               <LuBook className="text-xl text-white font-bold hover:text-gray-200 transition-colors" />
             </Link>
-            <Link href="/">
+            <Link href="/document/new">
               <LuFilePen className="text-xl text-white font-bold hover:text-gray-200 transition-colors" />
             </Link>
           </div>
