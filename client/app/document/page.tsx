@@ -2,16 +2,18 @@ import DocumentCards from "@/components/document/DocumentCards";
 import DocumentCategoryMenu from "@/components/document/DocumentCategoryMenu";
 import DocumentTable from "@/components/document/DocumentTable";
 import DocumentTitle from "@/components/document/DocumentTitle";
+import Pagination from "@/components/document/Pagination";
 import { getLatestDocuments } from "@/lib/api/document";
 
 export default async function DocumentPage({
   searchParams,
 }: {
-  searchParams: Promise<{ category?: string }>;
+  searchParams: Promise<{ category?: string; page?: string }>;
 }) {
   const params = await searchParams;
   const selectedCategory = params.category || "ALL";
-  const data = await getLatestDocuments(selectedCategory);
+  const currentPage = params.page ? parseInt(params.page, 10) : 0;
+  const data = await getLatestDocuments(selectedCategory, currentPage);
 
   return (
     <div>
@@ -63,6 +65,15 @@ export default async function DocumentPage({
             <p className="text-red-600">에러가 발생했습니다.</p>
           </div>
         </div>
+      )}
+
+      {/* 페이지네이션 */}
+      {data && (
+        <Pagination
+          pagination={data}
+          currentCategory={selectedCategory}
+          basePath="document"
+        />
       )}
     </div>
   );
