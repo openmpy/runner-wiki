@@ -20,7 +20,12 @@ export default function DocumentFormActions({
       <button
         onClick={onSubmit}
         disabled={isSubmitting}
-        className="bg-mint font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-1"
+        className={`bg-mint font-bmhanna text-white rounded-sm px-3 py-1
+          ${
+            isSubmitting
+              ? "opacity-50 cursor-not-allowed"
+              : "hover:opacity-90 cursor-pointer"
+          }`}
       >
         제출하기
       </button>

@@ -51,8 +51,8 @@ export default function DocumentNewPage() {
         content: markdown,
       });
 
-      alert("문서가 정상적으로 작성되었습니다.");
       router.push(`/document/${data.documentId}`);
+      alert("문서가 정상적으로 작성되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
@@ -76,9 +76,7 @@ export default function DocumentNewPage() {
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
         />
-        <div>
-          <ToastEditor ref={editorRef} />
-        </div>
+        <ToastEditor ref={editorRef} />
         <DocumentFormActions
           onSubmit={handleSubmit}
           onCancel={router.back}

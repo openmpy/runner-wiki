@@ -27,11 +27,11 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col lg:flex-row lg:justify-between gap-2">
               {/* 내용 */}
-              <div className="border-t border-b border-mint bg-white p-4 lg:rounded-sm lg:border lg:flex-1 lg:self-start">
+              <div className="border-t border-b border-mint bg-white p-4 lg:rounded-sm lg:border lg:flex-1 lg:self-start min-w-0 w-full">
                 {children}
               </div>
               {/* 사이드바 */}
-              <div className="border-t border-b border-mint bg-white p-4 lg:rounded-sm lg:border lg:w-80 lg:self-start lg:sticky lg:top-4">
+              <div className="border-t border-b border-mint bg-white p-4 lg:rounded-sm lg:border lg:w-80 lg:shrink-0 lg:self-start lg:sticky lg:top-4">
                 사이드바
                 <p>ㅁㄴㅇㄴㅁㅇ</p>
                 <p>ㅁㄴㅇㄴㅁㅇ</p>

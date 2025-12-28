@@ -72,8 +72,8 @@ export default function DocumentHistoryEditPage() {
         content: markdown,
       });
 
-      alert("문서가 정상적으로 편집되었습니다.");
       router.push(`/document/${data.documentId}`);
+      alert("문서가 정상적으로 편집되었습니다.");
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
