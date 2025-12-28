@@ -1,3 +1,5 @@
+import { DocumentCategory } from "@/lib/types/document";
+
 export async function getLatestDocuments(
   category: string,
   page: number = 0,
@@ -20,4 +22,28 @@ export async function getLatestDocuments(
   } catch (error) {
     console.error(error);
   }
+}
+
+export interface CreateDocumentRequest {
+  title: string;
+  category: DocumentCategory;
+  author: string;
+  content: string;
+}
+
+export async function createDocument(data: CreateDocumentRequest) {
+  const response = await fetch(`http://localhost:8080/api/v1/documents`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "문서 작성에 실패했습니다.");
+  }
+
+  return response.json();
 }
