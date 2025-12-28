@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 
 public record DocumentHistoryPageResponse(
         String title,
+        Long documentId,
         Long documentHistoryId,
         String author,
         Long version,
@@ -15,6 +16,7 @@ public record DocumentHistoryPageResponse(
     public static DocumentHistoryPageResponse from(final DocumentHistory documentHistory) {
         return new DocumentHistoryPageResponse(
                 documentHistory.getDocument().getTitle(),
+                documentHistory.getDocument().getId(),
                 documentHistory.getId(),
                 documentHistory.getAuthor(),
                 documentHistory.getVersion(),
