@@ -66,3 +66,27 @@ export async function getLatestDocument(documentId: number) {
 
   return response.json();
 }
+
+export async function getHistories(
+  documentHistoryId: number,
+  page: number = 0,
+  size: number = 15
+) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/documents/${documentHistoryId}/histories?page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}

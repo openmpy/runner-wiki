@@ -13,7 +13,7 @@ export default function DocumentCard({ document }: DocumentCardProps) {
       <div className="border border-gray-200 rounded-sm px-3 py-3 hover:bg-gray-100 transition-colors">
         <div className="flex items-center justify-between mb-4">
           <Link
-            href="/document/1234"
+            href={`/document/${document.documentId}`}
             className="block hover:underline transition-colors text-sm"
           >
             {document.title}

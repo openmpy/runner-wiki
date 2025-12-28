@@ -6,3 +6,12 @@ export interface DocumentPage {
   category: DocumentCategory;
   lastModifiedAt: string;
 }
+
+export interface DocumentHistoryPage {
+  title: string;
+  documentHistoryId: number;
+  author: string;
+  version: number;
+  size: number;
+  createdAt: string;
+}
