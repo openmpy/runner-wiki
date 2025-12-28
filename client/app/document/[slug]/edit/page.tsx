@@ -19,6 +19,7 @@ export default function DocumentHistoryEditPage() {
   const [category, setCategory] = useState<DocumentCategory>("USER");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -31,11 +32,7 @@ export default function DocumentHistoryEditPage() {
         const data = await getLatestDocument(documentId);
         setCategory(data.category);
         setTitle(data.title);
-
-        if (editorRef.current) {
-          const editorInstance = editorRef.current.getInstance();
-          editorInstance.setMarkdown(data.content);
-        }
+        setContent(data.content);
       } catch (error) {
         console.error(error);
         alert("문서를 불러오는데 실패했습니다.");
@@ -116,7 +113,13 @@ export default function DocumentHistoryEditPage() {
           onAuthorChange={setAuthor}
         />
         <div>
-          <ToastEditor ref={editorRef} />
+          {!isLoading && (
+            <ToastEditor
+              key={documentId}
+              ref={editorRef}
+              initialValue={content}
+            />
+          )}
         </div>
         <DocumentFormActions
           onSubmit={handleSubmit}
