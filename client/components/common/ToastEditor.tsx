@@ -2,7 +2,13 @@
 
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
+import dynamic from "next/dynamic";
 import { forwardRef } from "react";
+
+const ToastEditorEx = dynamic(
+  () => import("@toast-ui/react-editor").then((m) => m.Editor),
+  { ssr: false }
+);
 
 interface ToastEditorProps {
   initialValue?: string;
@@ -11,7 +17,7 @@ interface ToastEditorProps {
 const ToastEditor = forwardRef<Editor, ToastEditorProps>(
   ({ initialValue }, ref) => {
     return (
-      <Editor
+      <ToastEditorEx
         ref={ref}
         initialValue={
           initialValue ??

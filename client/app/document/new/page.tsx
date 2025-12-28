@@ -1,5 +1,6 @@
 "use client";
 
+import ToastEditor from "@/components/common/ToastEditor";
 import CategorySelector from "@/components/document/CategorySelector";
 import DocumentFormActions from "@/components/document/DocumentFormActions";
 import DocumentFormInputs from "@/components/document/DocumentFormInputs";
@@ -7,13 +8,8 @@ import DocumentTitle from "@/components/document/DocumentTitle";
 import { createDocument } from "@/lib/api/document";
 import { DocumentCategory } from "@/lib/types/document";
 import { Editor } from "@toast-ui/react-editor";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-
-const ToastEditorEx = dynamic(() => import("@/components/common/ToastEditor"), {
-  ssr: false,
-});
 
 export default function DocumentNewPage() {
   const router = useRouter();
@@ -81,7 +77,7 @@ export default function DocumentNewPage() {
           onAuthorChange={setAuthor}
         />
         <div>
-          <ToastEditorEx ref={editorRef} />
+          <ToastEditor ref={editorRef} />
         </div>
         <DocumentFormActions
           onSubmit={handleSubmit}

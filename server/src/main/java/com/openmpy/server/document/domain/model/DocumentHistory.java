@@ -33,7 +33,7 @@ public class DocumentHistory extends BaseTimeEntity {
     private DocumentHistoryAuthor author;
 
     @Embedded
-    @AttributeOverride(name = "value", column = @Column(name = "content", nullable = false))
+    @AttributeOverride(name = "value", column = @Column(columnDefinition = "TEXT", name = "content", nullable = false))
     private DocumentHistoryContent content;
 
     @Column(nullable = false)
