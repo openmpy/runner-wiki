@@ -13,7 +13,7 @@ export default function DocumentTableRow({ document }: DocumentTableRowProps) {
       <tr className="hover:bg-gray-100 transition-colors">
         <td className="px-3 py-3">
           <Link
-            href="/"
+            href={`/document/${document.documentId}`}
             className="block hover:underline transition-colors text-sm whitespace-nowrap"
           >
             {document.title}

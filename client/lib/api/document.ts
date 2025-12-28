@@ -47,3 +47,22 @@ export async function createDocument(data: CreateDocumentRequest) {
 
   return response.json();
 }
+
+export async function getLatestDocument(documentId: number) {
+  const response = await fetch(
+    `http://localhost:8080/api/v1/documents/${documentId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "문서를 불러오는데 실패했습니다.");
+  }
+
+  return response.json();
+}

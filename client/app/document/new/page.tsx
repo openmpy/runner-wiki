@@ -48,7 +48,7 @@ export default function DocumentNewPage() {
     try {
       setIsSubmitting(true);
 
-      await createDocument({
+      const data = await createDocument({
         title,
         category,
         author,
@@ -56,6 +56,7 @@ export default function DocumentNewPage() {
       });
 
       alert("문서가 정상적으로 작성되었습니다.");
+      router.push(`/document/${data.documentId}`);
     } catch (error) {
       if (error instanceof Error) {
         alert(error.message);
