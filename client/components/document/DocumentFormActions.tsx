@@ -12,7 +12,7 @@ export default function DocumentFormActions({
   return (
     <div className="flex justify-end gap-2">
       <button
-        className="bg-gray-400 font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-1"
+        className="bg-gray-400 font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-1 cursor-pointer"
         onClick={onCancel}
       >
         뒤로가기

@@ -3,7 +3,8 @@ import DocumentTitle from "@/components/document/DocumentTitle";
 import { getLatestDocument } from "@/lib/api/document";
 import { formatRelativeTime } from "@/lib/utils/date";
 import Link from "next/link";
-import { LuHistory, LuPlus } from "react-icons/lu";
+import { HiPlus } from "react-icons/hi";
+import { MdHistory } from "react-icons/md";
 
 export default async function DocumentDetailPage({
   params,
@@ -23,14 +24,14 @@ export default async function DocumentDetailPage({
             href={`/document/${documentId}/history`}
             className="bg-gray-400 font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
           >
-            <LuHistory className="lg:hidden font-bold" />
+            <MdHistory className="lg:hidden font-bold" />
             <span className="hidden lg:inline">편집기록</span>
           </Link>
           <Link
             href={`/document/${documentId}/edit`}
             className="bg-mint font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
           >
-            <LuPlus className="lg:hidden font-bold" />
+            <HiPlus className="lg:hidden font-bold" />
             <span className="hidden lg:inline">편집하기</span>
           </Link>
         </div>

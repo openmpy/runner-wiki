@@ -32,7 +32,9 @@ export default async function DocumentPage({
             {data.payload.length === 0 && (
               <div className="p-4">
                 <div className="flex flex-col items-center">
-                  <p className="text-gray-600">데이터가 존재하지 않습니다.</p>
+                  <p className="text-gray-400 font-bmhanna">
+                    데이터가 존재하지 않습니다.
+                  </p>
                 </div>
               </div>
             )}
@@ -41,7 +43,7 @@ export default async function DocumentPage({
       ) : (
         <div className="hidden lg:block p-4">
           <div className="flex flex-col items-center">
-            <p className="text-red-600">에러가 발생했습니다.</p>
+            <p className="text-red-600 font-bmhanna">에러가 발생했습니다.</p>
           </div>
         </div>
       )}
@@ -54,7 +56,9 @@ export default async function DocumentPage({
           {data.payload.length === 0 && (
             <div className="p-4">
               <div className="flex flex-col items-center">
-                <p className="text-gray-600">데이터가 존재하지 않습니다.</p>
+                <p className="text-gray-400 font-bmhanna">
+                  데이터가 존재하지 않습니다.
+                </p>
               </div>
             </div>
           )}
@@ -62,7 +66,7 @@ export default async function DocumentPage({
       ) : (
         <div className="lg:hidden p-4">
           <div className="flex flex-col items-center">
-            <p className="text-red-600">에러가 발생했습니다.</p>
+            <p className="text-red-600 font-bmhanna">에러가 발생했습니다.</p>
           </div>
         </div>
       )}
