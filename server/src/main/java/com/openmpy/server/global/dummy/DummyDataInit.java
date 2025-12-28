@@ -15,7 +15,8 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class DummyDataInit {
 
-    private static final int INITIAL_DOCUMENT_COUNT = 1000;
+    private static final int INITIAL_DOCUMENT_COUNT = 100;
+    private static final int INITIAL_DOCUMENT_HISTORY_COUNT = 50;
 
     @Profile("local")
     @Bean
@@ -24,7 +25,9 @@ public class DummyDataInit {
             for (int i = 0; i < INITIAL_DOCUMENT_COUNT; i++) {
                 final Document document = Document.create("제목" + i, i % 2 == 0 ? USER : GUILD);
 
-                document.addHistory("작성자" + i, "내용" + i, (long) i, "127.0.0." + i);
+                for (int j = 0; j < INITIAL_DOCUMENT_HISTORY_COUNT; j++) {
+                    document.addHistory("작성자" + j, "내용" + j, (long) j, "127.0.0." + j);
+                }
                 documentRepository.save(document);
             }
 
