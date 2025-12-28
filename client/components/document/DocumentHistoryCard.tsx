@@ -15,7 +15,7 @@ export default function DocumentHistoryCard({
       <div className="border border-gray-200 rounded-sm px-3 py-3 hover:bg-gray-100 transition-colors">
         <div className="flex items-center justify-between mb-4">
           <Link
-            href="/"
+            href={`/document/${documentHistory.documentId}/history/${documentHistory.documentHistoryId}`}
             className="block hover:underline transition-colors text-sm"
           >
             {documentHistory.author}

@@ -90,3 +90,22 @@ export async function getHistories(
     console.error(error);
   }
 }
+
+export async function getDocumentHistory(documentHistoryId: number) {
+  const response = await fetch(
+    `http://localhost:8080/api/v1/document-histories/${documentHistoryId}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "문서를 불러오는데 실패했습니다.");
+  }
+
+  return response.json();
+}

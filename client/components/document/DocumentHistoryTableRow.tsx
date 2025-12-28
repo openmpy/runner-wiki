@@ -16,7 +16,7 @@ export default function DocumentHistoryTableRow({
         <td className="px-3 py-3 text-center">{documentHistory.version}</td>
         <td className="px-3 py-3 text-center">
           <Link
-            href="/"
+            href={`/document/${documentHistory.documentId}/history/${documentHistory.documentHistoryId}`}
             className="block hover:underline transition-colors text-sm whitespace-nowrap"
           >
             {documentHistory.author}

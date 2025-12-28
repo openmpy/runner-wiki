@@ -9,6 +9,7 @@ export interface DocumentPage {
 
 export interface DocumentHistoryPage {
   title: string;
+  documentId: number;
   documentHistoryId: number;
   author: string;
   version: number;
