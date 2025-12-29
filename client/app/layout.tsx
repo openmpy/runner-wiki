@@ -1,6 +1,7 @@
 import Sidebar from "@/components/common/Sidebar";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { bmhanna, notoSans } from "./font";
 import "./globals.css";
@@ -41,6 +42,9 @@ export default function RootLayout({
 
         {/* 푸터 */}
         <Footer />
+
+        {/* 기타 */}
+        <GoogleAnalytics gaId="G-3PQBMJHYW1" />
       </body>
     </html>
   );
