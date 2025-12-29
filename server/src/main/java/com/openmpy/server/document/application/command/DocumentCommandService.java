@@ -8,7 +8,6 @@ import com.openmpy.server.document.application.usecase.CreateDocumentUseCase;
 import com.openmpy.server.document.application.usecase.DeleteDocumentHistoryUseCase;
 import com.openmpy.server.document.application.usecase.DeleteDocumentUseCase;
 import com.openmpy.server.document.application.usecase.UpdateDocumentUseCase;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,17 +22,17 @@ public class DocumentCommandService {
     private final DeleteDocumentHistoryUseCase deleteDocumentHistoryUseCase;
 
     @Transactional
-    public DocumentCreateResponse create(final DocumentCreateRequest request, final HttpServletRequest servletRequest) {
-        return createDocumentUseCase.execute(request, servletRequest);
+    public DocumentCreateResponse create(final DocumentCreateRequest request, final String clientIp) {
+        return createDocumentUseCase.execute(request, clientIp);
     }
 
     @Transactional
     public DocumentUpdateResponse update(
             final Long documentId,
             final DocumentUpdateRequest request,
-            final HttpServletRequest servletRequest
+            final String clientIp
     ) {
-        return updateDocumentUseCase.execute(documentId, request, servletRequest);
+        return updateDocumentUseCase.execute(documentId, request, clientIp);
     }
 
     @Transactional

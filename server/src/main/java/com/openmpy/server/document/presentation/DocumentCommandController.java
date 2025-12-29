@@ -10,6 +10,7 @@ import com.openmpy.server.document.application.command.request.DocumentUpdateReq
 import com.openmpy.server.document.application.command.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.command.response.DocumentUpdateResponse;
+import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,9 @@ public class DocumentCommandController {
             @RequestBody final DocumentCreateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        return ResponseEntity.ok(documentCommandService.create(request, servletRequest));
+        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+
+        return ResponseEntity.ok(documentCommandService.create(request, clientIp));
     }
 
     @PutMapping("/documents/{documentId}")
@@ -52,7 +55,9 @@ public class DocumentCommandController {
             @RequestBody final DocumentUpdateRequest request,
             final HttpServletRequest servletRequest
     ) {
-        return ResponseEntity.ok(documentCommandService.update(documentId, request, servletRequest));
+        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+
+        return ResponseEntity.ok(documentCommandService.update(documentId, request, clientIp));
     }
 
     @DeleteMapping("/documents/{documentId}")
@@ -83,7 +88,9 @@ public class DocumentCommandController {
             @RequestBody final List<MultipartFile> images,
             final HttpServletRequest servletRequest
     ) {
-        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(images, servletRequest);
+        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(images, clientIp);
+
         return ResponseEntity.ok(responses);
     }
 

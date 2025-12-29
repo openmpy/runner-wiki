@@ -6,8 +6,6 @@ import com.openmpy.server.document.application.port.ImageStorage;
 import com.openmpy.server.document.application.port.UploadedImage;
 import com.openmpy.server.document.domain.model.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
-import com.openmpy.server.global.util.ClientIpUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -24,10 +22,8 @@ public class UploadDocumentImagesUseCase {
     @Transactional
     public DocumentImageUploadResponses execute(
             final List<MultipartFile> images,
-            final HttpServletRequest servletRequest
+            final String clientIp
     ) {
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
-
         final List<DocumentImageUploadResponse> responses = images.stream()
                 .map(file -> {
                     final UploadedImage uploadedImage = imageStorage.upload(file);

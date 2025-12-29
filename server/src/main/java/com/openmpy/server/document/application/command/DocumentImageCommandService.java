@@ -2,7 +2,6 @@ package com.openmpy.server.document.application.command;
 
 import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.usecase.UploadDocumentImagesUseCase;
-import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,8 @@ public class DocumentImageCommandService {
     @Transactional
     public DocumentImageUploadResponses uploadImages(
             final List<MultipartFile> images,
-            final HttpServletRequest servletRequest
+            final String clientIp
     ) {
-        return uploadDocumentImagesUseCase.execute(images, servletRequest);
+        return uploadDocumentImagesUseCase.execute(images, clientIp);
     }
 }

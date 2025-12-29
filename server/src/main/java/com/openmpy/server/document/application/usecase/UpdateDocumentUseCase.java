@@ -7,8 +7,6 @@ import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.exception.CustomException;
-import com.openmpy.server.global.util.ClientIpUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,10 +24,9 @@ public class UpdateDocumentUseCase {
     public DocumentUpdateResponse execute(
             final Long documentId,
             final DocumentUpdateRequest request,
-            final HttpServletRequest servletRequest
+            final String clientIp
     ) {
         final Document document = findDocumentById(documentId);
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
 
         document.addHistory(
                 request.author(),

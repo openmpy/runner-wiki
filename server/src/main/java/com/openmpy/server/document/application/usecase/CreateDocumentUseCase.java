@@ -7,8 +7,6 @@ import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.exception.CustomException;
-import com.openmpy.server.global.util.ClientIpUtil;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,11 +23,9 @@ public class CreateDocumentUseCase {
     @Transactional
     public DocumentCreateResponse execute(
             final DocumentCreateRequest request,
-            final HttpServletRequest servletRequest
+            final String clientIp
     ) {
         validateDuplicate(request);
-
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
 
         final Document document = Document.create(request.title(), request.category());
         final Document savedDocument = documentRepository.save(document);
