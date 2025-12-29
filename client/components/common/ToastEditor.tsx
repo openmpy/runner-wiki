@@ -41,10 +41,25 @@ async function uploadImageToServer(blob: Blob, fileName?: string) {
   return url;
 }
 
+const TOOLBAR_DESKTOP = [
+  ["heading", "bold", "italic", "strike"],
+  ["hr", "quote"],
+  ["ul", "ol", "task"],
+  ["table", "link", "image"],
+  ["code", "codeblock"],
+];
+
+const TOOLBAR_MOBILE = [
+  ["bold", "italic", "strike"],
+  ["ul", "ol"],
+  ["link", "image"],
+];
+
 const ToastEditor = forwardRef<Editor, ToastEditorProps>(
   ({ initialValue }, ref) => {
     const innerRef = useRef<Editor>(null);
     const [isUploading, setIsUploading] = useState(false);
+    const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
 
     useImperativeHandle(ref, () => innerRef.current as Editor, []);
 
@@ -72,6 +87,7 @@ const ToastEditor = forwardRef<Editor, ToastEditorProps>(
           height="600px"
           initialEditType="wysiwyg"
           useCommandShortcut={true}
+          toolbarItems={isMobile ? TOOLBAR_MOBILE : TOOLBAR_DESKTOP}
           hooks={{
             addImageBlobHook: async (
               blob: Blob,
