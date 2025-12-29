@@ -1,10 +1,14 @@
 package com.openmpy.server.document.presentation;
 
+import com.openmpy.server.document.application.query.DocumentCacheQueryService;
 import com.openmpy.server.document.application.query.DocumentQueryService;
 import com.openmpy.server.document.application.query.response.DocumentGetResponse;
 import com.openmpy.server.document.application.query.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.application.query.response.DocumentPageResponse;
+import com.openmpy.server.document.application.query.response.DocumentTop10Response;
 import com.openmpy.server.global.dto.PageResponse;
+import com.openmpy.server.global.util.ClientIpUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +23,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class DocumentQueryController {
 
     private final DocumentQueryService documentQueryService;
+    private final DocumentCacheQueryService documentCacheQueryService;
 
     @GetMapping("/documents/{documentId}")
-    public ResponseEntity<DocumentGetResponse> getLatest(@PathVariable final Long documentId) {
-        return ResponseEntity.ok(documentQueryService.getLatest(documentId));
+    public ResponseEntity<DocumentGetResponse> getLatest(
+            @PathVariable final Long documentId,
+            final HttpServletRequest servletRequest
+    ) {
+        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final DocumentGetResponse response = documentQueryService.getLatest(documentId);
+
+        documentCacheQueryService.increaseRankIfAllowed(documentId, clientIp);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/documents")
@@ -55,5 +67,11 @@ public class DocumentQueryController {
             @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentQueryService.searchDocuments(title, page, size));
+    }
+
+    @GetMapping("/documents/top10")
+    public ResponseEntity<DocumentTop10Response> getDocumentTop10() {
+        final DocumentTop10Response response = documentCacheQueryService.getDocumentTop10();
+        return ResponseEntity.ok(response);
     }
 }

@@ -1,5 +1,6 @@
 package com.openmpy.server.document.presentation;
 
+import com.openmpy.server.document.application.command.DocumentCacheCommandService;
 import com.openmpy.server.document.application.command.DocumentCommandService;
 import com.openmpy.server.document.application.command.DocumentImageCommandService;
 import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
@@ -27,6 +28,7 @@ public class DocumentCommandController {
 
     private final DocumentCommandService documentCommandService;
     private final DocumentImageCommandService documentImageCommandService;
+    private final DocumentCacheCommandService documentCacheCommandService;
 
     @PostMapping("/documents")
     public ResponseEntity<DocumentCreateResponse> create(
@@ -48,6 +50,7 @@ public class DocumentCommandController {
     @DeleteMapping("/documents/{documentId}")
     public ResponseEntity<Void> delete(@PathVariable final Long documentId) {
         documentCommandService.delete(documentId);
+        documentCacheCommandService.removeFromRanking(documentId);
         return ResponseEntity.ok().build();
     }
 
