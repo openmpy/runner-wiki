@@ -2,8 +2,32 @@ import ToastViewer from "@/components/common/ToastViewer";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { getDocumentHistory } from "@/lib/api/document";
 import { formatRelativeTime } from "@/lib/utils/date";
+import { Metadata } from "next";
 import Link from "next/link";
 import { LuHistory, LuPlus } from "react-icons/lu";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const documentHistoryId = parseInt(id);
+
+  try {
+    const data = await getDocumentHistory(documentHistoryId);
+
+    return {
+      title: `${data.title}(기록) - 런너위키`,
+      description: `${data.content}`,
+    };
+  } catch {
+    return {
+      title: "런너위키",
+      description: "누구나 쉽게 문서 기록을 확인할 수 있습니다.",
+    };
+  }
+}
 
 export default async function DocumentHistoryDetailPage({
   params,

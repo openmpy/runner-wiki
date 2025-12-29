@@ -7,7 +7,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "런너위키",
-  description: "누구나 쉽게 런너 문서를 작성할 수 있습니다.",
+  description: "누구나 쉽게 문서를 작업할 수 있습니다.",
 };
 
 export default function RootLayout({

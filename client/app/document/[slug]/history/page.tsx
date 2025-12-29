@@ -3,8 +3,36 @@ import DocumentHistoryTable from "@/components/document/DocumentHistoryTable";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import Pagination from "@/components/document/Pagination";
 import { getHistories } from "@/lib/api/document";
+import { Metadata } from "next";
 import Link from "next/link";
 import { HiArrowLeft, HiPlus } from "react-icons/hi";
+
+export async function generateMetadata({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ slug: string }>;
+  searchParams: Promise<{ page?: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const searchParam = await searchParams;
+  const currentPage = searchParam.page ? parseInt(searchParam.page, 10) : 0;
+  const documentId = parseInt(slug);
+
+  try {
+    const data = await getHistories(documentId, currentPage);
+
+    return {
+      title: `${data.payload[0].title}(편집기록) - 런너위키`,
+      description: "누구나 쉽게 문서 편집 기록을 확인할 수 있습니다.",
+    };
+  } catch {
+    return {
+      title: "편집기록 - 런너위키",
+      description: "누구나 쉽게 문서 편집 기록을 확인할 수 있습니다.",
+    };
+  }
+}
 
 export default async function DocumentHistoryPage({
   params,

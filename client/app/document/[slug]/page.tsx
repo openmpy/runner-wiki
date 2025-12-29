@@ -2,9 +2,33 @@ import ToastViewer from "@/components/common/ToastViewer";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { getLatestDocument } from "@/lib/api/document";
 import { formatRelativeTime } from "@/lib/utils/date";
+import { Metadata } from "next";
 import Link from "next/link";
 import { HiPlus } from "react-icons/hi";
 import { MdHistory } from "react-icons/md";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+  const { slug } = await params;
+  const documentId = parseInt(slug);
+
+  try {
+    const data = await getLatestDocument(documentId);
+
+    return {
+      title: `${data.title} - 런너위키`,
+      description: `${data.content}`,
+    };
+  } catch {
+    return {
+      title: "런너위키",
+      description: "누구나 쉽게 문서를 확인할 수 있습니다.",
+    };
+  }
+}
 
 export default async function DocumentDetailPage({
   params,

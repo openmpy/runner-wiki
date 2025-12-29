@@ -56,6 +56,7 @@ export async function getLatestDocument(documentId: number) {
       headers: {
         "Content-Type": "application/json",
       },
+      next: { revalidate: 3 },
     }
   );
 
@@ -80,7 +81,7 @@ export async function getHistories(
         headers: {
           "Content-Type": "application/json",
         },
-        cache: "no-cache",
+        next: { revalidate: 3 },
       }
     );
 
@@ -99,6 +100,7 @@ export async function getDocumentHistory(documentHistoryId: number) {
       headers: {
         "Content-Type": "application/json",
       },
+      next: { revalidate: 3 },
     }
   );
 
