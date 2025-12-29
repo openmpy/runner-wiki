@@ -85,6 +85,20 @@ public class DocumentQueryService {
         return convertToDocumentPageResponse(documentPage);
     }
 
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentPageResponse> searchDocuments(
+            final String title,
+            final int page,
+            final int size
+    ) {
+        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        final Page<Document> documentPage = documentRepository.findAllByTitle_ValueContainingIgnoreCase(
+                title, pageRequest
+        );
+
+        return convertToDocumentPageResponse(documentPage);
+    }
+
     private PageResponse<DocumentPageResponse> convertToDocumentPageResponse(final Page<Document> documentPage) {
         final List<DocumentPageResponse> documentResponses = documentPage.getContent().stream()
                 .map(DocumentPageResponse::from)

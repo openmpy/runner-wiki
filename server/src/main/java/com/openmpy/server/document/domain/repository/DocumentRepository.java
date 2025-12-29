@@ -11,4 +11,6 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
 
     Page<Document> findAllByCategory(final DocumentCategory category, final Pageable pageable);
+
+    Page<Document> findAllByTitle_ValueContainingIgnoreCase(final String title, final Pageable pageable);
 }

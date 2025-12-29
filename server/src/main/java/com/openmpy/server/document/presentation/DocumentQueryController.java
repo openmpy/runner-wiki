@@ -47,4 +47,13 @@ public class DocumentQueryController {
     ) {
         return ResponseEntity.ok(documentQueryService.getHistories(documentId, page, size));
     }
+
+    @GetMapping("/documents/search")
+    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocuments(
+            @RequestParam final String title,
+            @RequestParam(defaultValue = "0", required = false) final int page,
+            @RequestParam(defaultValue = "10", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentQueryService.searchDocuments(title, page, size));
+    }
 }
