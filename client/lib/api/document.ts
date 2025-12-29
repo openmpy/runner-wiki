@@ -137,3 +137,27 @@ export async function updateDocument(
 
   return response.json();
 }
+
+export async function searchDocuments(
+  title: string,
+  page: number = 0,
+  size: number = 10
+) {
+  try {
+    const response = await fetch(
+      `http://localhost:8080/api/v1/documents/search?title=${title}&page=${page}&size=${size}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        cache: "no-cache",
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
