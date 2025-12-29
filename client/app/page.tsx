@@ -35,7 +35,7 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <h2 className="text-lg lg:text-xl font-bmhanna">안내</h2>
           <p className="text-sm leading-relaxed">
-            문서 작업 시 <strong>IP 주소가 기록</strong>되며, 이는 스팸, 악성
+            문서 작업 시 <strong>IP가 기록</strong>되며 이는 스팸, 악성
             이용, 시스템 악용 방지를 위한 용도로만 사용됩니다.
             <br />
             해당 정보는 그 외의 목적으로 절대 활용되지 않습니다.

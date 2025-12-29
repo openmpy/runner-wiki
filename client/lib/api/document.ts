@@ -161,3 +161,23 @@ export async function searchDocuments(
     console.error(error);
   }
 }
+
+export async function getDocumentTop10() {
+  try {
+    const response = await fetch(
+      `https://api.runner.wiki/api/v1/documents/top10`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        next: { revalidate: 300 },
+      }
+    );
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}

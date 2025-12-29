@@ -1,3 +1,4 @@
+import Sidebar from "@/components/common/Sidebar";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import type { Metadata } from "next";
@@ -32,9 +33,7 @@ export default function RootLayout({
               </div>
               {/* 사이드바 */}
               <div className="border-t border-b border-mint bg-white p-4 lg:rounded-sm lg:border lg:w-80 lg:shrink-0 lg:self-start lg:sticky lg:top-4">
-                사이드바
-                <p>ㅁㄴㅇㄴㅁㅇ</p>
-                <p>ㅁㄴㅇㄴㅁㅇ</p>
+                <Sidebar />
               </div>
             </div>
           </div>
