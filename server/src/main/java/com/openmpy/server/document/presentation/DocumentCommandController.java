@@ -1,5 +1,7 @@
 package com.openmpy.server.document.presentation;
 
+import static org.springframework.http.HttpStatus.FORBIDDEN;
+
 import com.openmpy.server.document.application.command.DocumentCacheCommandService;
 import com.openmpy.server.document.application.command.DocumentCommandService;
 import com.openmpy.server.document.application.command.DocumentImageCommandService;
@@ -11,15 +13,18 @@ import com.openmpy.server.document.application.command.response.DocumentUpdateRe
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
@@ -29,6 +34,9 @@ public class DocumentCommandController {
     private final DocumentCommandService documentCommandService;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentCacheCommandService documentCacheCommandService;
+
+    @Value("${admin.password}")
+    private String password;
 
     @PostMapping("/documents")
     public ResponseEntity<DocumentCreateResponse> create(
@@ -48,14 +56,24 @@ public class DocumentCommandController {
     }
 
     @DeleteMapping("/documents/{documentId}")
-    public ResponseEntity<Void> delete(@PathVariable final Long documentId) {
+    public ResponseEntity<Void> delete(
+            @RequestHeader("password") final String password,
+            @PathVariable final Long documentId
+    ) {
+        validatePassword(password);
+
         documentCommandService.delete(documentId);
         documentCacheCommandService.removeFromRanking(documentId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/document-histories/{historyId}")
-    public ResponseEntity<Void> deleteHistory(@PathVariable final Long historyId) {
+    public ResponseEntity<Void> deleteHistory(
+            @RequestHeader("password") final String password,
+            @PathVariable final Long historyId
+    ) {
+        validatePassword(password);
+
         documentCommandService.deleteHistory(historyId);
         return ResponseEntity.ok().build();
     }
@@ -67,5 +85,11 @@ public class DocumentCommandController {
     ) {
         final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(images, servletRequest);
         return ResponseEntity.ok(responses);
+    }
+
+    private void validatePassword(final String password) {
+        if (!this.password.equals(password)) {
+            throw new ResponseStatusException(FORBIDDEN, "비밀번호가 올바르지 않습니다.");
+        }
     }
 }
