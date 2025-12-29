@@ -1,10 +1,22 @@
 services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: unless-stopped
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
+    networks:
+      - wiki-network
   springboot:
     container_name: server
     image: ${DOCKERHUB_USERNAME}/wiki-server:latest
     restart: unless-stopped
     ports:
       - 8080:8080
+    depends_on:
+      - redis
     networks:
       - wiki-network
 
