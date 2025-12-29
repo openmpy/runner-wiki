@@ -7,7 +7,7 @@ export async function getLatestDocuments(
 ) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents?category=${category}&page=${page}&size=${size}`,
+      `https://api.runner.wiki/api/v1/documents?category=${category}&page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
@@ -32,7 +32,7 @@ export interface CreateDocumentRequest {
 }
 
 export async function createDocument(data: CreateDocumentRequest) {
-  const response = await fetch(`http://localhost:8080/api/v1/documents`, {
+  const response = await fetch(`https://api.runner.wiki/api/v1/documents`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -50,7 +50,7 @@ export async function createDocument(data: CreateDocumentRequest) {
 
 export async function getLatestDocument(documentId: number) {
   const response = await fetch(
-    `http://localhost:8080/api/v1/documents/${documentId}`,
+    `https://api.runner.wiki/api/v1/documents/${documentId}`,
     {
       method: "GET",
       headers: {
@@ -74,7 +74,7 @@ export async function getHistories(
 ) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents/${documentHistoryId}/histories?page=${page}&size=${size}`,
+      `https://api.runner.wiki/api/v1/documents/${documentHistoryId}/histories?page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
@@ -93,7 +93,7 @@ export async function getHistories(
 
 export async function getDocumentHistory(documentHistoryId: number) {
   const response = await fetch(
-    `http://localhost:8080/api/v1/document-histories/${documentHistoryId}`,
+    `https://api.runner.wiki/api/v1/document-histories/${documentHistoryId}`,
     {
       method: "GET",
       headers: {
@@ -120,7 +120,7 @@ export async function updateDocument(
   data: UpdateDocumentRequest
 ) {
   const response = await fetch(
-    `http://localhost:8080/api/v1/documents/${documentId}`,
+    `https://api.runner.wiki/api/v1/documents/${documentId}`,
     {
       method: "PUT",
       headers: {
@@ -145,7 +145,7 @@ export async function searchDocuments(
 ) {
   try {
     const response = await fetch(
-      `http://localhost:8080/api/v1/documents/search?title=${title}&page=${page}&size=${size}`,
+      `https://api.runner.wiki/api/v1/documents/search?title=${title}&page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
