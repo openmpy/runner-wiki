@@ -5,7 +5,12 @@ import Pagination from "@/components/document/Pagination";
 import { getHistories } from "@/lib/api/document";
 import { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { HiArrowLeft, HiPlus } from "react-icons/hi";
+
+const getHistoriesCached = cache((id: number, page: number) =>
+  getHistories(id, page)
+);
 
 export async function generateMetadata({
   params,
@@ -20,7 +25,7 @@ export async function generateMetadata({
   const documentId = parseInt(slug);
 
   try {
-    const data = await getHistories(documentId, currentPage);
+    const data = await getHistoriesCached(documentId, currentPage);
 
     return {
       title: `${data.payload[0].title}(편집기록) - 런너위키`,
@@ -46,7 +51,7 @@ export default async function DocumentHistoryPage({
   const currentPage = searchParam.page ? parseInt(searchParam.page, 10) : 0;
 
   const documentId = parseInt(slug);
-  const data = await getHistories(documentId, currentPage);
+  const data = await getHistoriesCached(documentId, currentPage);
 
   return (
     <div>

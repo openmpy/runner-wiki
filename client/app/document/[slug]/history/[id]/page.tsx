@@ -4,7 +4,10 @@ import { getDocumentHistory } from "@/lib/api/document";
 import { formatRelativeTime } from "@/lib/utils/date";
 import { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { LuHistory, LuPlus } from "react-icons/lu";
+
+const getDocumentHistoryCached = cache((id: number) => getDocumentHistory(id));
 
 export async function generateMetadata({
   params,
@@ -15,7 +18,7 @@ export async function generateMetadata({
   const documentHistoryId = parseInt(id);
 
   try {
-    const data = await getDocumentHistory(documentHistoryId);
+    const data = await getDocumentHistoryCached(documentHistoryId);
 
     return {
       title: `${data.title}(기록) - 런너위키`,
@@ -36,7 +39,7 @@ export default async function DocumentHistoryDetailPage({
 }) {
   const { id } = await params;
   const documentHistoryId = parseInt(id);
-  const data = await getDocumentHistory(documentHistoryId);
+  const data = await getDocumentHistoryCached(documentHistoryId);
 
   return (
     <div>

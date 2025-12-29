@@ -4,8 +4,11 @@ import { getLatestDocument } from "@/lib/api/document";
 import { formatRelativeTime } from "@/lib/utils/date";
 import { Metadata } from "next";
 import Link from "next/link";
+import { cache } from "react";
 import { HiPlus } from "react-icons/hi";
 import { MdHistory } from "react-icons/md";
+
+const getLatestDocumentCached = cache((id: number) => getLatestDocument(id));
 
 export async function generateMetadata({
   params,
@@ -16,7 +19,7 @@ export async function generateMetadata({
   const documentId = parseInt(slug);
 
   try {
-    const data = await getLatestDocument(documentId);
+    const data = await getLatestDocumentCached(documentId);
 
     return {
       title: `${data.title} - 런너위키`,
@@ -37,7 +40,7 @@ export default async function DocumentDetailPage({
 }) {
   const { slug } = await params;
   const documentId = parseInt(slug);
-  const data = await getLatestDocument(documentId);
+  const data = await getLatestDocumentCached(documentId);
 
   return (
     <div>
