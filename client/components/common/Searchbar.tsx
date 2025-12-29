@@ -2,17 +2,23 @@
 
 import { searchDocuments } from "@/lib/api/document";
 import { DocumentPage } from "@/lib/types/document";
+import { Page } from "@/lib/types/global";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import DocumentCategoryBadge from "../document/DocumentCategoryBadge";
 
 export default function Searchbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<DocumentPage[]>([]);
+  const [pageInfo, setPageInfo] = useState<Page<DocumentPage> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showResults, setShowResults] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
   const searchRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+  const loadingPageRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -30,40 +36,116 @@ export default function Searchbar() {
     };
   }, []);
 
+  const performSearch = useCallback(
+    async (query: string, page: number = 0, reset: boolean = false) => {
+      if (!query.trim()) return;
+
+      // 이미 같은 페이지를 로딩 중이면 중복 요청 방지
+      if (!reset && loadingPageRef.current === page) return;
+      loadingPageRef.current = page;
+
+      if (reset) {
+        setIsLoading(true);
+        setCurrentPage(0);
+        loadingPageRef.current = 0;
+      } else {
+        setIsLoadingMore(true);
+      }
+
+      try {
+        const data = await searchDocuments(query, page, 10);
+        if (data && data.payload) {
+          if (reset) {
+            setSearchResults(data.payload);
+            setPageInfo(data);
+          } else {
+            // 중복된 documentId 필터링
+            setSearchResults((prev) => {
+              const existingIds = new Set(prev.map((doc) => doc.documentId));
+              const newDocs = data.payload.filter(
+                (doc: DocumentPage) => !existingIds.has(doc.documentId)
+              );
+              return [...prev, ...newDocs];
+            });
+            setPageInfo(data);
+          }
+          setShowResults(true);
+          setCurrentPage(page);
+        } else {
+          if (reset) {
+            setSearchResults([]);
+            setPageInfo(null);
+          }
+          setShowResults(true);
+        }
+      } catch (error) {
+        console.error("검색 중 오류 발생:", error);
+        if (reset) {
+          setSearchResults([]);
+          setPageInfo(null);
+        }
+      } finally {
+        setIsLoading(false);
+        setIsLoadingMore(false);
+        if (loadingPageRef.current === page) {
+          loadingPageRef.current = null;
+        }
+      }
+    },
+    []
+  );
+
+  const loadMoreResults = useCallback(() => {
+    if (!pageInfo?.hasNext || isLoadingMore || !searchQuery.trim()) return;
+    performSearch(searchQuery, currentPage + 1, false);
+  }, [pageInfo, isLoadingMore, searchQuery, currentPage, performSearch]);
+
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);
+      setPageInfo(null);
       setShowResults(false);
+      setCurrentPage(0);
+      loadingPageRef.current = null;
       return;
     }
 
     const debounceTimer = setTimeout(() => {
-      performSearch(searchQuery);
+      performSearch(searchQuery, 0, true);
     }, 300);
 
     return () => clearTimeout(debounceTimer);
-  }, [searchQuery]);
+  }, [searchQuery, performSearch]);
 
-  const performSearch = async (query: string) => {
-    if (!query.trim()) return;
+  useEffect(() => {
+    const resultsContainer = resultsRef.current;
+    if (!resultsContainer || !pageInfo?.hasNext || isLoadingMore) return;
 
-    setIsLoading(true);
-    try {
-      const data = await searchDocuments(query, 0, 10);
-      if (data && data.payload) {
-        setSearchResults(data.payload);
-        setShowResults(true);
-      } else {
-        setSearchResults([]);
-        setShowResults(true);
+    let scrollTimer: NodeJS.Timeout | null = null;
+
+    const handleScroll = () => {
+      // 디바운싱으로 빠른 스크롤 시 중복 요청 방지
+      if (scrollTimer) {
+        clearTimeout(scrollTimer);
       }
-    } catch (error) {
-      console.error("검색 중 오류 발생:", error);
-      setSearchResults([]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+
+      scrollTimer = setTimeout(() => {
+        const { scrollTop, scrollHeight, clientHeight } = resultsContainer;
+        // 스크롤이 하단 100px 이내에 도달하면 다음 페이지 로드
+        if (scrollHeight - scrollTop - clientHeight < 100) {
+          loadMoreResults();
+        }
+      }, 100);
+    };
+
+    resultsContainer.addEventListener("scroll", handleScroll);
+    return () => {
+      resultsContainer.removeEventListener("scroll", handleScroll);
+      if (scrollTimer) {
+        clearTimeout(scrollTimer);
+      }
+    };
+  }, [pageInfo, isLoadingMore, loadMoreResults]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(e.target.value);
@@ -90,16 +172,19 @@ export default function Searchbar() {
       />
       <FaSearch className="absolute right-4 text-gray-400" />
       {showResults && (
-        <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-lg max-h-96 overflow-y-auto z-50">
+        <div
+          ref={resultsRef}
+          className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-sm shadow-lg max-h-96 overflow-y-auto z-50"
+        >
           {isLoading ? (
             <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
               검색 중입니다.
             </div>
           ) : searchResults.length > 0 ? (
             <div className="py-2">
-              {searchResults.map((document) => (
+              {searchResults.map((document, index) => (
                 <Link
-                  key={document.documentId}
+                  key={`${document.documentId}-${index}`}
                   href={`/document/${document.documentId}`}
                   onClick={handleResultClick}
                   className="block border-b border-b-gray-200 last:border-b-0"
@@ -112,6 +197,11 @@ export default function Searchbar() {
                   </div>
                 </Link>
               ))}
+              {isLoadingMore && (
+                <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
+                  불러오는 중...
+                </div>
+              )}
             </div>
           ) : (
             <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
