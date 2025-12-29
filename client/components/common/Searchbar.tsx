@@ -39,9 +39,8 @@ export default function Searchbar() {
   const performSearch = useCallback(
     async (query: string, page: number = 0, reset: boolean = false) => {
       if (!query.trim()) return;
-
-      // 이미 같은 페이지를 로딩 중이면 중복 요청 방지
       if (!reset && loadingPageRef.current === page) return;
+      
       loadingPageRef.current = page;
 
       if (reset) {
@@ -59,7 +58,6 @@ export default function Searchbar() {
             setSearchResults(data.payload);
             setPageInfo(data);
           } else {
-            // 중복된 documentId 필터링
             setSearchResults((prev) => {
               const existingIds = new Set(prev.map((doc) => doc.documentId));
               const newDocs = data.payload.filter(
@@ -124,14 +122,12 @@ export default function Searchbar() {
     let scrollTimer: NodeJS.Timeout | null = null;
 
     const handleScroll = () => {
-      // 디바운싱으로 빠른 스크롤 시 중복 요청 방지
       if (scrollTimer) {
         clearTimeout(scrollTimer);
       }
 
       scrollTimer = setTimeout(() => {
         const { scrollTop, scrollHeight, clientHeight } = resultsContainer;
-        // 스크롤이 하단 100px 이내에 도달하면 다음 페이지 로드
         if (scrollHeight - scrollTop - clientHeight < 100) {
           loadMoreResults();
         }
