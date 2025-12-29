@@ -22,10 +22,13 @@ async function uploadImageToServer(blob: Blob, fileName?: string) {
   const formData = new FormData();
   formData.append("images", blob, fileName ?? "image.png");
 
-  const response = await fetch("http://localhost:8080/api/v1/document-images", {
-    method: "POST",
-    body: formData,
-  });
+  const response = await fetch(
+    "https://api.runner.wiki/api/v1/document-images",
+    {
+      method: "POST",
+      body: formData,
+    }
+  );
 
   if (!response.ok) {
     const error = await response.json();
