@@ -12,37 +12,12 @@ const ToastEditorEx = dynamic(
 
 interface ToastEditorProps {
   initialValue?: string;
+  onImageUploaded?: (imageId: number) => void;
 }
 
 type UploadResponse = {
   images: { imageId: number; url: string }[];
 };
-
-async function uploadImageToServer(blob: Blob, fileName?: string) {
-  const formData = new FormData();
-  formData.append("images", blob, fileName ?? "image.png");
-
-  const response = await fetch(
-    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/document-images`,
-    {
-      method: "POST",
-      body: formData,
-    }
-  );
-
-  if (!response.ok) {
-    const error = await response.json();
-    throw new Error(error.message || "이미지 업로드에 실패했습니다.");
-  }
-
-  const data: UploadResponse = await response.json();
-  const url = data.images?.[0]?.url;
-
-  if (!url) {
-    throw new Error("업로드 응답에 url이 없습니다.");
-  }
-  return url;
-}
 
 const TOOLBAR_DESKTOP = [
   ["heading", "bold", "italic", "strike"],
@@ -59,7 +34,7 @@ const TOOLBAR_MOBILE = [
 ];
 
 const ToastEditor = forwardRef<Editor, ToastEditorProps>(
-  ({ initialValue }, ref) => {
+  ({ initialValue, onImageUploaded }, ref) => {
     const innerRef = useRef<Editor>(null);
     const [isUploading, setIsUploading] = useState(false);
     const isMobile = typeof window !== "undefined" && window.innerWidth <= 768;
@@ -99,11 +74,41 @@ const ToastEditor = forwardRef<Editor, ToastEditorProps>(
               setIsUploading(true);
 
               try {
-                const url = await uploadImageToServer(
+                const formData = new FormData();
+                formData.append(
+                  "images",
                   blob,
-                  (blob as File).name
+                  (blob as File).name ?? "image.png"
                 );
-                callback(url, (blob as File).name ?? "image");
+
+                const response = await fetch(
+                  `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/document-images`,
+                  {
+                    method: "POST",
+                    body: formData,
+                  }
+                );
+
+                if (!response.ok) {
+                  const error = await response.json();
+                  throw new Error(
+                    error.message || "이미지 업로드에 실패했습니다."
+                  );
+                }
+
+                const data: UploadResponse = await response.json();
+                const imageData = data.images?.[0];
+
+                if (!imageData?.url) {
+                  throw new Error("업로드 응답에 url이 없습니다.");
+                }
+
+                callback(imageData.url, (blob as File).name ?? "image");
+
+                // imageId를 부모 컴포넌트에 전달
+                if (imageData.imageId && onImageUploaded) {
+                  onImageUploaded(imageData.imageId);
+                }
               } catch (e) {
                 alert("이미지 업로드에 실패했습니다.");
                 console.error(e);

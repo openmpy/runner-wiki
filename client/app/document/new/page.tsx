@@ -19,6 +19,7 @@ export default function DocumentNewPage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [imageIds, setImageIds] = useState<number[]>([]);
 
   const handleSubmit = async () => {
     if (!editorRef.current) {
@@ -49,6 +50,7 @@ export default function DocumentNewPage() {
         category,
         author,
         content: markdown,
+        ...(imageIds.length > 0 && { imageIds }),
       });
 
       router.push(`/document/${data.documentId}`);
@@ -76,7 +78,12 @@ export default function DocumentNewPage() {
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
         />
-        <ToastEditor ref={editorRef} />
+        <ToastEditor
+          ref={editorRef}
+          onImageUploaded={(imageId) => {
+            setImageIds((prev) => [...prev, imageId]);
+          }}
+        />
         <DocumentFormActions
           onSubmit={handleSubmit}
           onCancel={router.back}

@@ -22,6 +22,7 @@ export default function DocumentHistoryEditPage() {
   const [content, setContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [imageIds, setImageIds] = useState<number[]>([]);
 
   const slug = params.slug as string;
   const documentId = parseInt(slug);
@@ -67,6 +68,7 @@ export default function DocumentHistoryEditPage() {
       const data = await updateDocument(documentId, {
         author,
         content: markdown,
+        ...(imageIds.length > 0 && { imageIds }),
       });
 
       router.push(`/document/${data.documentId}`);
@@ -118,6 +120,9 @@ export default function DocumentHistoryEditPage() {
               key={documentId}
               ref={editorRef}
               initialValue={content}
+              onImageUploaded={(imageId) => {
+                setImageIds((prev) => [...prev, imageId]);
+              }}
             />
           )}
         </div>

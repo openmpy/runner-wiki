@@ -10,6 +10,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @RequiredArgsConstructor
@@ -36,5 +37,16 @@ public class S3ImageStorage implements ImageStorage {
         } catch (final Exception e) {
             throw new IllegalStateException("이미지 업로드 실패", e);
         }
+    }
+
+    @Override
+    public void delete(final String url) {
+        final String bucket = s3Properties.bucket();
+        final String key = url.substring(s3Properties.endpoint().length() + bucket.length() + 2);
+
+        s3Client.deleteObject(DeleteObjectRequest.builder()
+                .bucket(bucket)
+                .key(key)
+                .build());
     }
 }

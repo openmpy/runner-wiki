@@ -31,6 +31,7 @@ export interface CreateDocumentRequest {
   category: DocumentCategory;
   author: string;
   content: string;
+  imageIds?: number[];
 }
 
 export async function createDocument(data: CreateDocumentRequest) {
@@ -114,6 +115,7 @@ export async function getDocumentHistory(documentHistoryId: number) {
 export interface UpdateDocumentRequest {
   author: string;
   content: string;
+  imageIds?: number[];
 }
 
 export async function updateDocument(
