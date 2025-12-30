@@ -23,7 +23,7 @@ async function uploadImageToServer(blob: Blob, fileName?: string) {
   formData.append("images", blob, fileName ?? "image.png");
 
   const response = await fetch(
-    "https://api.runner.wiki/api/v1/document-images",
+    `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/document-images`,
     {
       method: "POST",
       body: formData,
