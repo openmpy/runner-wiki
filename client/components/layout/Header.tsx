@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { LuBook, LuFilePen } from "react-icons/lu";
 import Searchbar from "../common/Searchbar";
+import ShuffleButton from "../common/ShuffleButton";
 
 export default function Header() {
   return (
@@ -27,7 +28,10 @@ export default function Header() {
               </Link>
             </div>
           </div>
-          <Searchbar />
+          <div className="flex gap-2">
+            <ShuffleButton />
+            <Searchbar />
+          </div>
         </div>
 
         {/* 모바일 */}
@@ -47,7 +51,10 @@ export default function Header() {
               </Link>
             </div>
           </div>
-          <Searchbar />
+          <div className="flex gap-2">
+            <ShuffleButton />
+            <Searchbar />
+          </div>
         </div>
       </div>
     </header>

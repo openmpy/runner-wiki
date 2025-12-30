@@ -99,6 +99,12 @@ public class DocumentQueryService {
         return convertToDocumentPageResponse(documentPage);
     }
 
+    @Transactional(readOnly = true)
+    public DocumentPageResponse getShuffleDocument() {
+        final Document document = documentRepository.findRandomDocument();
+        return DocumentPageResponse.from(document);
+    }
+
     private PageResponse<DocumentPageResponse> convertToDocumentPageResponse(final Page<Document> documentPage) {
         final List<DocumentPageResponse> documentResponses = documentPage.getContent().stream()
                 .map(DocumentPageResponse::from)

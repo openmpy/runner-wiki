@@ -74,4 +74,10 @@ public class DocumentQueryController {
         final DocumentTop10Response response = documentCacheQueryService.getDocumentTop10();
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/documents/shuffle")
+    public ResponseEntity<DocumentPageResponse> getShuffleDocument() {
+        final DocumentPageResponse response = documentQueryService.getShuffleDocument();
+        return ResponseEntity.ok(response);
+    }
 }

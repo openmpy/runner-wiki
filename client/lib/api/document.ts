@@ -178,3 +178,19 @@ export async function getDocumentTop10() {
     console.error(error);
   }
 }
+
+export async function getShuffleDocument() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/v1/documents/shuffle`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error(error);
+  }
+}
