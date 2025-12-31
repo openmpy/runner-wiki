@@ -13,7 +13,7 @@ export default function TableOfContents({ items }: { items: TocItem[] }) {
   };
 
   return (
-    <nav className="border border-gray-200 rounded-sm p-3 mb-4">
+    <nav className="inline-block w-fit border border-gray-200 rounded-sm p-3 mb-4">
       <div className="font-bmhanna mb-2">목차</div>
 
       <ul className="text-sm flex flex-col gap-1">
@@ -31,7 +31,9 @@ export default function TableOfContents({ items }: { items: TocItem[] }) {
               ].join(" ")}
             >
               <Link href={`#${it.id}`} className="flex gap-1">
-                <span className="text-mint tabular-nums">{number}.</span>
+                <span className="text-mint tabular-nums whitespace-nowrap">
+                  {number}.
+                </span>
                 <span className="hover:underline">{it.text}</span>
               </Link>
             </li>

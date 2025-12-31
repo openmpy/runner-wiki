@@ -43,8 +43,6 @@ export default async function DocumentDetailPage({
   const { slug } = await params;
   const documentId = parseInt(slug);
   const data = await getLatestDocumentCached(documentId);
-
-  // ✅ content(markdown) 기반 목차 생성
   const toc = getTocFromMarkdown(data.content);
 
   return (

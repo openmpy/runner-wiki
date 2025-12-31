@@ -1,7 +1,7 @@
 import GithubSlugger from "github-slugger";
 
 export type TocItem = {
-  depth: number; // 1~6
+  depth: number;
   text: string;
   id: string;
 };

@@ -34,9 +34,7 @@ const ToastViewer = ({ initialValue }: ToastViewerProps) => {
       });
     };
 
-    // 1) 즉시 1번
     applyHeadingIds();
-    // 2) 렌더 타이밍 이슈 대비 다음 프레임에 1번 더
     requestAnimationFrame(applyHeadingIds);
   }, [initialValue]);
 

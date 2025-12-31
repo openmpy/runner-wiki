@@ -1,6 +1,8 @@
+import TableOfContents from "@/components/common/TableOfContents";
 import ToastViewer from "@/components/common/ToastViewer";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { getDocumentHistory } from "@/lib/api/document";
+import { getTocFromMarkdown } from "@/lib/toc";
 import { formatRelativeTime } from "@/lib/utils/date";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -40,6 +42,7 @@ export default async function DocumentHistoryDetailPage({
   const { id } = await params;
   const documentHistoryId = parseInt(id);
   const data = await getDocumentHistoryCached(documentHistoryId);
+  const toc = getTocFromMarkdown(data.content);
 
   return (
     <div>
@@ -63,7 +66,9 @@ export default async function DocumentHistoryDetailPage({
         </div>
       </div>
       <div className="flex flex-col">
+        <TableOfContents items={toc} />
         <ToastViewer initialValue={data.content} />
+
         <div className="text-xs text-gray-600 border-t border-t-gray-300 pt-3">
           마지막 편집 시간: {formatRelativeTime(data.lastModifiedAt)}
         </div>
