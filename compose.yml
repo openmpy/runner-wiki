@@ -15,6 +15,10 @@ services:
     restart: unless-stopped
     ports:
       - 8080:8080
+    environment:
+      - LOG_PATH=/logs
+    volumes:
+      - ./server/logs:/logs
     depends_on:
       - redis
     networks:

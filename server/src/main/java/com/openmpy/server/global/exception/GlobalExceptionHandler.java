@@ -1,5 +1,6 @@
 package com.openmpy.server.global.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -14,8 +15,15 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
-    public ResponseEntity<ErrorResponse> customException(final CustomException e) {
-        log.warn(e.getMessage());
+    public ResponseEntity<ErrorResponse> customException(
+            final CustomException e,
+            final HttpServletRequest servletRequest
+    ) {
+        log.warn("custom exception method = {}, uri = {}, message = {}",
+                servletRequest.getMethod(),
+                servletRequest.getRequestURI(),
+                e.getMessage()
+        );
         return ResponseEntity.badRequest().body(new ErrorResponse(e.getMessage()));
     }
 
@@ -46,8 +54,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponse> exception(final Exception e) {
-        log.error(e.getMessage());
+    public ResponseEntity<ErrorResponse> exception(
+            final Exception e,
+            final HttpServletRequest servletRequest
+    ) {
+        log.error("exception method = {}, uri = {}, message = {}",
+                servletRequest.getMethod(),
+                servletRequest.getRequestURI(),
+                e.getMessage()
+        );
         return ResponseEntity.internalServerError().body(new ErrorResponse(e.getMessage()));
     }
 }
