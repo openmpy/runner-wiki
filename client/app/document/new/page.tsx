@@ -1,46 +1,39 @@
 "use client";
 
-import ToastEditor from "@/components/common/ToastEditor";
+import ToastEditor, {
+  ToastEditorHandle,
+} from "@/components/common/ToastEditor";
 import CategorySelector from "@/components/document/CategorySelector";
 import DocumentFormActions from "@/components/document/DocumentFormActions";
 import DocumentFormInputs from "@/components/document/DocumentFormInputs";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { createDocument } from "@/lib/api/document";
 import { DocumentCategory } from "@/lib/types/document";
-import { Editor } from "@toast-ui/react-editor";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 export default function DocumentNewPage() {
   const router = useRouter();
-  const editorRef = useRef<Editor>(null);
+  const editorRef = useRef<ToastEditorHandle>(null);
 
   const [category, setCategory] = useState<DocumentCategory>("USER");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageIds, setImageIds] = useState<number[]>([]);
+  const [isEditorReady, setIsEditorReady] = useState(false);
 
   const handleSubmit = async () => {
-    if (!editorRef.current) {
+    const markdown = editorRef.current?.getMarkdown();
+
+    if (!markdown) {
+      alert("에디터 로딩 중입니다. 잠시 후 다시 시도해주세요.");
       return;
     }
 
-    const editorInstance = editorRef.current.getInstance();
-    const markdown = editorInstance.getMarkdown();
-
-    if (!title.trim()) {
-      alert("제목을 입력해주세요.");
-      return;
-    }
-    if (!author.trim()) {
-      alert("작성자를 입력해주세요.");
-      return;
-    }
-    if (!markdown.trim()) {
-      alert("내용을 입력해주세요.");
-      return;
-    }
+    if (!title.trim()) return alert("제목을 입력해주세요.");
+    if (!author.trim()) return alert("작성자를 입력해주세요.");
+    if (!markdown.trim()) return alert("내용을 입력해주세요.");
 
     try {
       setIsSubmitting(true);
@@ -56,11 +49,11 @@ export default function DocumentNewPage() {
       router.push(`/document/${data.documentId}`);
       alert("문서가 정상적으로 작성되었습니다.");
     } catch (error) {
-      if (error instanceof Error) {
-        alert(error.message);
-      } else {
-        alert("문서 작성 도중에 에러가 발생했습니다.");
-      }
+      alert(
+        error instanceof Error
+          ? error.message
+          : "문서 작성 도중에 에러가 발생했습니다."
+      );
       console.error(error);
     } finally {
       setIsSubmitting(false);
@@ -78,16 +71,20 @@ export default function DocumentNewPage() {
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
         />
+
         <ToastEditor
           ref={editorRef}
-          onImageUploaded={(imageId) => {
-            setImageIds((prev) => [...prev, imageId]);
-          }}
+          onReady={() => setIsEditorReady(true)}
+          onImageUploaded={(imageId) =>
+            setImageIds((prev) => [...prev, imageId])
+          }
         />
+
         <DocumentFormActions
           onSubmit={handleSubmit}
           onCancel={router.back}
           isSubmitting={isSubmitting}
+          disabled={!isEditorReady}
         />
       </div>
     </div>

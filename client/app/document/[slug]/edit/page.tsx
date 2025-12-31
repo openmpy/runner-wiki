@@ -1,20 +1,21 @@
 "use client";
 
-import ToastEditor from "@/components/common/ToastEditor";
+import ToastEditor, {
+  ToastEditorHandle,
+} from "@/components/common/ToastEditor";
 import CategorySelector from "@/components/document/CategorySelector";
 import DocumentFormActions from "@/components/document/DocumentFormActions";
 import DocumentFormInputs from "@/components/document/DocumentFormInputs";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { getLatestDocument, updateDocument } from "@/lib/api/document";
 import { DocumentCategory } from "@/lib/types/document";
-import { Editor } from "@toast-ui/react-editor";
 import { useParams, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 
 export default function DocumentHistoryEditPage() {
   const router = useRouter();
   const params = useParams();
-  const editorRef = useRef<Editor>(null);
+  const editorRef = useRef<ToastEditorHandle>(null);
 
   const [category, setCategory] = useState<DocumentCategory>("USER");
   const [title, setTitle] = useState("");
@@ -23,6 +24,7 @@ export default function DocumentHistoryEditPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [imageIds, setImageIds] = useState<number[]>([]);
+  const [isEditorReady, setIsEditorReady] = useState(false);
 
   const slug = params.slug as string;
   const documentId = parseInt(slug);
@@ -30,6 +32,10 @@ export default function DocumentHistoryEditPage() {
   useEffect(() => {
     const fetchDocument = async () => {
       try {
+        setIsLoading(true);
+        setIsEditorReady(false);
+        setImageIds([]);
+
         const data = await getLatestDocument(documentId);
         setCategory(data.category);
         setTitle(data.title);
@@ -46,12 +52,12 @@ export default function DocumentHistoryEditPage() {
   }, [documentId]);
 
   const handleSubmit = async () => {
-    if (!editorRef.current) {
+    const markdown = editorRef.current?.getMarkdown();
+
+    if (!markdown) {
+      alert("에디터 로딩 중입니다. 잠시 후 다시 시도해주세요.");
       return;
     }
-
-    const editorInstance = editorRef.current.getInstance();
-    const markdown = editorInstance.getMarkdown();
 
     if (!author.trim()) {
       alert("작성자를 입력해주세요.");
@@ -107,6 +113,7 @@ export default function DocumentHistoryEditPage() {
           disabled={true}
           onCategoryChange={setCategory}
         />
+
         <DocumentFormInputs
           title={title}
           disabledTitle={true}
@@ -114,22 +121,22 @@ export default function DocumentHistoryEditPage() {
           onTitleChange={setTitle}
           onAuthorChange={setAuthor}
         />
-        <div>
-          {!isLoading && (
-            <ToastEditor
-              key={documentId}
-              ref={editorRef}
-              initialValue={content}
-              onImageUploaded={(imageId) => {
-                setImageIds((prev) => [...prev, imageId]);
-              }}
-            />
-          )}
-        </div>
+
+        <ToastEditor
+          key={documentId}
+          ref={editorRef}
+          initialValue={content}
+          onReady={() => setIsEditorReady(true)}
+          onImageUploaded={(imageId) => {
+            setImageIds((prev) => [...prev, imageId]);
+          }}
+        />
+
         <DocumentFormActions
           onSubmit={handleSubmit}
           onCancel={router.back}
           isSubmitting={isSubmitting}
+          disabled={!isEditorReady}
         />
       </div>
     </div>
