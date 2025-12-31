@@ -1,3 +1,4 @@
+import ScrollToTop from "@/components/common/ScrollToTop";
 import Sidebar from "@/components/common/Sidebar";
 import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
@@ -42,6 +43,9 @@ export default function RootLayout({
 
         {/* 푸터 */}
         <Footer />
+
+        {/* 스크롤 버튼*/}
+        <ScrollToTop />
 
         {/* 기타 */}
         <GoogleAnalytics gaId="G-3PQBMJHYW1" />
