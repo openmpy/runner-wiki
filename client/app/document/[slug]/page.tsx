@@ -1,6 +1,8 @@
+import TableOfContents from "@/components/common/TableOfContents";
 import ToastViewer from "@/components/common/ToastViewer";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import { getLatestDocument } from "@/lib/api/document";
+import { getTocFromMarkdown } from "@/lib/toc";
 import { formatRelativeTime } from "@/lib/utils/date";
 import { Metadata } from "next";
 import Link from "next/link";
@@ -42,6 +44,9 @@ export default async function DocumentDetailPage({
   const documentId = parseInt(slug);
   const data = await getLatestDocumentCached(documentId);
 
+  // ✅ content(markdown) 기반 목차 생성
+  const toc = getTocFromMarkdown(data.content);
+
   return (
     <div>
       <div className="flex justify-between items-start">
@@ -63,8 +68,11 @@ export default async function DocumentDetailPage({
           </Link>
         </div>
       </div>
+
       <div className="flex flex-col">
+        <TableOfContents items={toc} />
         <ToastViewer initialValue={data.content} />
+
         <div className="text-xs text-gray-600 border-t border-t-gray-300 pt-3">
           마지막 편집 시간: {formatRelativeTime(data.lastModifiedAt)}
         </div>
