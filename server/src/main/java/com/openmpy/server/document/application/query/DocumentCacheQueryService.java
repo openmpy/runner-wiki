@@ -1,5 +1,7 @@
 package com.openmpy.server.document.application.query;
 
+import static java.util.HashMap.newHashMap;
+
 import com.openmpy.server.document.application.query.response.DocumentPageResponse;
 import com.openmpy.server.document.application.query.response.DocumentTop10Response;
 import com.openmpy.server.document.domain.model.Document;
@@ -7,7 +9,9 @@ import com.openmpy.server.document.domain.repository.DocumentRepository;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -19,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentCacheQueryService {
 
     private static final int MAX_TOP_DOCUMENTS = 10;
-    private static final Duration DUPLICATE_BLOCK_TTL = Duration.ofMinutes(MAX_TOP_DOCUMENTS);
+    private static final Duration DUPLICATE_BLOCK_TTL = Duration.ofMinutes(10);
     private static final String RANK_KEY = "rank:document:views";
 
     private final StringRedisTemplate redisTemplate;
@@ -40,13 +44,20 @@ public class DocumentCacheQueryService {
     public DocumentTop10Response getDocumentTop10() {
         final Set<String> ids = redisTemplate.opsForZSet().reverseRange(RANK_KEY, 0, MAX_TOP_DOCUMENTS - 1);
 
-        if (ids.isEmpty()) {
+        if (ids == null || ids.isEmpty()) {
             return new DocumentTop10Response(List.of());
         }
 
-        final List<Long> documentIds = ids.stream().map(Long::parseLong).toList();
-        final List<Document> documents = documentRepository.findAllByIdIn(documentIds);
+        final List<Long> rankedIds = ids.stream().map(Long::parseLong).toList();
+        final List<Document> documents = documentRepository.findAllByIdIn(rankedIds);
+
+        final Map<Long, Integer> orderIndex = newHashMap(rankedIds.size());
+        for (int i = 0; i < rankedIds.size(); i++) {
+            orderIndex.put(rankedIds.get(i), i);
+        }
+
         final List<DocumentPageResponse> responses = documents.stream()
+                .sorted(Comparator.comparingInt(d -> orderIndex.getOrDefault(d.getId(), Integer.MAX_VALUE)))
                 .map(DocumentPageResponse::from)
                 .toList();
 
