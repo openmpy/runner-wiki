@@ -31,10 +31,11 @@ class DeleteDocumentUseCaseTest {
     void 문서가_정상적으로_삭제된다() {
         // given
         final Document document = Document.create("제목", DocumentCategory.USER);
-        final Document savedDocument = documentRepository.save(document);
+
+        documentRepository.save(document);
 
         // when
-        deleteDocumentUseCase.execute(savedDocument.getId());
+        deleteDocumentUseCase.execute(document.getId());
 
         // then
         final long count = documentRepository.count();

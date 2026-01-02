@@ -43,7 +43,7 @@ class UpdateDocumentUseCaseTest {
     @Test
     void 문서가_정상적으로_수정된다_이미지_X() {
         final Document document = Document.create("제목", DocumentCategory.USER);
-        final Document savedDocument = documentRepository.save(document);
+        documentRepository.save(document);
 
         // given
         final DocumentUpdateRequest request = new DocumentUpdateRequest(
@@ -54,13 +54,13 @@ class UpdateDocumentUseCaseTest {
 
         // when
         final DocumentUpdateResponse response = updateDocumentUseCase.execute(
-                savedDocument.getId(),
+                document.getId(),
                 request,
                 CLIENT_IP
         );
 
         // then
-        final Document foundDocument = documentRepository.findById(savedDocument.getId()).orElseThrow();
+        final Document foundDocument = documentRepository.findById(document.getId()).orElseThrow();
         final DocumentHistory documentHistory = foundDocument.getHistories().getFirst();
 
         assertThat(response.documentId()).isNotNull();
@@ -74,7 +74,7 @@ class UpdateDocumentUseCaseTest {
     @Test
     void 문서가_정상적으로_수정된다_이미지_O() {
         final Document document = Document.create("제목", DocumentCategory.USER);
-        final Document savedDocument = documentRepository.save(document);
+        documentRepository.save(document);
 
         final DocumentImage documentImage1 = DocumentImage.create("http://localhost:8080/image/1", CLIENT_IP);
         final DocumentImage documentImage2 = DocumentImage.create("http://localhost:8080/image/2", CLIENT_IP);
@@ -91,13 +91,13 @@ class UpdateDocumentUseCaseTest {
 
         // when
         final DocumentUpdateResponse response = updateDocumentUseCase.execute(
-                savedDocument.getId(),
+                document.getId(),
                 request,
                 CLIENT_IP
         );
 
         // then
-        final Document foundDocument = documentRepository.findById(savedDocument.getId()).orElseThrow();
+        final Document foundDocument = documentRepository.findById(document.getId()).orElseThrow();
         final DocumentHistory documentHistory = foundDocument.getHistories().getFirst();
 
         assertThat(response.documentId()).isNotNull();
