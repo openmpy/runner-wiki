@@ -27,8 +27,8 @@ export default function Home() {
         <div className="flex flex-col gap-2">
           <h2 className="text-lg lg:text-xl font-bmhanna">런너위키란?</h2>
           <p className="text-sm leading-relaxed">
-            누구나 익명으로 문서를 작성하고 편집할 수 있으며 유저, 길드에 대한
-            정보를 자유롭게 기록할 수 있습니다.
+            테일즈런너를 플레이하는 유저라면 누구나 문서 작성하고 열람할 수
+            있습니다.
           </p>
         </div>
 

@@ -9,7 +9,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "런너위키",
-  description: "누구나 쉽게 문서를 작업할 수 있습니다.",
+  description: "테일즈런너를 플레이하는 유저라면 누구나 문서를 작성하고 열람할 수 있습니다.",
 };
 
 export default function RootLayout({

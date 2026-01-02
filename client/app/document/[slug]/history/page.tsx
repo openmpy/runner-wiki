@@ -28,13 +28,15 @@ export async function generateMetadata({
     const data = await getHistoriesCached(documentId, currentPage);
 
     return {
-      title: `${data.payload[0].title}(편집기록) - 런너위키`,
-      description: "누구나 쉽게 문서 편집 기록을 확인할 수 있습니다.",
+      title: `${data.payload[0].title} | 편집기록 - 런너위키`,
+      description:
+        "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
   } catch {
     return {
       title: "편집기록 - 런너위키",
-      description: "누구나 쉽게 문서 편집 기록을 확인할 수 있습니다.",
+      description:
+        "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
   }
 }
