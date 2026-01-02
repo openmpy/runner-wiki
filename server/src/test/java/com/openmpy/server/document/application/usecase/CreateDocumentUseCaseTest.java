@@ -81,7 +81,7 @@ class CreateDocumentUseCaseTest {
                 DocumentCategory.USER,
                 "홍길동",
                 "내용",
-                List.of(1L, 2L, 3L)
+                List.of(documentImage1.getId(), documentImage2.getId(), documentImage3.getId())
         );
 
         // when
