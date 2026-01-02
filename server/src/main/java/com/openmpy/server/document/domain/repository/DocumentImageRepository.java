@@ -10,7 +10,7 @@ public interface DocumentImageRepository extends JpaRepository<DocumentImage, Lo
 
     List<DocumentImage> findAllByIdInAndStatus(final List<Long> ids, final DocumentImageStatus status);
 
-    List<DocumentImage> findAllByStatusAndExpiredAtAfter(
-            final DocumentImageStatus status, final LocalDateTime expiredAt
+    List<DocumentImage> findAllByStatusAndExpiredAtBefore(
+            final DocumentImageStatus status, final LocalDateTime localDateTime
     );
 }

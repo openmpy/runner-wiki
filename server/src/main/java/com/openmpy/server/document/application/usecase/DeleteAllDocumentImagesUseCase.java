@@ -20,7 +20,7 @@ public class DeleteAllDocumentImagesUseCase {
 
     @Transactional
     public long execute() {
-        final List<DocumentImage> documentImages = documentImageRepository.findAllByStatusAndExpiredAtAfter(
+        final List<DocumentImage> documentImages = documentImageRepository.findAllByStatusAndExpiredAtBefore(
                 TEMP,
                 LocalDateTime.now()
         );
@@ -37,5 +37,4 @@ public class DeleteAllDocumentImagesUseCase {
         }
         return deleted;
     }
-
 }
