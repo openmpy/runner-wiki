@@ -29,6 +29,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.boot:spring-boot-starter-flyway'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -45,6 +46,9 @@ dependencies {
 
     // s3
     implementation 'software.amazon.awssdk:s3:2.40.15'
+
+    // flyway
+    runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.20.0'
 }
 
 tasks.named('test') {
