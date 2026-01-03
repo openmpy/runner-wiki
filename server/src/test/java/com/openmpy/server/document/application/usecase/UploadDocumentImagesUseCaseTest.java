@@ -10,14 +10,18 @@ import com.openmpy.server.document.application.command.response.DocumentImageUpl
 import com.openmpy.server.document.application.port.ImageStorage;
 import com.openmpy.server.document.application.port.UploadedImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
+import jakarta.persistence.EntityManager;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class UploadDocumentImagesUseCaseTest {
 
@@ -31,6 +35,14 @@ class UploadDocumentImagesUseCaseTest {
 
     @MockitoBean
     private ImageStorage imageStorage;
+
+    @Autowired
+    private EntityManager em;
+
+    @BeforeEach
+    void setUp() {
+        em.createNativeQuery("DELETE FROM document_image").executeUpdate();
+    }
 
     @Test
     void 문서에_이미지_목록을_업로드한다() {

@@ -12,6 +12,7 @@ import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.exception.CustomException;
+import jakarta.persistence.EntityManager;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
 class UpdateDocumentUseCaseTest {
 
@@ -34,12 +36,14 @@ class UpdateDocumentUseCaseTest {
     @Autowired
     private DocumentImageRepository documentImageRepository;
 
+    @Autowired
+    private EntityManager em;
+
     @BeforeEach
     void setUp() {
-        documentRepository.deleteAll();
+        em.createNativeQuery("DELETE FROM document").executeUpdate();
     }
 
-    @Transactional
     @Test
     void 문서가_정상적으로_수정된다_이미지_X() {
         final Document document = Document.create("제목", DocumentCategory.USER);
@@ -70,7 +74,6 @@ class UpdateDocumentUseCaseTest {
         assertThat(foundDocument.getImages()).isEmpty();
     }
 
-    @Transactional
     @Test
     void 문서가_정상적으로_수정된다_이미지_O() {
         final Document document = Document.create("제목", DocumentCategory.USER);
