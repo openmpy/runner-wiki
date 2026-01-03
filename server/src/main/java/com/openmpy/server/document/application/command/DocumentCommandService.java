@@ -8,7 +8,9 @@ import com.openmpy.server.document.application.usecase.CreateDocumentUseCase;
 import com.openmpy.server.document.application.usecase.DeleteDocumentHistoryUseCase;
 import com.openmpy.server.document.application.usecase.DeleteDocumentUseCase;
 import com.openmpy.server.document.application.usecase.UpdateDocumentUseCase;
+import com.openmpy.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,7 +25,11 @@ public class DocumentCommandService {
 
     @Transactional
     public DocumentCreateResponse create(final DocumentCreateRequest request, final String clientIp) {
-        return createDocumentUseCase.execute(request, clientIp);
+        try {
+            return createDocumentUseCase.execute(request, clientIp);
+        } catch (final DataIntegrityViolationException e) {
+            throw new CustomException("문서가 중복으로 작성되었습니다.");
+        }
     }
 
     @Transactional
@@ -32,7 +38,11 @@ public class DocumentCommandService {
             final DocumentUpdateRequest request,
             final String clientIp
     ) {
-        return updateDocumentUseCase.execute(documentId, request, clientIp);
+        try {
+            return updateDocumentUseCase.execute(documentId, request, clientIp);
+        } catch (final DataIntegrityViolationException e) {
+            throw new CustomException("문서 기록이 중복으로 작성되었습니다.");
+        }
     }
 
     @Transactional
