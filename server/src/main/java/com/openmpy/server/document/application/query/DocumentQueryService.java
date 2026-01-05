@@ -30,9 +30,8 @@ public class DocumentQueryService {
 
     @Transactional(readOnly = true)
     public DocumentGetResponse getHistory(final Long documentHistoryId) {
-        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
-        );
+        final DocumentHistory documentHistory = documentHistoryRepository.findByIdWithDocument(documentHistoryId)
+                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 기록 번호입니다."));
 
         return DocumentGetResponse.from(documentHistory.getDocument(), documentHistory);
     }
