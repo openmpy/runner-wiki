@@ -26,6 +26,50 @@
 - Amazon EC2
 - Amazon Lightsail
 
+## 아키텍처
+
+```mermaid
+flowchart TB
+  U[사용자 브라우저]
+  FE[Frontend<br/>Next.js<br/>Deploy Vercel]
+  BE[Backend<br/>Spring Boot<br/>Docker Container]
+
+  PG[(PostgreSQL)]
+  RD[(Redis)]
+  S3[(Amazon S3<br/>Image Storage)]
+
+  U --> FE
+  FE -->|HTTPS API| BE
+
+  BE --> PG
+  BE --> RD
+  BE --> S3
+
+  subgraph AWS Infrastructure
+    EC2[EC2]
+    LS[Lightsail]
+  end
+
+  BE --- EC2
+  BE --- LS
+
+```
+
+```mermaid
+
+flowchart LR
+  CW[CloudWatch<br/>EC2, RDS 모니터링]
+  SNS[SNS<br/>임계치 이벤트]
+  L[Lambda]
+  D[Discord Webhook<br/>실시간 알림]
+
+  CW --> SNS
+  SNS --> L
+  L --> D
+  
+```
+
+
 ## 기능
 
 ### 문서(게시글) 관리
