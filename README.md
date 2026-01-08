@@ -151,6 +151,8 @@ flowchart LR
 
 #### 해결
 
+<img width="604" height="459" alt="Image" src="https://github.com/user-attachments/assets/8bb80e35-d03b-427c-a589-70e8d7ffeeb6" />
+
 - **CloudWatch**를 이용한 EC2/RDS 메트릭 모니터링
 - 임계치 초과 시 **SNS**로 이벤트 발행
 - **Lambda**를 통해 Discord Webhook 연동
