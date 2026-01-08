@@ -15,6 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
@@ -71,22 +72,30 @@ public class DocumentCacheQueryService {
     @Transactional(readOnly = true)
     public DocumentTop10Response getDocumentTop10() {
         final String rankKey = rankKeyOfToday();
-        final Set<String> ids = redisTemplate.opsForZSet().reverseRange(rankKey, 0, MAX_TOP_DOCUMENTS - 1);
 
-        if (ids == null || ids.isEmpty()) {
+        final int fetchSize = 80;
+        final Set<String> rawIds = redisTemplate.opsForZSet().reverseRange(rankKey, 0, fetchSize - 1);
+
+        if (rawIds == null || rawIds.isEmpty()) {
             return new DocumentTop10Response(List.of());
         }
 
-        final List<Long> rankedIds = ids.stream().map(Long::parseLong).toList();
+        final List<Long> rankedIds = rawIds.stream().map(Long::parseLong).toList();
         final List<Document> documents = documentRepository.findAllByIdIn(rankedIds);
 
-        final Map<Long, Integer> orderIndex = newHashMap(rankedIds.size());
+        final Map<Long, Integer> orderIndex = newHashMap(rankedIds.size() * 2);
         for (int i = 0; i < rankedIds.size(); i++) {
             orderIndex.put(rankedIds.get(i), i);
         }
 
-        final List<DocumentPageResponse> responses = documents.stream()
+        final List<Document> sorted = documents.stream()
                 .sorted(Comparator.comparingInt(d -> orderIndex.getOrDefault(d.getId(), Integer.MAX_VALUE)))
+                .limit(MAX_TOP_DOCUMENTS)
+                .toList();
+
+        cleanupInvalidMembers(rankKey, rankedIds, documents);
+
+        final List<DocumentPageResponse> responses = sorted.stream()
                 .map(DocumentPageResponse::from)
                 .toList();
 
@@ -107,6 +116,26 @@ public class DocumentCacheQueryService {
 
     private String rankKeyOfToday() {
         return "rank:document:views:" + LocalDate.now(ZoneId.of("Asia/Seoul"));
+    }
+
+    private void cleanupInvalidMembers(
+            final String rankKey,
+            final List<Long> rankedIds,
+            final List<Document> foundDocuments
+    ) {
+        final Set<Long> foundIds = foundDocuments.stream()
+                .map(Document::getId)
+                .collect(Collectors.toSet());
+
+        final List<String> invalidMembers = rankedIds.stream()
+                .filter(id -> !foundIds.contains(id))
+                .limit(30)
+                .map(String::valueOf)
+                .toList();
+
+        if (!invalidMembers.isEmpty()) {
+            redisTemplate.opsForZSet().remove(rankKey, invalidMembers.toArray());
+        }
     }
 
     private String sha256Hex(final String input) {
