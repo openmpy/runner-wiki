@@ -4,6 +4,7 @@ import com.openmpy.server.document.domain.DocumentTitle;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
+import com.openmpy.server.global.util.KoreanChosung;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -36,6 +37,9 @@ public class Document extends BaseTimeEntity {
     @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false))
     private DocumentTitle title;
 
+    @Column
+    private String titleChosung;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DocumentCategory category;
@@ -57,6 +61,7 @@ public class Document extends BaseTimeEntity {
             final DocumentCategory category
     ) {
         this.title = new DocumentTitle(title);
+        this.titleChosung = KoreanChosung.toChosung(title);
         this.category = category;
         this.latestVersion = 0L;
     }
