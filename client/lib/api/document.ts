@@ -145,7 +145,7 @@ export async function searchDocuments(
 ) {
   try {
     const response = await fetch(
-      `${API_BASE_URL}/v1/documents/search?title=${title}&page=${page}&size=${size}`,
+      `${API_BASE_URL}/v1/documents/autocomplete?title=${title}&page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
