@@ -16,6 +16,8 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     Page<Document> findAllByTitle_ValueContainingIgnoreCase(final String title, final Pageable pageable);
 
+    Page<Document> findByTitleChosungIsNullOrTitleChosungEquals(final String titleChosung, final Pageable pageable);
+
     List<Document> findAllByIdIn(final List<Long> ids);
 
     @Query(

@@ -109,6 +109,10 @@ public class Document extends BaseTimeEntity {
         images.forEach(DocumentImage::delete);
     }
 
+    public void changeTitleChosung(final String chosung) {
+        titleChosung = chosung;
+    }
+
     public String getTitle() {
         return title.getValue();
     }
