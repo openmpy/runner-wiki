@@ -18,9 +18,11 @@ public class DummyDataInit {
     private static final int INITIAL_DOCUMENT_COUNT = 100;
     private static final int INITIAL_DOCUMENT_HISTORY_COUNT = 50;
 
-    @Profile("local")
+    @Profile("local2")
     @Bean
     CommandLineRunner init(final DocumentRepository documentRepository) {
+        documentRepository.deleteAll();
+
         return args -> {
             for (int i = 0; i < INITIAL_DOCUMENT_COUNT; i++) {
                 final Document document = Document.create("제목" + i, i % 2 == 0 ? USER : GUILD);
