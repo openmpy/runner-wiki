@@ -14,12 +14,6 @@ public class SearchInputClassifier {
             if (c >= 'ㄱ' && c <= 'ㅎ') {
                 continue;
             }
-            if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
-                continue;
-            }
-            if (c >= '0' && c <= '9') {
-                continue;
-            }
 
             return false;
         }
