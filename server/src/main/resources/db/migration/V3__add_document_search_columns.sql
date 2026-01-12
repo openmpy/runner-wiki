@@ -5,8 +5,9 @@ ALTER TABLE document
     ADD COLUMN IF NOT EXISTS title_chosung text;
 
 ALTER TABLE document
-    ADD COLUMN IF NOT EXISTS title_norm text;
+DROP
+COLUMN IF EXISTS title_norm;
 
-UPDATE document
-SET title_norm = lower(title)
-WHERE title_norm IS NULL;
+ALTER TABLE document
+    ADD COLUMN title_norm text
+        GENERATED ALWAYS AS (lower(title)) STORED;
