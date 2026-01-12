@@ -2,6 +2,7 @@ package com.openmpy.server.document.presentation;
 
 import com.openmpy.server.document.application.query.DocumentCacheQueryService;
 import com.openmpy.server.document.application.query.DocumentQueryService;
+import com.openmpy.server.document.application.query.DocumentSearchQueryService;
 import com.openmpy.server.document.application.query.response.DocumentGetResponse;
 import com.openmpy.server.document.application.query.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.application.query.response.DocumentPageResponse;
@@ -24,6 +25,7 @@ public class DocumentQueryController {
 
     private final DocumentQueryService documentQueryService;
     private final DocumentCacheQueryService documentCacheQueryService;
+    private final DocumentSearchQueryService documentSearchQueryService;
 
     @GetMapping("/documents/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(
@@ -79,5 +81,14 @@ public class DocumentQueryController {
     public ResponseEntity<DocumentPageResponse> getShuffleDocument() {
         final DocumentPageResponse response = documentQueryService.getShuffleDocument();
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/documents/autocomplete")
+    public ResponseEntity<PageResponse<DocumentPageResponse>> autoComplete(
+            @RequestParam final String title,
+            @RequestParam(defaultValue = "0", required = false) final int page,
+            @RequestParam(defaultValue = "10", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentSearchQueryService.autoComplete(title, page, size));
     }
 }
