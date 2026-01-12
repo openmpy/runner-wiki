@@ -6,7 +6,9 @@ import java.util.List;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 public interface DocumentRepository extends JpaRepository<Document, Long> {
 
@@ -33,4 +35,12 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             nativeQuery = true
     )
     Document findRandomDocument();
+
+    @Modifying(clearAutomatically = true, flushAutomatically = true)
+    @Query("""
+                update Document d
+                set d.titleChosung = :chosung
+                where d.id = :id
+            """)
+    int updateTitleChosungOnly(@Param("id") final Long id, @Param("chosung") final String chosung);
 }

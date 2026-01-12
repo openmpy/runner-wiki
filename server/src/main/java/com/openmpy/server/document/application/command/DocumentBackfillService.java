@@ -18,11 +18,10 @@ public class DocumentBackfillService {
     @Transactional
     public long chosungBackfill(final int batchSize) {
         long updated = 0L;
-        int page = 0;
 
         while (true) {
             final Page<Document> chunk = documentRepository.findByTitleChosungIsNullOrTitleChosungEquals(
-                    "", PageRequest.of(page, batchSize)
+                    "", PageRequest.of(0, batchSize)
             );
 
             if (chunk.isEmpty()) {
@@ -30,8 +29,9 @@ public class DocumentBackfillService {
             }
 
             for (final Document document : chunk.getContent()) {
-                document.changeTitleChosung(KoreanChosung.toChosung(document.getTitle()));
-                updated++;
+                final String chosung = KoreanChosung.toChosung(document.getTitle());
+
+                updated += documentRepository.updateTitleChosungOnly(document.getId(), chosung);
             }
         }
         return updated;
