@@ -12,7 +12,7 @@ public class DocumentBackfillScheduler {
 
     private final DocumentBackfillService documentBackfillService;
 
-    @Scheduled(cron = "0 0 * * * *")
+    @Scheduled(cron = "0 0 * * * ?")
     public void titleChosungExecute() {
         documentBackfillService.chosungBackfill(BATCH_SIZE);
     }
