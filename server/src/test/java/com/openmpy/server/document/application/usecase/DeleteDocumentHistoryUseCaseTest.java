@@ -3,6 +3,7 @@ package com.openmpy.server.document.application.usecase;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.openmpy.server.document.application.command.usecase.DeleteDocumentHistoryUseCase;
 import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.model.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;

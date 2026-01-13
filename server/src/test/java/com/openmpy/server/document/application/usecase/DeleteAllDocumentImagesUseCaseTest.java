@@ -8,7 +8,8 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
-import com.openmpy.server.document.application.port.ImageStorage;
+import com.openmpy.server.document.application.command.usecase.DeleteAllDocumentImagesUseCase;
+import com.openmpy.server.document.application.image.port.ImageStorage;
 import com.openmpy.server.document.domain.model.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import jakarta.persistence.EntityManager;

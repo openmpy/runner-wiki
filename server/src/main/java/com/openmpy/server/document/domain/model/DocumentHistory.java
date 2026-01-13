@@ -1,7 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
-import com.openmpy.server.document.domain.DocumentHistoryAuthor;
-import com.openmpy.server.document.domain.DocumentHistoryContent;
+import com.openmpy.server.document.domain.vo.DocumentHistoryAuthor;
+import com.openmpy.server.document.domain.vo.DocumentHistoryContent;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;

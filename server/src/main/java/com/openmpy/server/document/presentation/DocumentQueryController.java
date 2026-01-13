@@ -1,12 +1,12 @@
 package com.openmpy.server.document.presentation;
 
-import com.openmpy.server.document.application.query.DocumentCacheQueryService;
-import com.openmpy.server.document.application.query.DocumentQueryService;
-import com.openmpy.server.document.application.query.DocumentSearchQueryService;
-import com.openmpy.server.document.application.query.response.DocumentGetResponse;
-import com.openmpy.server.document.application.query.response.DocumentHistoryPageResponse;
-import com.openmpy.server.document.application.query.response.DocumentPageResponse;
-import com.openmpy.server.document.application.query.response.DocumentTop10Response;
+import com.openmpy.server.document.application.query.dto.response.DocumentGetResponse;
+import com.openmpy.server.document.application.query.dto.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
+import com.openmpy.server.document.application.query.dto.response.DocumentTop10Response;
+import com.openmpy.server.document.application.query.service.DocumentQueryService;
+import com.openmpy.server.document.application.query.service.DocumentSearchQueryService;
+import com.openmpy.server.document.application.ranking.service.DocumentRankingQueryService;
 import com.openmpy.server.global.dto.PageResponse;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DocumentQueryController {
 
     private final DocumentQueryService documentQueryService;
-    private final DocumentCacheQueryService documentCacheQueryService;
+    private final DocumentRankingQueryService documentRankingQueryService;
     private final DocumentSearchQueryService documentSearchQueryService;
 
     @GetMapping("/documents/{documentId}")
@@ -35,7 +35,7 @@ public class DocumentQueryController {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
         final DocumentGetResponse response = documentQueryService.getLatest(documentId);
 
-        documentCacheQueryService.increaseRankIfAllowed(documentId, clientIp);
+        documentRankingQueryService.increaseRankIfAllowed(documentId, clientIp);
         return ResponseEntity.ok(response);
     }
 
@@ -73,7 +73,7 @@ public class DocumentQueryController {
 
     @GetMapping("/documents/top10")
     public ResponseEntity<DocumentTop10Response> getDocumentTop10() {
-        final DocumentTop10Response response = documentCacheQueryService.getDocumentTop10();
+        final DocumentTop10Response response = documentRankingQueryService.getDocumentTop10();
         return ResponseEntity.ok(response);
     }
 

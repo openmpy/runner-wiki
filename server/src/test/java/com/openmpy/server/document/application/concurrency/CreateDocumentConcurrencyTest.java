@@ -2,8 +2,8 @@ package com.openmpy.server.document.application.concurrency;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.openmpy.server.document.application.command.DocumentCommandService;
-import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.service.DocumentCommandService;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import jakarta.persistence.EntityManager;

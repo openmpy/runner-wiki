@@ -2,14 +2,14 @@ package com.openmpy.server.document.presentation;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
-import com.openmpy.server.document.application.command.DocumentCacheCommandService;
-import com.openmpy.server.document.application.command.DocumentCommandService;
-import com.openmpy.server.document.application.command.DocumentImageCommandService;
-import com.openmpy.server.document.application.command.request.DocumentCreateRequest;
-import com.openmpy.server.document.application.command.request.DocumentUpdateRequest;
-import com.openmpy.server.document.application.command.response.DocumentCreateResponse;
-import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
-import com.openmpy.server.document.application.command.response.DocumentUpdateResponse;
+import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
+import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
+import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
+import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
+import com.openmpy.server.document.application.command.service.DocumentCommandService;
+import com.openmpy.server.document.application.command.service.DocumentImageCommandService;
+import com.openmpy.server.document.application.ranking.service.DocumentRankingCommandService;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -34,7 +34,7 @@ public class DocumentCommandController {
 
     private final DocumentCommandService documentCommandService;
     private final DocumentImageCommandService documentImageCommandService;
-    private final DocumentCacheCommandService documentCacheCommandService;
+    private final DocumentRankingCommandService documentRankingCommandService;
 
     @Value("${admin.password}")
     private String password;
@@ -68,7 +68,7 @@ public class DocumentCommandController {
         validatePassword(password);
 
         documentCommandService.delete(documentId);
-        documentCacheCommandService.removeFromRanking(documentId);
+        documentRankingCommandService.removeFromRanking(documentId);
         return ResponseEntity.ok().build();
     }
 

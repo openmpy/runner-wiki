@@ -1,7 +1,7 @@
 package com.openmpy.server.document.domain.model;
 
-import com.openmpy.server.document.domain.DocumentTitle;
 import com.openmpy.server.document.domain.type.DocumentCategory;
+import com.openmpy.server.document.domain.vo.DocumentTitle;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import com.openmpy.server.global.util.KoreanChosung;

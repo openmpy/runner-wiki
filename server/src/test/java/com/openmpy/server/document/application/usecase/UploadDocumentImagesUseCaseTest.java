@@ -6,9 +6,10 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import com.openmpy.server.document.application.command.response.DocumentImageUploadResponses;
-import com.openmpy.server.document.application.port.ImageStorage;
-import com.openmpy.server.document.application.port.UploadedImage;
+import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
+import com.openmpy.server.document.application.command.usecase.UploadDocumentImagesUseCase;
+import com.openmpy.server.document.application.image.port.ImageStorage;
+import com.openmpy.server.document.application.image.port.UploadedImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import jakarta.persistence.EntityManager;
 import java.util.List;
