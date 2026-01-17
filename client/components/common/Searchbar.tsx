@@ -173,7 +173,7 @@ export default function Searchbar() {
           className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-600 rounded-sm shadow-lg max-h-96 overflow-y-auto z-50"
         >
           {isLoading ? (
-            <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
+            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
               검색 중입니다.
             </div>
           ) : searchResults.length > 0 ? (
@@ -183,7 +183,7 @@ export default function Searchbar() {
                   key={`${document.documentId}-${index}`}
                   href={`/document/${document.documentId}`}
                   onClick={handleResultClick}
-                  className="block border-b border-b-gray-200 last:border-b-0"
+                  className="block border-b border-b-gray-200 dark:border-b-zinc-600 last:border-b-0"
                 >
                   <div className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
                     <div className="flex items-center justify-between">
@@ -194,13 +194,13 @@ export default function Searchbar() {
                 </Link>
               ))}
               {isLoadingMore && (
-                <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
+                <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
                   불러오는 중...
                 </div>
               )}
             </div>
           ) : (
-            <div className="p-4 text-center text-gray-400 text-sm font-bmhanna">
+            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
               검색 결과가 없습니다.
             </div>
           )}

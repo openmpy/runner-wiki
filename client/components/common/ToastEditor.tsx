@@ -101,12 +101,12 @@ const ToastEditor = forwardRef<ToastEditorHandle, ToastEditorProps>(
     }, [onReady]);
 
     return (
-      <div className="relative">
+      <div className="relative toast-editor">
         {isUploading && (
-          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm">
-            <div className="flex flex-col items-center gap-3 bg-white px-8 py-6">
-              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700" />
-              <span className="text-sm text-gray-700 font-bmhanna">
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-sm dark:bg-black/60">
+            <div className="flex flex-col items-center gap-3 bg-white px-8 py-6 dark:bg-zinc-900">
+              <div className="h-8 w-8 animate-spin rounded-full border-4 border-gray-300 border-t-gray-700 dark:border-zinc-600 dark:border-t-zinc-300" />
+              <span className="text-sm text-gray-700 dark:text-zinc-200 font-bmhanna">
                 이미지 업로드 중
               </span>
             </div>

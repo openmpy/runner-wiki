@@ -39,7 +39,7 @@ const ToastViewer = ({ initialValue }: ToastViewerProps) => {
   }, [initialValue]);
 
   return (
-    <div ref={wrapperRef}>
+    <div ref={wrapperRef} className="toast-viewer">
       <Viewer initialValue={initialValue} />
     </div>
   );
