@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-mint: #00a495;
+}
+
 @layer utilities {
   .font-bmhanna {
     font-family: var(--font-bmhanna);
@@ -8,10 +14,6 @@
   .font-noto-sans {
     font-family: var(--font-noto-sans);
   }
-}
-
-@theme {
-  --color-mint: #00a495;
 }
 
 @media (max-width: 768px) {

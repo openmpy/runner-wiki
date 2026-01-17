@@ -7,11 +7,11 @@ interface DocumentCategoryBadgeProps {
 const CATEGORY_CONFIG = {
   USER: {
     label: "런너",
-    className: "bg-blue-100 text-blue-700",
+    className: "bg-blue-100 text-blue-700 dark:bg-zinc-500 dark:text-zinc-200",
   },
   GUILD: {
     label: "길드",
-    className: "bg-purple-100 text-purple-700",
+    className: "bg-purple-100 text-purple-700 dark:bg-zinc-500 dark:text-zinc-200",
   },
 } as const;
 

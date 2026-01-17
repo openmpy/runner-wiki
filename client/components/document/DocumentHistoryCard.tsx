@@ -12,7 +12,7 @@ export default function DocumentHistoryCard({
 }: DocumentHistoryCardProps) {
   return (
     <>
-      <div className="border border-gray-200 rounded-sm px-3 py-3 hover:bg-gray-100 transition-colors">
+      <div className="border border-gray-200 dark:border-zinc-700 rounded-sm px-3 py-3 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
         <div className="flex items-center justify-between mb-4">
           <Link
             href={`/document/${documentHistory.documentId}/history/${documentHistory.documentHistoryId}`}
@@ -20,14 +20,14 @@ export default function DocumentHistoryCard({
           >
             {documentHistory.author}
           </Link>
-          <span className="rounded-sm font-bold px-2 py-0.5 text-xs bg-orange-100 text-orange-700">
+          <span className="rounded-sm font-bold px-2 py-0.5 text-xs bg-orange-100 text-orange-700 dark:bg-zinc-500 dark:text-zinc-200">
             버전 {documentHistory.version}
           </span>
         </div>
-        <p className="text-gray-700 text-xs mb-1">
+        <p className="text-gray-700 dark:text-zinc-500 text-xs mb-1">
           {formatFileSize(documentHistory.size)}
         </p>
-        <p className="text-gray-500 text-xs">
+        <p className="text-gray-500 dark:text-zinc-600 text-xs">
           {formatRelativeTime(documentHistory.createdAt)}
         </p>
       </div>

@@ -27,13 +27,15 @@ export default function DocumentCategoryMenu({
       {CATEGORIES.map((category) => {
         const { label } = CATEGORY_MENU_CONFIG[category];
         const bgColor =
-          category === selectedCategory ? "bg-mint" : "bg-gray-400";
+          category === selectedCategory
+            ? "bg-mint dark:bg-zinc-700"
+            : "bg-gray-400 dark:bg-zinc-500";
         const href = `/document?category=${category}`;
 
         return (
           <Link key={category} href={href}>
             <button
-              className={`font-bmhanna ${bgColor} text-white px-4 rounded-sm hover:opacity-90 transition-opacity cursor-pointer`}
+              className={`font-bmhanna ${bgColor} text-white dark:text-zinc-200 px-4 rounded-sm hover:opacity-90 transition-opacity cursor-pointer`}
             >
               {label}
             </button>

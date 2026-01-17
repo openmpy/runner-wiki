@@ -30,9 +30,9 @@ export default function ShuffleButton() {
     <button
       onClick={handleShuffle}
       disabled={isLoading}
-      className="px-2.5 py-2.5 bg-white rounded-sm cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+      className="px-2.5 py-2.5 bg-white dark:bg-zinc-700 rounded-sm cursor-pointer hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
     >
-      <FaRandom className="text-mint" />
+      <FaRandom className="text-mint dark:text-zinc-200" />
     </button>
   );
 }

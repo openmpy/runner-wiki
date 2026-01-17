@@ -96,7 +96,7 @@ export default function DocumentHistoryEditPage() {
       <div>
         <DocumentTitle text="문서편집" />
         <div className="flex justify-center items-center py-8">
-          <p className="text-gray-400 font-bmhanna">
+          <p className="text-gray-400 dark:text-zinc-400 font-bmhanna">
             문서를 불러오는 중입니다.
           </p>
         </div>

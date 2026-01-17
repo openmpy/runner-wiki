@@ -18,10 +18,10 @@ export default async function Sidebar() {
             <li key={document.documentId}>
               <Link
                 href={`/document/${document.documentId}`}
-                className="flex items-center justify-between hover:bg-gray-100 transition-colors px-1 py-1"
+                className="flex items-center justify-between hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors px-1 py-1"
               >
                 <div className="flex items-center gap-1">
-                  <p className="text-mint text-sm font-bold">{index + 1}.</p>
+                  <p className="text-mint text-sm font-bold dark:text-orange-400">{index + 1}.</p>
                   <p className="text-sm hover:underline flex-1 truncate">
                     {document.title}
                   </p>

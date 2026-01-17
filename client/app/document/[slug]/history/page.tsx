@@ -62,14 +62,14 @@ export default async function DocumentHistoryPage({
         <div className="flex gap-2">
           <Link
             href={`/document/${documentId}`}
-            className="bg-gray-400 font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
           >
             <HiArrowLeft className="lg:hidden" />
             <span className="hidden lg:inline">뒤로가기</span>
           </Link>
           <Link
             href={`/document/${documentId}/edit`}
-            className="bg-mint font-bmhanna text-white rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
           >
             <HiPlus className="lg:hidden font-bold" />
             <span className="hidden lg:inline">편집하기</span>
@@ -77,7 +77,7 @@ export default async function DocumentHistoryPage({
         </div>
       </div>
       <div>
-        <p className="font-bmhanna text-lg text-gray-500 mb-2">
+        <p className="font-bmhanna text-lg text-gray-500 dark:text-zinc-200 mb-2">
           {data.payload[0].title}
         </p>
 

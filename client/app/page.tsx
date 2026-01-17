@@ -47,7 +47,10 @@ export default function Home() {
           <h2 className="text-lg lg:text-xl font-bmhanna">문의</h2>
           <p className="text-sm leading-relaxed">
             서비스 관련 문의, 오류 제보, 문서 삭제 요청 등은{" "}
-            <Link href="mailto:runnerwiki@proton.me" className="text-mint">
+            <Link
+              href="mailto:runnerwiki@proton.me"
+              className="text-mint dark:text-orange-400"
+            >
               #이메일
             </Link>
             을 통해 연락해 주시기 바랍니다.

@@ -8,7 +8,7 @@ interface DocumentTableProps {
 export default function DocumentTable({ documents }: DocumentTableProps) {
   return (
     <>
-      <table className="min-w-full divide-y divide-gray-200">
+      <table className="min-w-full divide-y divide-gray-200 dark:divide-zinc-700">
         <thead>
           <tr className="font-bold">
             <td className="px-3 py-3">제목</td>
@@ -16,7 +16,7 @@ export default function DocumentTable({ documents }: DocumentTableProps) {
             <td className="px-3 py-3 w-1/3">마지막 편집 시간</td>
           </tr>
         </thead>
-        <tbody className="text-sm divide-y divide-gray-200">
+        <tbody className="text-sm divide-y divide-gray-200 dark:divide-zinc-700">
           {documents.map((it: DocumentPage) => (
             <DocumentTableRow key={it.documentId} document={it} />
           ))}

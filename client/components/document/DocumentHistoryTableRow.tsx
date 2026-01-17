@@ -12,7 +12,7 @@ export default function DocumentHistoryTableRow({
 }: DocumentHistoryTableRowProps) {
   return (
     <>
-      <tr className="hover:bg-gray-100 transition-colors">
+      <tr className="hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
         <td className="px-3 py-3 text-center">{documentHistory.version}</td>
         <td className="px-3 py-3 text-center">
           <Link
@@ -25,7 +25,7 @@ export default function DocumentHistoryTableRow({
         <td className="px-3 py-3 text-center">
           {formatFileSize(documentHistory.size)}
         </td>
-        <td className="px-3 py-3 whitespace-nowrap text-gray-500">
+        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-zinc-500">
           {formatRelativeTime(documentHistory.createdAt)}
         </td>
       </tr>

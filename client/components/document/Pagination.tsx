@@ -86,8 +86,8 @@ export default function Pagination({
         href={hasPrevious ? buildPageUrl(page - 1) : "#"}
         className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
           hasPrevious
-            ? "border-gray-300 hover:bg-gray-100 text-gray-700"
-            : "border-gray-200 text-gray-400 cursor-not-allowed"
+            ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
+            : "border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-600 cursor-not-allowed"
         }`}
         aria-label="이전 페이지"
       >
@@ -114,8 +114,8 @@ export default function Pagination({
               href={buildPageUrl(pageIndex)}
               className={`flex items-center justify-center min-w-7 h-7 rounded border transition-colors text-xs ${
                 isActive
-                  ? "bg-mint text-white border-mint font-semibold"
-                  : "border-gray-300 hover:bg-gray-100 text-gray-700"
+                  ? "bg-mint dark:bg-zinc-700 text-white border-mint dark:border-zinc-700 font-semibold dark:text-zinc-200"
+                  : "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
               }`}
               aria-label={`${pageIndex + 1}페이지`}
               aria-current={isActive ? "page" : undefined}
@@ -131,8 +131,8 @@ export default function Pagination({
         href={hasNext ? buildPageUrl(page + 1) : "#"}
         className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
           hasNext
-            ? "border-gray-300 hover:bg-gray-100 text-gray-700"
-            : "border-gray-200 text-gray-400 cursor-not-allowed"
+            ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
+            : "border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-600 cursor-not-allowed"
         }`}
         aria-label="다음 페이지"
       >
