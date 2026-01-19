@@ -14,17 +14,20 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
 
     @Query(
-            value = "SELECT "
-                    + "d.id, d.title, d.title_chosung, d.category, d.latest_version, "
-                    + "d.created_at, d.updated_at, d.deleted_at "
-                    + "FROM ( "
-                    + "  SELECT id FROM document "
-                    + "  WHERE deleted_at IS NULL "
-                    + "  ORDER BY updated_at DESC "
-                    + "  LIMIT :limit OFFSET :offset "
-                    + ") t "
-                    + "LEFT JOIN document d ON t.id = d.id "
-                    + "WHERE d.deleted_at IS NULL",
+            value = """
+                    SELECT
+                        d.*
+                    FROM (
+                        SELECT id, updated_at
+                        FROM document
+                        WHERE deleted_at IS NULL
+                        ORDER BY updated_at DESC, id DESC
+                        LIMIT :limit OFFSET :offset
+                    ) t
+                    JOIN document d ON d.id = t.id
+                    WHERE d.deleted_at IS NULL
+                    ORDER BY t.updated_at DESC, t.id DESC
+                    """,
             nativeQuery = true
     )
     List<Document> findAllOrderByUpdatedAtDesc(
@@ -33,18 +36,21 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     );
 
     @Query(
-            value = "SELECT "
-                    + "d.id, d.title, d.title_chosung, d.category, d.latest_version, "
-                    + "d.created_at, d.updated_at, d.deleted_at "
-                    + "FROM ( "
-                    + "  SELECT id FROM document "
-                    + "  WHERE category = :category "
-                    + "    AND deleted_at IS NULL "
-                    + "  ORDER BY updated_at DESC "
-                    + "  LIMIT :limit OFFSET :offset "
-                    + ") t "
-                    + "LEFT JOIN document d ON t.id = d.id "
-                    + "WHERE d.deleted_at IS NULL",
+            value = """
+                    SELECT
+                        d.*
+                    FROM (
+                        SELECT id, updated_at
+                        FROM document
+                        WHERE category = :category
+                          AND deleted_at IS NULL
+                        ORDER BY updated_at DESC, id DESC
+                        LIMIT :limit OFFSET :offset
+                    ) t
+                    JOIN document d ON d.id = t.id
+                    WHERE d.deleted_at IS NULL
+                    ORDER BY t.updated_at DESC, t.id DESC
+                    """,
             nativeQuery = true
     )
     List<Document> findAllByCategoryOrderByUpdatedAtDesc(
@@ -52,6 +58,7 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
             @Param("offset") final int offset,
             @Param("limit") final int limit
     );
+
 
     @Query(
             value = "SELECT count(*) " +
