@@ -52,7 +52,7 @@ public class DocumentQueryService {
                 .toList();
         final Long totalElements = documentHistoryRepository.countByDocumentId(
                 documentId,
-                PageLimitCalculator.calculatePageLimit(page, size, 10)
+                PageLimitCalculator.calculatePageLimit(page, size, size)
         );
 
         return PageResponse.of(responses, page, size, totalElements);
@@ -82,7 +82,7 @@ public class DocumentQueryService {
                     .map(DocumentPageResponse::from)
                     .toList();
             final Long totalElements = documentRepository.count(
-                    PageLimitCalculator.calculatePageLimit(page, size, 10)
+                    PageLimitCalculator.calculatePageLimit(page, size, size)
             );
 
             return PageResponse.of(responses, page, size, totalElements);
@@ -94,7 +94,7 @@ public class DocumentQueryService {
                 .map(DocumentPageResponse::from)
                 .toList();
         final Long totalElements = documentRepository.countByCategory(
-                category.toUpperCase(), PageLimitCalculator.calculatePageLimit(page, size, 10)
+                category.toUpperCase(), PageLimitCalculator.calculatePageLimit(page, size, size)
         );
 
         return PageResponse.of(responses, page, size, totalElements);
