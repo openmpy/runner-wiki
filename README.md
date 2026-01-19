@@ -25,48 +25,45 @@
 - Docker
 - Amazon EC2
 - Amazon Lightsail
+- Amazon CloudWatch
 
 ## 아키텍처
 
 ```mermaid
 flowchart TB
-  U[사용자 브라우저]
-  FE[Frontend<br/>Next.js<br/>Deploy Vercel]
-  BE[Backend<br/>Spring Boot<br/>Docker Container]
+    U[사용자 브라우저]
+    FE[Frontend<br/>Next.js<br/>Deploy Vercel]
+    BE[Backend<br/>Spring Boot<br/>Docker Container]
+    PG[(PostgreSQL)]
+    RD[(Redis)]
+    S3[(Amazon S3<br/>Image Storage)]
+    U --> FE
+    FE -->|HTTPS API| BE
+    BE --> PG
+    BE --> RD
+    BE --> S3
 
-  PG[(PostgreSQL)]
-  RD[(Redis)]
-  S3[(Amazon S3<br/>Image Storage)]
+    subgraph AWS Infrastructure
+        EC2[EC2]
+        LS[Lightsail]
+    end
 
-  U --> FE
-  FE -->|HTTPS API| BE
-
-  BE --> PG
-  BE --> RD
-  BE --> S3
-
-  subgraph AWS Infrastructure
-    EC2[EC2]
-    LS[Lightsail]
-  end
-
-  BE --- EC2
-  BE --- LS
+    BE --- EC2
+    BE --- LS
 
 ```
 
 ```mermaid
 
 flowchart LR
-  CW[CloudWatch<br/>EC2, RDS 모니터링]
-  SNS[SNS<br/>임계치 이벤트]
-  L[Lambda]
-  D[Discord Webhook<br/>실시간 알림]
+    CW[CloudWatch<br/>EC2, RDS 모니터링]
+    SNS[SNS<br/>임계치 이벤트]
+    L[Lambda]
+    D[Discord Webhook<br/>실시간 알림]
+    CW --> SNS
+    SNS --> L
+    L --> D
 
-  CW --> SNS
-  SNS --> L
-  L --> D
-  
 ```
 
 ## 기능
@@ -107,6 +104,127 @@ flowchart LR
 - PostgreSQL 기능 활용
     - GENERATED COLUMN으로 정규화 컬럼 생성
     - `pg_trgm` 확장으로 유사도 검색 처리
+
+## 성능 개선
+
+### 문서 페이지 조회
+
+> 응답 속도 73.13% 감소 (5,281ms > 1,419ms)
+
+```mermaid
+xychart-beta
+    title "데이터: 3000만 건, 단위: ms"
+    x-axis ["기본", "인덱스 적용", "인덱스 + 쿼리문 개선"]
+    y-axis 0 --> 6000
+    bar [5281, 1959, 1419]
+```
+
+#### 개선 전
+
+Spring Data JPA의 `PageRequest + Sort`를 사용하여 다음과 같이 최신 문서 목록을 조회
+
+- `ORDER BY updated_at DESC` 기반 정렬
+- `OFFSET` 기반 페이징
+- `Page` 생성 시 자동으로 수행되는 `COUNT` 쿼리
+
+문제점
+
+- 데이터가 많아질수록 `ORDER BY + OFFSET` 비용이 급격히 증가
+- `COUNT(*)` 쿼리가 대용량 테이블에서 병목이 됨
+
+#### 개선 1: 쿼리 구조 변경 (ID 선조회 + JOIN)
+
+1. 인덱스를 타고 `id`만 최신순으로 페이징
+2. 해당 `id` 목록을 기준으로 실제 row를 다시 조인
+
+```sql
+SELECT d.*
+FROM (SELECT id
+      FROM document
+      WHERE deleted_at IS NULL
+      ORDER BY updated_at DESC LIMIT :limit
+      OFFSET :offset) t
+         LEFT JOIN document d ON t.id = d.id
+WHERE d.deleted_at IS NULL;
+```
+
+- 정렬 비용을 `전체 row`가 아니라 `id 컬럼` 수준으로 축소
+- 테이블 접근 횟수를 `페이지 크기`만큼으로 제한
+
+#### 개선 2: COUNT 쿼리 제한
+
+조회 시 전체 개수를 끝까지 세지 않고, UI에 필요한 범위까지만 카운트하도록 제한
+
+```java
+Long totalElements = documentHistoryRepository.countByDocumentId(
+        documentId,
+        PageLimitCalculator.calculatePageLimit(page, size, 10)
+);
+```
+
+### 문서 기록 페이지 조회
+
+> 응답 속도 91.84% 감소 (21,085ms > 1,721ms)
+
+```mermaid
+xychart-beta
+    title "데이터: 3000만 건, 단위 ms"
+    x-axis ["기본", "인덱스 적용", "인덱스 + 쿼리문 개선"]
+    y-axis 0 --> 22000
+    bar [21085, 15197, 1721]
+```
+
+#### 개선 전
+
+Spring Data JPA의 `PageRequest + Sort` 기반으로 문서 기록(DocumentHistory)을 조회
+
+- `ORDER BY version DESC` 기반 정렬
+- `OFFSET` 기반 페이징
+- `Page` 생성 시 자동으로 수행되는 `COUNT` 쿼리
+
+문제점
+
+- 문서 기록 데이터는 계속 누적되기 때문에 `ORDER BY + OFFSET` 비용이 시간이 갈수록 증가
+- `COUNT(*)` 쿼리가 대용량 문서 기록 테이블에서 병목이 될 가능성이 큼
+
+#### 개선 1: 쿼리 구조 변경 (ID 선조회 + JOIN)
+
+1. `document_id` + `deleted_at IS NULL` 조건으로 범위를 먼저 좁힘
+2. 인덱스를 타고 `id`만 `version DESC` 기준으로 페이징
+3. 해당 `id` 목록을 기준으로 실제 row를 다시 조인
+
+```sql
+SELECT dh.*
+FROM (SELECT id
+      FROM document_history
+      WHERE document_id = :documentId
+        AND deleted_at IS NULL
+      ORDER BY version DESC LIMIT :limit
+      OFFSET :offset) t
+         JOIN document_history dh
+              ON dh.id = t.id
+WHERE dh.deleted_at IS NULL;
+```
+
+- 정렬 비용을 `전체 row`가 아니라 `id 컬럼` 수준으로 축소
+- 조인으로 가져오는 row 수를 `페이지 크기`로 제한
+- `document_id` 조건으로 탐색 범위를 빠르게 축소
+
+#### 개선 2: COUNT 쿼리 제한
+
+조회 시 전체 문서 기록 개수를 끝까지 세지 않고, UI에 필요한 범위까지만 카운트하도록 제한
+
+```sql
+SELECT count(*)
+FROM (SELECT id
+      FROM document_history
+      WHERE document_id = :documentId
+        AND deleted_at IS NULL
+      ORDER BY version DESC LIMIT :limit) t;
+```
+
+- 정확한 전체 건수 대신 `필요한 범위까지만` 계산
+- 대용량 테이블에서 `COUNT(*)`로 인한 전체 스캔 방지
 
 ## 트러블 슈팅
 
