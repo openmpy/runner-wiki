@@ -1,7 +1,7 @@
 package com.openmpy.server.document.infrastructure.storage;
 
+import com.openmpy.server.document.application.image.dto.UploadedImage;
 import com.openmpy.server.document.application.image.port.ImageStorage;
-import com.openmpy.server.document.application.image.port.UploadedImage;
 import com.openmpy.server.global.properties.S3Properties;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
