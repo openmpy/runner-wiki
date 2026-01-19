@@ -43,16 +43,19 @@ public class DocumentQueryService {
             final int page,
             final int size
     ) {
-        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdAt"));
-        final Page<DocumentHistory> documentHistoryPage = documentHistoryRepository.findAllByDocumentId(
-                documentId,
-                pageRequest
-        );
-        final List<DocumentHistoryPageResponse> documentHistoryResponses = documentHistoryPage.getContent().stream()
+        final int offset = page * size;
+
+        final List<DocumentHistoryPageResponse> responses = documentHistoryRepository.findAllByDocumentId(
+                        documentId, offset, size
+                ).stream()
                 .map(DocumentHistoryPageResponse::from)
                 .toList();
+        final Long totalElements = documentHistoryRepository.countByDocumentId(
+                documentId,
+                PageLimitCalculator.calculatePageLimit(page, size, 10)
+        );
 
-        return PageResponse.of(documentHistoryResponses, page, size, documentHistoryPage.getTotalElements());
+        return PageResponse.of(responses, page, size, totalElements);
     }
 
     @Transactional(readOnly = true)
