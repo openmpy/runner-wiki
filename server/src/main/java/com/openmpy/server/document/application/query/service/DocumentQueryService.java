@@ -8,9 +8,9 @@ import com.openmpy.server.document.domain.model.Document;
 import com.openmpy.server.document.domain.model.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
-import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.dto.PageResponse;
 import com.openmpy.server.global.exception.CustomException;
+import com.openmpy.server.global.util.PageLimitCalculator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -71,18 +71,30 @@ public class DocumentQueryService {
             final int page,
             final int size
     ) {
-        final PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "updatedAt"));
+        final int offset = page * size;
 
         if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {
-            final Page<Document> documentPage = documentRepository.findAll(pageRequest);
+            final List<DocumentPageResponse> responses = documentRepository.findAllOrderByUpdatedAtDesc(offset, size)
+                    .stream()
+                    .map(DocumentPageResponse::from)
+                    .toList();
+            final Long totalElements = documentRepository.count(
+                    PageLimitCalculator.calculatePageLimit(page, size, 10)
+            );
 
-            return convertToDocumentPageResponse(documentPage);
+            return PageResponse.of(responses, page, size, totalElements);
         }
 
-        final DocumentCategory selectedCategory = DocumentCategory.valueOf(category.toUpperCase());
-        final Page<Document> documentPage = documentRepository.findAllByCategory(selectedCategory, pageRequest);
+        final List<DocumentPageResponse> responses = documentRepository.findAllByCategoryOrderByUpdatedAtDesc(
+                        category.toUpperCase(), offset, size
+                ).stream()
+                .map(DocumentPageResponse::from)
+                .toList();
+        final Long totalElements = documentRepository.countByCategory(
+                category.toUpperCase(), PageLimitCalculator.calculatePageLimit(page, size, 10)
+        );
 
-        return convertToDocumentPageResponse(documentPage);
+        return PageResponse.of(responses, page, size, totalElements);
     }
 
     @Transactional(readOnly = true)

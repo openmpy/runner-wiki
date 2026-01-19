@@ -39,3 +39,4 @@ out/
 ### Oterhs ###
 application-*.yml
 logs/
+*.csv
