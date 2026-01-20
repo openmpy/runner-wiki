@@ -21,6 +21,7 @@ export default function DocumentHistoryEditPage() {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [content, setContent] = useState("");
+  const [token, setToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [imageIds, setImageIds] = useState<number[]>([]);
@@ -67,6 +68,10 @@ export default function DocumentHistoryEditPage() {
       alert("내용을 입력해주세요.");
       return;
     }
+    if (!token) {
+      alert("봇 방지 인증을 완료해주세요.");
+      return;
+    }
 
     try {
       setIsSubmitting(true);
@@ -75,6 +80,7 @@ export default function DocumentHistoryEditPage() {
         author,
         content: markdown,
         ...(imageIds.length > 0 && { imageIds }),
+        token,
       });
 
       router.push(`/document/${data.documentId}`);
@@ -137,6 +143,7 @@ export default function DocumentHistoryEditPage() {
           onCancel={router.back}
           isSubmitting={isSubmitting}
           disabled={!isEditorReady}
+          onTokenChange={setToken}
         />
       </div>
     </div>
