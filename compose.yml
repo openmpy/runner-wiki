@@ -9,6 +9,7 @@ services:
       - ./redis/data:/data
     networks:
       - wiki-network
+
   springboot:
     container_name: server
     image: ${DOCKERHUB_USERNAME}/wiki-server:latest
@@ -23,6 +24,7 @@ services:
       - redis
     networks:
       - wiki-network
+
   prometheus:
     container_name: prometheus
     image: prom/prometheus:latest
@@ -36,6 +38,7 @@ services:
       - "--storage.tsdb.retention.time=15d"
     networks:
       - wiki-network
+
   grafana:
     container_name: grafana
     image: grafana/grafana:latest
@@ -49,3 +52,7 @@ services:
 networks:
   wiki-network:
     driver: bridge
+
+volumes:
+  prometheus_data:
+  grafana_data:
