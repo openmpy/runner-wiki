@@ -6,26 +6,40 @@
 
 - TypeScript 5
 - Next.js 16.1.1
+- Tailwind CSS
 - Vercel
 
 ### Backend
 
 - Java 21
 - Spring Boot 4.0.1
+- Spring Data JPA
+- Spring Actuator
 - PostgreSQL
 - Redis
 - Flyway
+
+### Observability / Monitoring
+
+- Prometheus
+- Grafana
+- Amazon CloudWatch
+- Amazon SNS
+- AWS Lambda
+- Discord Webhook
 
 ### Storage
 
 - Amazon S3
 
-### Infrastructure
+### Infrastructure / Network
 
 - Docker
 - Amazon EC2
 - Amazon Lightsail
-- Amazon CloudWatch
+- Amazon VPC
+- Cloudflare Tunnel
+- Cloudflare DNS / Proxy
 
 ## 아키텍처
 
@@ -42,28 +56,34 @@ flowchart TB
     BE --> PG
     BE --> RD
     BE --> S3
+%% Monitoring & Metrics
+    ACT[Spring Actuator<br/>/actuator, /prometheus]
+    PROM[Prometheus]
+    GRAF[Grafana]
+    CW[Amazon CloudWatch]
+    SNS[SNS Alarm]
+    LAMBDA[Lambda]
+    DISCORD[Discord Webhook]
+    BE --> ACT
+    PROM -->|Scrape| ACT
+    GRAF --> PROM
+    BE -->|Logs/Metrics| CW
+    CW -->|Alarm| SNS
+    SNS --> LAMBDA
+    LAMBDA --> DISCORD
 
     subgraph AWS Infrastructure
         EC2[EC2]
         LS[Lightsail]
+        CW
+        SNS
+        LAMBDA
     end
 
     BE --- EC2
     BE --- LS
-
-```
-
-```mermaid
-
-flowchart LR
-    CW[CloudWatch<br/>EC2, RDS 모니터링]
-    SNS[SNS<br/>임계치 이벤트]
-    L[Lambda]
-    D[Discord Webhook<br/>실시간 알림]
-    CW --> SNS
-    SNS --> L
-    L --> D
-
+    CW --- EC2
+    CW --- LS
 ```
 
 ## 기능
