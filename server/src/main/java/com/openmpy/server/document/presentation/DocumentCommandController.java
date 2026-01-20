@@ -10,6 +10,7 @@ import com.openmpy.server.document.application.command.dto.response.DocumentUpda
 import com.openmpy.server.document.application.command.service.DocumentCommandService;
 import com.openmpy.server.document.application.command.service.DocumentImageCommandService;
 import com.openmpy.server.document.application.ranking.service.DocumentRankingCommandService;
+import com.openmpy.server.document.infrastructure.turnstile.TurnstileVerifier;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -35,6 +36,7 @@ public class DocumentCommandController {
     private final DocumentCommandService documentCommandService;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentRankingCommandService documentRankingCommandService;
+    private final TurnstileVerifier turnstileVerifier;
 
     @Value("${admin.password}")
     private String password;
@@ -45,7 +47,11 @@ public class DocumentCommandController {
             final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
 
+        if (!isVerified) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok(documentCommandService.create(request, clientIp));
     }
 
@@ -56,7 +62,11 @@ public class DocumentCommandController {
             final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
 
+        if (!isVerified) {
+            return ResponseEntity.status(403).build();
+        }
         return ResponseEntity.ok(documentCommandService.update(documentId, request, clientIp));
     }
 

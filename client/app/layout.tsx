@@ -4,6 +4,7 @@ import Footer from "@/components/layout/Footer";
 import Header from "@/components/layout/Header";
 import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
+import Script from "next/script";
 import { bmhanna, notoSans } from "./font";
 import "./globals.css";
 import Providers from "./providers";
@@ -21,6 +22,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko" suppressHydrationWarning>
+      <head>
+        <Script
+          src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit"
+          strategy="beforeInteractive"
+          defer
+        />
+      </head>
       <body
         className={`${notoSans.variable} ${bmhanna.variable} antialiased min-h-screen flex flex-col bg-mint dark:bg-zinc-800 text-zinc-900 dark:text-zinc-200`}
       >

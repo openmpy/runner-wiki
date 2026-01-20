@@ -19,6 +19,7 @@ export default function DocumentNewPage() {
   const [category, setCategory] = useState<DocumentCategory>("USER");
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
+  const [token, setToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imageIds, setImageIds] = useState<number[]>([]);
   const [isEditorReady, setIsEditorReady] = useState(false);
@@ -35,6 +36,11 @@ export default function DocumentNewPage() {
     if (!author.trim()) return alert("작성자를 입력해주세요.");
     if (!markdown.trim()) return alert("내용을 입력해주세요.");
 
+    if (!token) {
+      alert("봇 방지 인증을 완료해주세요.");
+      return;
+    }
+
     try {
       setIsSubmitting(true);
 
@@ -44,6 +50,7 @@ export default function DocumentNewPage() {
         author,
         content: markdown,
         ...(imageIds.length > 0 && { imageIds }),
+        token,
       });
 
       router.push(`/document/${data.documentId}`);
@@ -85,6 +92,7 @@ export default function DocumentNewPage() {
           onCancel={router.back}
           isSubmitting={isSubmitting}
           disabled={!isEditorReady}
+          onTokenChange={setToken}
         />
       </div>
     </div>

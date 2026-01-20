@@ -32,6 +32,7 @@ export interface CreateDocumentRequest {
   author: string;
   content: string;
   imageIds?: number[];
+  token: string;
 }
 
 export async function createDocument(data: CreateDocumentRequest) {
@@ -44,6 +45,10 @@ export async function createDocument(data: CreateDocumentRequest) {
   });
 
   if (!response.ok) {
+    if (response.status == 403) {
+      throw new Error("봇 방지 인증에 실패했습니다.");
+    }
+
     const error = await response.json();
     throw new Error(error.message || "문서 작성에 실패했습니다.");
   }
@@ -116,6 +121,7 @@ export interface UpdateDocumentRequest {
   author: string;
   content: string;
   imageIds?: number[];
+  token: string;
 }
 
 export async function updateDocument(
@@ -131,6 +137,10 @@ export async function updateDocument(
   });
 
   if (!response.ok) {
+    if (response.status == 403) {
+      throw new Error("봇 방지 인증에 실패했습니다.");
+    }
+    
     const error = await response.json();
     throw new Error(error.message || "문서 편집에 실패했습니다.");
   }

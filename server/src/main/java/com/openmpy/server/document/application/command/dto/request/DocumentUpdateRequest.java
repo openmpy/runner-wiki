@@ -6,6 +6,7 @@ import java.util.List;
 public record DocumentUpdateRequest(
         String author,
         String content,
-        @Nullable List<Long> imageIds
+        @Nullable List<Long> imageIds,
+        String token
 ) {
 }
