@@ -30,6 +30,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
     implementation 'org.springframework.boot:spring-boot-starter-flyway'
+    implementation 'org.springframework.boot:spring-boot-starter-actuator'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.h2database:h2'
     annotationProcessor 'org.projectlombok:lombok'
@@ -49,6 +50,9 @@ dependencies {
 
     // flyway
     runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.20.0'
+
+    // prometheus
+    implementation "io.micrometer:micrometer-registry-prometheus"
 }
 
 tasks.named('test') {
