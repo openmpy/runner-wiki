@@ -1,6 +1,5 @@
 package com.openmpy.server.document.application;
 
-import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.dto.request.DocumentCreateRequest;
@@ -18,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentCommandService {
 
     private final DocumentRepository documentRepository;
-    private final ImageAttacher imageAttacher;
+    private final DocumentImageCommandService documentImageCommandService;
 
     @Transactional
     public DocumentCreateResponse save(
@@ -36,7 +35,7 @@ public class DocumentCommandService {
             ContentCalculator.calculateUtf8Bytes(request.content()),
             clientIp
         );
-        imageAttacher.attachTempImages(savedDocument, request.imageIds());
+        documentImageCommandService.attachTempImages(savedDocument, request.imageIds());
         return new DocumentCreateResponse(savedDocument.getId());
     }
 
@@ -54,7 +53,7 @@ public class DocumentCommandService {
             ContentCalculator.calculateUtf8Bytes(request.content()),
             clientIp
         );
-        imageAttacher.attachTempImages(document, request.imageIds());
+        documentImageCommandService.attachTempImages(document, request.imageIds());
         return new DocumentUpdateResponse(document.getId());
     }
 

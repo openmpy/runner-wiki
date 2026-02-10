@@ -2,12 +2,15 @@ package com.openmpy.server.document.application;
 
 import static com.openmpy.server.document.domain.type.DocumentImageStatus.TEMP;
 
-import com.openmpy.server.document.application.image.dto.UploadedImage;
-import com.openmpy.server.document.application.image.port.ImageStorage;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
+import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponse;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponses;
+import com.openmpy.server.global.exception.CustomException;
+import com.openmpy.server.image.application.ImageStorage;
+import com.openmpy.server.image.dto.UploadedImage;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -61,5 +64,22 @@ public class DocumentImageCommandService {
             }
         }
         return deleted;
+    }
+
+    public void attachTempImages(final Document document, final List<Long> imageIds) {
+        if (imageIds == null || imageIds.isEmpty()) {
+            return;
+        }
+
+        final List<DocumentImage> images = documentImageRepository.findAllByIdInAndStatus(
+            imageIds,
+            DocumentImageStatus.TEMP
+        );
+
+        if (images.size() != imageIds.size()) {
+            throw new CustomException("이미지 업로드 갯수가 올바르지 않습니다.");
+        }
+
+        document.attachImages(images);
     }
 }

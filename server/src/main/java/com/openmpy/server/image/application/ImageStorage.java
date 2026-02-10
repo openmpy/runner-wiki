@@ -1,6 +1,6 @@
-package com.openmpy.server.document.application.image.port;
+package com.openmpy.server.image.application;
 
-import com.openmpy.server.document.application.image.dto.UploadedImage;
+import com.openmpy.server.image.dto.UploadedImage;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface ImageStorage {
