@@ -4,12 +4,12 @@ import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import com.openmpy.server.document.application.DocumentCommandService;
 import com.openmpy.server.document.application.DocumentHistoryCommandService;
+import com.openmpy.server.document.application.DocumentImageCommandService;
 import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
-import com.openmpy.server.document.application.command.service.DocumentImageCommandService;
 import com.openmpy.server.document.application.ranking.service.DocumentRankingCommandService;
 import com.openmpy.server.document.infrastructure.turnstile.TurnstileVerifier;
 import com.openmpy.server.global.util.ClientIpUtil;
@@ -102,7 +102,8 @@ public class DocumentCommandController {
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
         final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(
-            images, clientIp);
+            images, clientIp
+        );
 
         return ResponseEntity.ok(responses);
     }

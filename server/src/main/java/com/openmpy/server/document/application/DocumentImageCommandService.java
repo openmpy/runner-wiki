@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application.command.usecase;
+package com.openmpy.server.document.application;
 
 import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponse;
 import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
@@ -14,23 +14,26 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RequiredArgsConstructor
 @Service
-public class UploadDocumentImagesUseCase {
+public class DocumentImageCommandService {
 
     private final DocumentImageRepository documentImageRepository;
     private final ImageStorage imageStorage;
 
     @Transactional
-    public DocumentImageUploadResponses execute(
+    public DocumentImageUploadResponses uploadImages(
         final List<MultipartFile> images,
         final String clientIp
     ) {
         final List<DocumentImageUploadResponse> responses = images.stream()
-            .map(file -> {
-                final UploadedImage uploadedImage = imageStorage.upload(file);
-                final DocumentImage documentImage = DocumentImage.create(uploadedImage.url(),
-                    clientIp);
-                final DocumentImage saved = documentImageRepository.save(documentImage);
-                return new DocumentImageUploadResponse(saved.getId(), uploadedImage.url());
+            .map(it -> {
+                final UploadedImage uploadedImage = imageStorage.upload(it);
+                final DocumentImage documentImage = DocumentImage.create(
+                    uploadedImage.url(),
+                    clientIp
+                );
+
+                documentImageRepository.save(documentImage);
+                return new DocumentImageUploadResponse(documentImage.getId(), uploadedImage.url());
             })
             .toList();
 
