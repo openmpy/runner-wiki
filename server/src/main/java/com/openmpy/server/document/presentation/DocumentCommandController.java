@@ -3,12 +3,12 @@ package com.openmpy.server.document.presentation;
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
 import com.openmpy.server.document.application.DocumentCommandService2;
+import com.openmpy.server.document.application.DocumentHistoryCommandService;
 import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
-import com.openmpy.server.document.application.command.service.DocumentCommandService;
 import com.openmpy.server.document.application.command.service.DocumentImageCommandService;
 import com.openmpy.server.document.application.ranking.service.DocumentRankingCommandService;
 import com.openmpy.server.document.infrastructure.turnstile.TurnstileVerifier;
@@ -34,8 +34,8 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class DocumentCommandController {
 
-    private final DocumentCommandService documentCommandService;
     private final DocumentCommandService2 documentCommandService2;
+    private final DocumentHistoryCommandService documentHistoryCommandService;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentRankingCommandService documentRankingCommandService;
     private final TurnstileVerifier turnstileVerifier;
@@ -91,7 +91,7 @@ public class DocumentCommandController {
     ) {
         validatePassword(password);
 
-        documentCommandService.deleteHistory(historyId);
+        documentHistoryCommandService.delete(historyId);
         return ResponseEntity.ok().build();
     }
 
