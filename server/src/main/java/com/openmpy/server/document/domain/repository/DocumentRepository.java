@@ -1,6 +1,6 @@
 package com.openmpy.server.document.domain.repository;
 
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -14,95 +14,96 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
 
     @Query(
-            value = """
-                    SELECT
-                        d.*
-                    FROM (
-                        SELECT id, updated_at
-                        FROM document
-                        WHERE deleted_at IS NULL
-                        ORDER BY updated_at DESC, id DESC
-                        LIMIT :limit OFFSET :offset
-                    ) t
-                    JOIN document d ON d.id = t.id
-                    WHERE d.deleted_at IS NULL
-                    ORDER BY t.updated_at DESC, t.id DESC
-                    """,
-            nativeQuery = true
+        value = """
+            SELECT
+                d.*
+            FROM (
+                SELECT id, updated_at
+                FROM document
+                WHERE deleted_at IS NULL
+                ORDER BY updated_at DESC, id DESC
+                LIMIT :limit OFFSET :offset
+            ) t
+            JOIN document d ON d.id = t.id
+            WHERE d.deleted_at IS NULL
+            ORDER BY t.updated_at DESC, t.id DESC
+            """,
+        nativeQuery = true
     )
     List<Document> findAllOrderByUpdatedAtDesc(
-            @Param("offset") final int offset,
-            @Param("limit") final int limit
+        @Param("offset") final int offset,
+        @Param("limit") final int limit
     );
 
     @Query(
-            value = """
-                    SELECT
-                        d.*
-                    FROM (
-                        SELECT id, updated_at
-                        FROM document
-                        WHERE category = :category
-                          AND deleted_at IS NULL
-                        ORDER BY updated_at DESC, id DESC
-                        LIMIT :limit OFFSET :offset
-                    ) t
-                    JOIN document d ON d.id = t.id
-                    WHERE d.deleted_at IS NULL
-                    ORDER BY t.updated_at DESC, t.id DESC
-                    """,
-            nativeQuery = true
+        value = """
+            SELECT
+                d.*
+            FROM (
+                SELECT id, updated_at
+                FROM document
+                WHERE category = :category
+                  AND deleted_at IS NULL
+                ORDER BY updated_at DESC, id DESC
+                LIMIT :limit OFFSET :offset
+            ) t
+            JOIN document d ON d.id = t.id
+            WHERE d.deleted_at IS NULL
+            ORDER BY t.updated_at DESC, t.id DESC
+            """,
+        nativeQuery = true
     )
     List<Document> findAllByCategoryOrderByUpdatedAtDesc(
-            @Param("category") final String category,
-            @Param("offset") final int offset,
-            @Param("limit") final int limit
+        @Param("category") final String category,
+        @Param("offset") final int offset,
+        @Param("limit") final int limit
     );
 
 
     @Query(
-            value = "SELECT count(*) " +
-                    "FROM ( " +
-                    "  SELECT id FROM document " +
-                    "  WHERE deleted_at IS NULL " +
-                    "  LIMIT :limit " +
-                    ") t",
-            nativeQuery = true
+        value = "SELECT count(*) " +
+            "FROM ( " +
+            "  SELECT id FROM document " +
+            "  WHERE deleted_at IS NULL " +
+            "  LIMIT :limit " +
+            ") t",
+        nativeQuery = true
     )
     Long count(
-            @Param("limit") final int limit
+        @Param("limit") final int limit
     );
 
     @Query(
-            value = "SELECT count(*) " +
-                    "FROM ( " +
-                    "  SELECT id FROM document " +
-                    "  WHERE category = :category " +
-                    "    AND deleted_at IS NULL " +
-                    "  LIMIT :limit " +
-                    ") t",
-            nativeQuery = true
+        value = "SELECT count(*) " +
+            "FROM ( " +
+            "  SELECT id FROM document " +
+            "  WHERE category = :category " +
+            "    AND deleted_at IS NULL " +
+            "  LIMIT :limit " +
+            ") t",
+        nativeQuery = true
     )
     Long countByCategory(
-            @Param("category") final String category,
-            @Param("limit") final int limit
+        @Param("category") final String category,
+        @Param("limit") final int limit
     );
 
-    Page<Document> findAllByTitle_ValueContainingIgnoreCase(final String title, final Pageable pageable);
+    Page<Document> findAllByTitle_ValueContainingIgnoreCase(final String title,
+        final Pageable pageable);
 
     List<Document> findAllByIdIn(final List<Long> ids);
 
     @Query(
-            value = """
-                      SELECT *
-                      FROM document
-                      WHERE id >= (
-                        SELECT floor(random() * (SELECT max(id) FROM document)) + 1
-                      )
-                      ORDER BY id
-                      LIMIT 1
-                    """,
-            nativeQuery = true
+        value = """
+              SELECT *
+              FROM document
+              WHERE id >= (
+                SELECT floor(random() * (SELECT max(id) FROM document)) + 1
+              )
+              ORDER BY id
+              LIMIT 1
+            """,
+        nativeQuery = true
     )
     Document findRandomDocument();
 }

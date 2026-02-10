@@ -1,7 +1,7 @@
 package com.openmpy.server.document.application.support;
 
-import com.openmpy.server.document.domain.model.Document;
-import com.openmpy.server.document.domain.model.DocumentImage;
+import com.openmpy.server.document.domain.entity.Document;
+import com.openmpy.server.document.domain.entity.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import com.openmpy.server.global.exception.CustomException;
@@ -21,8 +21,8 @@ public class ImageAttacher {
         }
 
         final List<DocumentImage> images = documentImageRepository.findAllByIdInAndStatus(
-                imageIds,
-                DocumentImageStatus.TEMP
+            imageIds,
+            DocumentImageStatus.TEMP
         );
 
         if (images.size() != imageIds.size()) {

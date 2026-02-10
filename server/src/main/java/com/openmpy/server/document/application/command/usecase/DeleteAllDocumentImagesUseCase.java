@@ -3,7 +3,7 @@ package com.openmpy.server.document.application.command.usecase;
 import static com.openmpy.server.document.domain.type.DocumentImageStatus.TEMP;
 
 import com.openmpy.server.document.application.image.port.ImageStorage;
-import com.openmpy.server.document.domain.model.DocumentImage;
+import com.openmpy.server.document.domain.entity.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -21,8 +21,8 @@ public class DeleteAllDocumentImagesUseCase {
     @Transactional
     public long execute() {
         final List<DocumentImage> documentImages = documentImageRepository.findAllByStatusAndExpiredAtBefore(
-                TEMP,
-                LocalDateTime.now()
+            TEMP,
+            LocalDateTime.now()
         );
         long deleted = 0;
 

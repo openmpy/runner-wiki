@@ -5,7 +5,7 @@ import static java.util.HashMap.newHashMap;
 import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
 import com.openmpy.server.document.application.query.dto.response.DocumentTop10Response;
 import com.openmpy.server.document.application.ranking.port.DocumentRankingPort;
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import java.util.Comparator;
 import java.util.List;
@@ -49,33 +49,34 @@ public class DocumentRankingQueryService {
         }
 
         final List<Document> sorted = documents.stream()
-                .sorted(Comparator.comparingInt(d -> orderIndex.getOrDefault(d.getId(), Integer.MAX_VALUE)))
-                .limit(MAX_TOP_DOCUMENTS)
-                .toList();
+            .sorted(
+                Comparator.comparingInt(d -> orderIndex.getOrDefault(d.getId(), Integer.MAX_VALUE)))
+            .limit(MAX_TOP_DOCUMENTS)
+            .toList();
 
         cleanupInvalidMembers(rankKey, rankedIds, documents);
 
         final List<DocumentPageResponse> responses = sorted.stream()
-                .map(DocumentPageResponse::from)
-                .toList();
+            .map(DocumentPageResponse::from)
+            .toList();
 
         return new DocumentTop10Response(responses);
     }
 
     private void cleanupInvalidMembers(
-            final String rankKey,
-            final List<Long> rankedIds,
-            final List<Document> foundDocuments
+        final String rankKey,
+        final List<Long> rankedIds,
+        final List<Document> foundDocuments
     ) {
         final Set<Long> foundIds = foundDocuments.stream()
-                .map(Document::getId)
-                .collect(Collectors.toSet());
+            .map(Document::getId)
+            .collect(Collectors.toSet());
 
         final List<String> invalidMembers = rankedIds.stream()
-                .filter(id -> !foundIds.contains(id))
-                .limit(30)
-                .map(String::valueOf)
-                .toList();
+            .filter(id -> !foundIds.contains(id))
+            .limit(30)
+            .map(String::valueOf)
+            .toList();
 
         if (!invalidMembers.isEmpty()) {
             rankingPort.removeInvalidMembers(rankKey, invalidMembers.toArray());

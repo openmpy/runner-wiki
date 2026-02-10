@@ -1,4 +1,4 @@
-package com.openmpy.server.document.domain.model;
+package com.openmpy.server.document.domain.entity;
 
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.document.domain.vo.DocumentTitle;
@@ -57,8 +57,8 @@ public class Document extends BaseTimeEntity {
     private final List<DocumentImage> images = new ArrayList<>();
 
     private Document(
-            final String title,
-            final DocumentCategory category
+        final String title,
+        final DocumentCategory category
     ) {
         this.title = new DocumentTitle(title);
         this.titleChosung = KoreanChosung.toChosung(title);
@@ -71,10 +71,10 @@ public class Document extends BaseTimeEntity {
     }
 
     public void addHistory(
-            final String author,
-            final String content,
-            final Long size,
-            final String clientIp
+        final String author,
+        final String content,
+        final Long size,
+        final String clientIp
     ) {
         if (deletedAt != null) {
             throw new CustomException("삭제된 문서는 수정할 수 없습니다.");
@@ -82,7 +82,8 @@ public class Document extends BaseTimeEntity {
 
         latestVersion++;
 
-        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size, clientIp);
+        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size,
+            clientIp);
 
         history.assignTo(this);
         histories.add(history);

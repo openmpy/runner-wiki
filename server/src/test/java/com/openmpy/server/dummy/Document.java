@@ -6,8 +6,10 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+@Disabled
 class Document {
 
     private static final int N = 30_000_000;
@@ -18,7 +20,8 @@ class Document {
         final String ts = LocalDateTime.now().format(F);
 
         try (final BufferedWriter w = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream("document.csv"), StandardCharsets.UTF_8), 1 << 20)
+            new OutputStreamWriter(new FileOutputStream("document.csv"), StandardCharsets.UTF_8),
+            1 << 20)
         ) {
             for (int i = 0; i < N; i++) {
                 final long id = (long) i + 1;
@@ -28,12 +31,12 @@ class Document {
 
                 // id,title,category,latest_version,created_at,updated_at
                 w.append(Long.toString(id)).append(',')
-                        .append(title).append(',')
-                        .append(category).append(',')
-                        .append(Long.toString(latestVersion)).append(',')
-                        .append(ts).append(',')
-                        .append(ts)
-                        .append('\n');
+                    .append(title).append(',')
+                    .append(category).append(',')
+                    .append(Long.toString(latestVersion)).append(',')
+                    .append(ts).append(',')
+                    .append(ts)
+                    .append('\n');
 
                 if (i % 200_000 == 0 && i != 0) {
                     w.flush();
@@ -47,7 +50,8 @@ class Document {
         final String ts = LocalDateTime.now().format(F);
 
         try (final BufferedWriter w = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream("document_history.csv"), StandardCharsets.UTF_8), 1 << 20)
+            new OutputStreamWriter(new FileOutputStream("document_history.csv"),
+                StandardCharsets.UTF_8), 1 << 20)
         ) {
             for (int i = 0; i < N; i++) {
                 final long documentId = (long) i + 1;
@@ -59,14 +63,14 @@ class Document {
 
                 // document_id,author,content,version,size,client_ip,created_at,updated_at
                 w.append(Long.toString(documentId)).append(',')
-                        .append(author).append(',')
-                        .append(content).append(',')
-                        .append(Long.toString(version)).append(',')
-                        .append(Long.toString(size)).append(',')
-                        .append(ip).append(',')
-                        .append(ts).append(',')
-                        .append(ts)
-                        .append('\n');
+                    .append(author).append(',')
+                    .append(content).append(',')
+                    .append(Long.toString(version)).append(',')
+                    .append(Long.toString(size)).append(',')
+                    .append(ip).append(',')
+                    .append(ts).append(',')
+                    .append(ts)
+                    .append('\n');
 
                 if (i % 200_000 == 0 && i != 0) {
                     w.flush();
@@ -80,7 +84,8 @@ class Document {
         final String ts = LocalDateTime.now().format(F);
 
         try (final BufferedWriter w = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream("document_histories.csv"), StandardCharsets.UTF_8), 1 << 20)
+            new OutputStreamWriter(new FileOutputStream("document_histories.csv"),
+                StandardCharsets.UTF_8), 1 << 20)
         ) {
             for (int i = 0; i < N; i++) {
                 final long documentId = 10000000;
@@ -92,14 +97,14 @@ class Document {
 
                 // document_id,author,content,version,size,client_ip,created_at,updated_at
                 w.append(Long.toString(documentId)).append(',')
-                        .append(author).append(',')
-                        .append(content).append(',')
-                        .append(Long.toString(version)).append(',')
-                        .append(Long.toString(size)).append(',')
-                        .append(ip).append(',')
-                        .append(ts).append(',')
-                        .append(ts)
-                        .append('\n');
+                    .append(author).append(',')
+                    .append(content).append(',')
+                    .append(Long.toString(version)).append(',')
+                    .append(Long.toString(size)).append(',')
+                    .append(ip).append(',')
+                    .append(ts).append(',')
+                    .append(ts)
+                    .append('\n');
 
                 if (i % 200_000 == 0 && i != 0) {
                     w.flush();

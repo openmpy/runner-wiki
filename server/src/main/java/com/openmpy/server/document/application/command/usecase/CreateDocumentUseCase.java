@@ -4,7 +4,7 @@ import com.openmpy.server.document.application.command.dto.request.DocumentCreat
 import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.exception.CustomException;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +22,8 @@ public class CreateDocumentUseCase {
 
     @Transactional
     public DocumentCreateResponse execute(
-            final DocumentCreateRequest request,
-            final String clientIp
+        final DocumentCreateRequest request,
+        final String clientIp
     ) {
         validateDuplicate(request);
 
@@ -31,17 +31,18 @@ public class CreateDocumentUseCase {
         final Document savedDocument = documentRepository.save(document);
 
         savedDocument.addHistory(
-                request.author(),
-                request.content(),
-                contentSizeCalculator.calculateUtf8Bytes(request.content()),
-                clientIp
+            request.author(),
+            request.content(),
+            contentSizeCalculator.calculateUtf8Bytes(request.content()),
+            clientIp
         );
         imageAttacher.attachTempImages(savedDocument, request.imageIds());
         return new DocumentCreateResponse(savedDocument.getId());
     }
 
     private void validateDuplicate(final DocumentCreateRequest request) {
-        if (documentRepository.existsByTitle_ValueAndCategory(request.title(), request.category())) {
+        if (documentRepository.existsByTitle_ValueAndCategory(request.title(),
+            request.category())) {
             throw new CustomException("이미 작성된 문서입니다.");
         }
     }

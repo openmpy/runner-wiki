@@ -1,6 +1,6 @@
 package com.openmpy.server.document.application.command.usecase;
 
-import com.openmpy.server.document.domain.model.DocumentHistory;
+import com.openmpy.server.document.domain.entity.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.global.exception.CustomException;
 import jakarta.transaction.Transactional;
@@ -15,8 +15,9 @@ public class DeleteDocumentHistoryUseCase {
 
     @Transactional
     public void execute(final Long documentHistoryId) {
-        final DocumentHistory documentHistory = documentHistoryRepository.findById(documentHistoryId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
+        final DocumentHistory documentHistory = documentHistoryRepository.findById(
+            documentHistoryId).orElseThrow(
+            () -> new CustomException("찾을 수 없는 문서 기록 번호입니다.")
         );
 
         documentHistory.delete();

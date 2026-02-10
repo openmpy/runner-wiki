@@ -1,6 +1,6 @@
 package com.openmpy.server.document.application.query.port;
 
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 

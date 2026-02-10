@@ -4,7 +4,7 @@ import com.openmpy.server.document.application.command.dto.request.DocumentUpdat
 import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.document.application.support.ContentSizeCalculator;
 import com.openmpy.server.document.application.support.ImageAttacher;
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.global.exception.CustomException;
 import jakarta.transaction.Transactional;
@@ -22,17 +22,17 @@ public class UpdateDocumentUseCase {
 
     @Transactional
     public DocumentUpdateResponse execute(
-            final Long documentId,
-            final DocumentUpdateRequest request,
-            final String clientIp
+        final Long documentId,
+        final DocumentUpdateRequest request,
+        final String clientIp
     ) {
         final Document document = findDocumentById(documentId);
 
         document.addHistory(
-                request.author(),
-                request.content(),
-                contentSizeCalculator.calculateUtf8Bytes(request.content()),
-                clientIp
+            request.author(),
+            request.content(),
+            contentSizeCalculator.calculateUtf8Bytes(request.content()),
+            clientIp
         );
         imageAttacher.attachTempImages(document, request.imageIds());
         return new DocumentUpdateResponse(document.getId());
@@ -40,7 +40,7 @@ public class UpdateDocumentUseCase {
 
     private Document findDocumentById(final Long documentId) {
         return documentRepository.findById(documentId).orElseThrow(
-                () -> new CustomException("찾을 수 없는 문서 번호입니다.")
+            () -> new CustomException("찾을 수 없는 문서 번호입니다.")
         );
     }
 }

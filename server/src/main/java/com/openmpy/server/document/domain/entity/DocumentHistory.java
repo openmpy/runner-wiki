@@ -1,4 +1,4 @@
-package com.openmpy.server.document.domain.model;
+package com.openmpy.server.document.domain.entity;
 
 import com.openmpy.server.document.domain.vo.DocumentHistoryAuthor;
 import com.openmpy.server.document.domain.vo.DocumentHistoryContent;
@@ -53,11 +53,11 @@ public class DocumentHistory extends BaseTimeEntity {
     private Document document;
 
     private DocumentHistory(
-            final String author,
-            final String content,
-            final Long version,
-            final Long size,
-            final String clientIp
+        final String author,
+        final String content,
+        final Long version,
+        final Long size,
+        final String clientIp
     ) {
         this.author = new DocumentHistoryAuthor(author);
         this.content = new DocumentHistoryContent(content);
@@ -67,11 +67,11 @@ public class DocumentHistory extends BaseTimeEntity {
     }
 
     protected static DocumentHistory create(
-            final String author,
-            final String content,
-            final Long version,
-            final Long size,
-            final String clientIp
+        final String author,
+        final String content,
+        final Long version,
+        final Long size,
+        final String clientIp
     ) {
         return new DocumentHistory(author, content, version, size, clientIp);
     }

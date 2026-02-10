@@ -3,7 +3,7 @@ package com.openmpy.server.document.application.query.service;
 import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
 import com.openmpy.server.document.application.query.port.DocumentSearchRepository;
 import com.openmpy.server.document.application.support.SearchInputClassifier;
-import com.openmpy.server.document.domain.model.Document;
+import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.global.dto.PageResponse;
 import java.util.Collections;
 import java.util.List;
@@ -21,7 +21,8 @@ public class DocumentSearchQueryService {
     private final DocumentSearchRepository documentSearchRepository;
     private final SearchInputClassifier searchInputClassifier;
 
-    public PageResponse<DocumentPageResponse> autoComplete(final String title, final int page, final int size) {
+    public PageResponse<DocumentPageResponse> autoComplete(final String title, final int page,
+        final int size) {
         String query = title;
 
         if (query == null) {
@@ -41,7 +42,8 @@ public class DocumentSearchQueryService {
         }
 
         if (!searchInputClassifier.isChosungQuery(query)) {
-            final Page<Document> prefix = documentSearchRepository.searchByTitlePrefix(query, pageable);
+            final Page<Document> prefix = documentSearchRepository.searchByTitlePrefix(query,
+                pageable);
             result = prefix;
 
             if (!prefix.hasContent()) {
@@ -49,15 +51,16 @@ public class DocumentSearchQueryService {
             }
         }
 
-        final List<DocumentPageResponse> payload = Objects.requireNonNull(result).getContent().stream()
-                .map(DocumentPageResponse::from)
-                .toList();
+        final List<DocumentPageResponse> payload = Objects.requireNonNull(result).getContent()
+            .stream()
+            .map(DocumentPageResponse::from)
+            .toList();
 
         return PageResponse.of(
-                payload,
-                result.getNumber(),
-                result.getSize(),
-                result.getTotalElements()
+            payload,
+            result.getNumber(),
+            result.getSize(),
+            result.getTotalElements()
         );
     }
 }

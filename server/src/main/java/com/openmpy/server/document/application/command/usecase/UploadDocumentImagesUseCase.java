@@ -4,7 +4,7 @@ import com.openmpy.server.document.application.command.dto.response.DocumentImag
 import com.openmpy.server.document.application.command.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.application.image.dto.UploadedImage;
 import com.openmpy.server.document.application.image.port.ImageStorage;
-import com.openmpy.server.document.domain.model.DocumentImage;
+import com.openmpy.server.document.domain.entity.DocumentImage;
 import com.openmpy.server.document.domain.repository.DocumentImageRepository;
 import jakarta.transaction.Transactional;
 import java.util.List;
@@ -21,17 +21,18 @@ public class UploadDocumentImagesUseCase {
 
     @Transactional
     public DocumentImageUploadResponses execute(
-            final List<MultipartFile> images,
-            final String clientIp
+        final List<MultipartFile> images,
+        final String clientIp
     ) {
         final List<DocumentImageUploadResponse> responses = images.stream()
-                .map(file -> {
-                    final UploadedImage uploadedImage = imageStorage.upload(file);
-                    final DocumentImage documentImage = DocumentImage.create(uploadedImage.url(), clientIp);
-                    final DocumentImage saved = documentImageRepository.save(documentImage);
-                    return new DocumentImageUploadResponse(saved.getId(), uploadedImage.url());
-                })
-                .toList();
+            .map(file -> {
+                final UploadedImage uploadedImage = imageStorage.upload(file);
+                final DocumentImage documentImage = DocumentImage.create(uploadedImage.url(),
+                    clientIp);
+                final DocumentImage saved = documentImageRepository.save(documentImage);
+                return new DocumentImageUploadResponse(saved.getId(), uploadedImage.url());
+            })
+            .toList();
 
         return new DocumentImageUploadResponses(responses);
     }

@@ -1,4 +1,4 @@
-package com.openmpy.server.document.domain.model;
+package com.openmpy.server.document.domain.entity;
 
 import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import com.openmpy.server.global.exception.CustomException;
