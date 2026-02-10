@@ -12,7 +12,7 @@ import com.openmpy.server.document.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.util.ClientIpUtil;
-import com.openmpy.server.verifier.application.TurnstileVerifier;
+import com.openmpy.server.verifier.application.TurnstileVerifierAdapter;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -38,7 +38,7 @@ public class DocumentCommandController {
     private final DocumentHistoryCommandService documentHistoryCommandService;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentRankingCommandService documentRankingCommandService;
-    private final TurnstileVerifier turnstileVerifier;
+    private final TurnstileVerifierAdapter turnstileVerifierAdapter;
 
     @Value("${admin.password}")
     private String password;
@@ -49,7 +49,7 @@ public class DocumentCommandController {
         final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
-        final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
+        final boolean isVerified = turnstileVerifierAdapter.verify(request.token(), clientIp);
 
         if (!isVerified) {
             return ResponseEntity.status(403).build();
@@ -64,7 +64,7 @@ public class DocumentCommandController {
         final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
-        final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
+        final boolean isVerified = turnstileVerifierAdapter.verify(request.token(), clientIp);
 
         if (!isVerified) {
             return ResponseEntity.status(403).build();

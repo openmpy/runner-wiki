@@ -1,7 +1,7 @@
-package com.openmpy.server.image.infrastructure;
+package com.openmpy.server.image.application;
 
 import com.openmpy.server.global.properties.S3Properties;
-import com.openmpy.server.image.application.ImageStorage;
+import com.openmpy.server.image.application.port.ImageStoragePort;
 import com.openmpy.server.image.dto.UploadedImage;
 import java.util.UUID;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 @RequiredArgsConstructor
 @Component
-public class S3Storage implements ImageStorage {
+public class S3StoragePortAdapter implements ImageStoragePort {
 
     private final S3Properties s3Properties;
     private final S3Client s3Client;

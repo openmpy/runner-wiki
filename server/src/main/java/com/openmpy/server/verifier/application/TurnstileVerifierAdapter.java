@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient;
 
 @RequiredArgsConstructor
 @Component
-public class TurnstileVerifier implements VerifierPort {
+public class TurnstileVerifierAdapter implements VerifierPort {
 
     private static final String TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 

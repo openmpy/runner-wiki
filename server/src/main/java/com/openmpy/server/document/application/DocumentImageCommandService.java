@@ -9,7 +9,7 @@ import com.openmpy.server.document.domain.type.DocumentImageStatus;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponse;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.global.exception.CustomException;
-import com.openmpy.server.image.application.ImageStorage;
+import com.openmpy.server.image.application.port.ImageStoragePort;
 import com.openmpy.server.image.dto.UploadedImage;
 import jakarta.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -23,7 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 public class DocumentImageCommandService {
 
     private final DocumentImageRepository documentImageRepository;
-    private final ImageStorage imageStorage;
+    private final ImageStoragePort imageStoragePort;
 
     @Transactional
     public DocumentImageUploadResponses uploadImages(
@@ -32,7 +32,7 @@ public class DocumentImageCommandService {
     ) {
         final List<DocumentImageUploadResponse> responses = images.stream()
             .map(it -> {
-                final UploadedImage uploadedImage = imageStorage.upload(it);
+                final UploadedImage uploadedImage = imageStoragePort.upload(it);
                 final DocumentImage documentImage = DocumentImage.create(
                     uploadedImage.url(),
                     clientIp
@@ -56,7 +56,7 @@ public class DocumentImageCommandService {
 
         for (final DocumentImage documentImage : documentImages) {
             try {
-                imageStorage.delete(documentImage.getUrl());
+                imageStoragePort.delete(documentImage.getUrl());
                 documentImageRepository.delete(documentImage);
                 deleted++;
             } catch (final Exception e) {
