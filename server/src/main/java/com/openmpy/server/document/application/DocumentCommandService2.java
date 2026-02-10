@@ -58,6 +58,13 @@ public class DocumentCommandService2 {
         return new DocumentUpdateResponse(document.getId());
     }
 
+    @Transactional
+    public void delete(final Long documentId) {
+        final Document document = findDocumentById(documentId);
+
+        document.delete();
+    }
+
     private void validateDuplicate(final DocumentCreateRequest request) {
         if (documentRepository.existsByTitle_ValueAndCategory(
             request.title(),

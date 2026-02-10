@@ -79,7 +79,7 @@ public class DocumentCommandController {
     ) {
         validatePassword(password);
 
-        documentCommandService.delete(documentId);
+        documentCommandService2.delete(documentId);
         documentRankingCommandService.removeFromRanking(documentId);
         return ResponseEntity.ok().build();
     }
