@@ -2,6 +2,7 @@ package com.openmpy.server.document.presentation;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
+import com.openmpy.server.document.application.DocumentCommandService2;
 import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
@@ -34,6 +35,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class DocumentCommandController {
 
     private final DocumentCommandService documentCommandService;
+    private final DocumentCommandService2 documentCommandService2;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentRankingCommandService documentRankingCommandService;
     private final TurnstileVerifier turnstileVerifier;
@@ -42,9 +44,9 @@ public class DocumentCommandController {
     private String password;
 
     @PostMapping("/documents")
-    public ResponseEntity<DocumentCreateResponse> create(
-            @RequestBody final DocumentCreateRequest request,
-            final HttpServletRequest servletRequest
+    public ResponseEntity<DocumentCreateResponse> save(
+        @RequestBody final DocumentCreateRequest request,
+        final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
         final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
@@ -52,14 +54,14 @@ public class DocumentCommandController {
         if (!isVerified) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(documentCommandService.create(request, clientIp));
+        return ResponseEntity.ok(documentCommandService2.save(request, clientIp));
     }
 
     @PutMapping("/documents/{documentId}")
     public ResponseEntity<DocumentUpdateResponse> update(
-            @PathVariable final Long documentId,
-            @RequestBody final DocumentUpdateRequest request,
-            final HttpServletRequest servletRequest
+        @PathVariable final Long documentId,
+        @RequestBody final DocumentUpdateRequest request,
+        final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
         final boolean isVerified = turnstileVerifier.verify(request.token(), clientIp);
@@ -72,8 +74,8 @@ public class DocumentCommandController {
 
     @DeleteMapping("/documents/{documentId}")
     public ResponseEntity<Void> delete(
-            @RequestHeader("password") final String password,
-            @PathVariable final Long documentId
+        @RequestHeader("password") final String password,
+        @PathVariable final Long documentId
     ) {
         validatePassword(password);
 
@@ -84,8 +86,8 @@ public class DocumentCommandController {
 
     @DeleteMapping("/document-histories/{historyId}")
     public ResponseEntity<Void> deleteHistory(
-            @RequestHeader("password") final String password,
-            @PathVariable final Long historyId
+        @RequestHeader("password") final String password,
+        @PathVariable final Long historyId
     ) {
         validatePassword(password);
 
@@ -95,11 +97,12 @@ public class DocumentCommandController {
 
     @PostMapping("/document-images")
     public ResponseEntity<DocumentImageUploadResponses> uploadImages(
-            @RequestBody final List<MultipartFile> images,
-            final HttpServletRequest servletRequest
+        @RequestBody final List<MultipartFile> images,
+        final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
-        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(images, clientIp);
+        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(
+            images, clientIp);
 
         return ResponseEntity.ok(responses);
     }
