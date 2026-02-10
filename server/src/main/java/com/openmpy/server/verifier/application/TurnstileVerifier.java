@@ -1,7 +1,7 @@
-package com.openmpy.server.document.infrastructure.turnstile;
+package com.openmpy.server.verifier.application;
 
-import com.openmpy.server.document.application.verify.port.Verifier;
 import com.openmpy.server.global.properties.CloudflareProperties;
+import com.openmpy.server.verifier.application.port.VerifierPort;
 import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.ParameterizedTypeReference;
@@ -13,7 +13,7 @@ import org.springframework.web.client.RestClient;
 
 @RequiredArgsConstructor
 @Component
-public class TurnstileVerifier implements Verifier {
+public class TurnstileVerifier implements VerifierPort {
 
     private static final String TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -32,12 +32,12 @@ public class TurnstileVerifier implements Verifier {
         params.add("remoteip", clientIp);
 
         final Map<String, Object> response = restClient.post()
-                .uri(TURNSTILE_VERIFY_URL)
-                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
-                .body(params)
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
+            .uri(TURNSTILE_VERIFY_URL)
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+            .body(params)
+            .retrieve()
+            .body(new ParameterizedTypeReference<>() {
+            });
 
         if (response == null) {
             return false;

@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application.ranking.port;
+package com.openmpy.server.document.application.port;
 
 import java.util.Set;
 

@@ -1,8 +1,8 @@
-package com.openmpy.server.document.application.ranking.service;
+package com.openmpy.server.document.application;
 
 import static java.util.HashMap.newHashMap;
 
-import com.openmpy.server.document.application.ranking.port.DocumentRankingPort;
+import com.openmpy.server.document.application.port.DocumentRankingPort;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;

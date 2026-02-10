@@ -1,8 +1,8 @@
 package com.openmpy.server.document.presentation;
 
 import com.openmpy.server.document.application.DocumentQueryService;
+import com.openmpy.server.document.application.DocumentRankingQueryService;
 import com.openmpy.server.document.application.DocumentSearchQueryService;
-import com.openmpy.server.document.application.ranking.service.DocumentRankingQueryService;
 import com.openmpy.server.document.dto.response.DocumentGetResponse;
 import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;

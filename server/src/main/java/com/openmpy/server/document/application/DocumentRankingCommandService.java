@@ -1,6 +1,6 @@
-package com.openmpy.server.document.application.ranking.service;
+package com.openmpy.server.document.application;
 
-import com.openmpy.server.document.application.ranking.port.DocumentRankingPort;
+import com.openmpy.server.document.application.port.DocumentRankingPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

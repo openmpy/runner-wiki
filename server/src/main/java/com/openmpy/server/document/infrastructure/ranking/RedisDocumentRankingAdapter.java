@@ -1,6 +1,6 @@
 package com.openmpy.server.document.infrastructure.ranking;
 
-import com.openmpy.server.document.application.ranking.port.DocumentRankingPort;
+import com.openmpy.server.document.application.port.DocumentRankingPort;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.time.Duration;
@@ -21,27 +21,27 @@ public class RedisDocumentRankingAdapter implements DocumentRankingPort {
     private static final Duration RANK_KEY_TTL = Duration.ofDays(8);
 
     private static final String INCR_IF_ALLOWED_LUA = """
-            -- KEYS[1] = blockKey
-            -- KEYS[2] = rankKey (zset)
-            -- ARGV[1] = blockTtlSeconds
-            -- ARGV[2] = member (documentId as string)
-            -- ARGV[3] = rankKeyTtlSeconds
-            
-            local ok = redis.call('SET', KEYS[1], '1', 'NX', 'EX', ARGV[1])
-            if not ok then
-              return 0
-            end
-            
-            redis.call('ZINCRBY', KEYS[2], 1, ARGV[2])
-            
-            -- set rank key ttl only if not set (newly created or persisted)
-            local ttl = redis.call('TTL', KEYS[2])
-            if ttl < 0 then
-              redis.call('EXPIRE', KEYS[2], ARGV[3])
-            end
-            
-            return 1
-            """;
+        -- KEYS[1] = blockKey
+        -- KEYS[2] = rankKey (zset)
+        -- ARGV[1] = blockTtlSeconds
+        -- ARGV[2] = member (documentId as string)
+        -- ARGV[3] = rankKeyTtlSeconds
+        
+        local ok = redis.call('SET', KEYS[1], '1', 'NX', 'EX', ARGV[1])
+        if not ok then
+          return 0
+        end
+        
+        redis.call('ZINCRBY', KEYS[2], 1, ARGV[2])
+        
+        -- set rank key ttl only if not set (newly created or persisted)
+        local ttl = redis.call('TTL', KEYS[2])
+        if ttl < 0 then
+          redis.call('EXPIRE', KEYS[2], ARGV[3])
+        end
+        
+        return 1
+        """;
 
     private final StringRedisTemplate redisTemplate;
     private final DefaultRedisScript<Long> increaseScript = script();
@@ -59,11 +59,11 @@ public class RedisDocumentRankingAdapter implements DocumentRankingPort {
         final String rankKey = rankKeyOfToday();
 
         redisTemplate.execute(
-                increaseScript,
-                List.of(blockKey, rankKey),
-                String.valueOf(DUPLICATE_BLOCK_TTL.toSeconds()),
-                String.valueOf(documentId),
-                String.valueOf(RANK_KEY_TTL.toSeconds())
+            increaseScript,
+            List.of(blockKey, rankKey),
+            String.valueOf(DUPLICATE_BLOCK_TTL.toSeconds()),
+            String.valueOf(documentId),
+            String.valueOf(RANK_KEY_TTL.toSeconds())
         );
     }
 
