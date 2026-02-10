@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @RequiredArgsConstructor
 @Service
-public class DocumentCommandService2 {
+public class DocumentCommandService {
 
     private final DocumentRepository documentRepository;
     private final ImageAttacher imageAttacher;

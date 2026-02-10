@@ -2,7 +2,7 @@ package com.openmpy.server.document.presentation;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
 
-import com.openmpy.server.document.application.DocumentCommandService2;
+import com.openmpy.server.document.application.DocumentCommandService;
 import com.openmpy.server.document.application.DocumentHistoryCommandService;
 import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
 import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
@@ -34,7 +34,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RestController
 public class DocumentCommandController {
 
-    private final DocumentCommandService2 documentCommandService2;
+    private final DocumentCommandService documentCommandService;
     private final DocumentHistoryCommandService documentHistoryCommandService;
     private final DocumentImageCommandService documentImageCommandService;
     private final DocumentRankingCommandService documentRankingCommandService;
@@ -54,7 +54,7 @@ public class DocumentCommandController {
         if (!isVerified) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(documentCommandService2.save(request, clientIp));
+        return ResponseEntity.ok(documentCommandService.save(request, clientIp));
     }
 
     @PutMapping("/documents/{documentId}")
@@ -69,7 +69,7 @@ public class DocumentCommandController {
         if (!isVerified) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(documentCommandService2.update(documentId, request, clientIp));
+        return ResponseEntity.ok(documentCommandService.update(documentId, request, clientIp));
     }
 
     @DeleteMapping("/documents/{documentId}")
@@ -79,7 +79,7 @@ public class DocumentCommandController {
     ) {
         validatePassword(password);
 
-        documentCommandService2.delete(documentId);
+        documentCommandService.delete(documentId);
         documentRankingCommandService.removeFromRanking(documentId);
         return ResponseEntity.ok().build();
     }
