@@ -1,13 +1,12 @@
-package com.openmpy.server.document.application.query.service;
+package com.openmpy.server.document.application;
 
-import com.openmpy.server.document.application.query.dto.response.DocumentGetResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentHistoryPageResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
-import com.openmpy.server.document.application.query.port.DocumentQueryRepository;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.document.dto.response.DocumentGetResponse;
+import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.dto.response.DocumentPageResponse;
 import com.openmpy.server.global.dto.PageResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.PageLimitCalculator;
@@ -27,7 +26,6 @@ public class DocumentQueryService {
 
     private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
-    private final DocumentQueryRepository documentQueryRepository;
 
     @Transactional(readOnly = true)
     public DocumentGetResponse getHistory(final Long documentHistoryId) {
@@ -61,7 +59,7 @@ public class DocumentQueryService {
 
     @Transactional(readOnly = true)
     public DocumentGetResponse getLatest(final Long documentId) {
-        final DocumentGetResponse response = documentQueryRepository.findLatestDocumentById(
+        final DocumentGetResponse response = documentRepository.findLatestDocumentById(
             documentId);
 
         if (response == null) {

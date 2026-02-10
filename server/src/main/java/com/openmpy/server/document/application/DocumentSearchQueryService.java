@@ -1,10 +1,10 @@
-package com.openmpy.server.document.application.query.service;
+package com.openmpy.server.document.application;
 
-import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
-import com.openmpy.server.document.application.query.port.DocumentSearchRepository;
-import com.openmpy.server.document.application.support.SearchInputClassifier;
 import com.openmpy.server.document.domain.entity.Document;
+import com.openmpy.server.document.domain.repository.search.DocumentSearchRepository;
+import com.openmpy.server.document.dto.response.DocumentPageResponse;
 import com.openmpy.server.global.dto.PageResponse;
+import com.openmpy.server.global.util.SearchInputClassifier;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -19,10 +19,12 @@ import org.springframework.stereotype.Service;
 public class DocumentSearchQueryService {
 
     private final DocumentSearchRepository documentSearchRepository;
-    private final SearchInputClassifier searchInputClassifier;
 
-    public PageResponse<DocumentPageResponse> autoComplete(final String title, final int page,
-        final int size) {
+    public PageResponse<DocumentPageResponse> autoComplete(
+        final String title,
+        final int page,
+        final int size
+    ) {
         String query = title;
 
         if (query == null) {
@@ -37,13 +39,15 @@ public class DocumentSearchQueryService {
         final Pageable pageable = PageRequest.of(page, size);
         Page<Document> result = null;
 
-        if (searchInputClassifier.isChosungQuery(query)) {
+        if (SearchInputClassifier.isChosungQuery(query)) {
             result = documentSearchRepository.searchByChosungPrefix(query, pageable);
         }
 
-        if (!searchInputClassifier.isChosungQuery(query)) {
-            final Page<Document> prefix = documentSearchRepository.searchByTitlePrefix(query,
-                pageable);
+        if (!SearchInputClassifier.isChosungQuery(query)) {
+            final Page<Document> prefix = documentSearchRepository.searchByTitlePrefix(
+                query,
+                pageable
+            );
             result = prefix;
 
             if (!prefix.hasContent()) {

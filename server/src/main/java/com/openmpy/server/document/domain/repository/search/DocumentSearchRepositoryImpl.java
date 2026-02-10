@@ -1,6 +1,5 @@
-package com.openmpy.server.document.infrastructure.persistence;
+package com.openmpy.server.document.domain.repository.search;
 
-import com.openmpy.server.document.application.query.port.DocumentSearchRepository;
 import com.openmpy.server.document.domain.entity.Document;
 import jakarta.persistence.EntityManager;
 import java.util.List;

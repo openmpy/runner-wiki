@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.repository;
 
 import com.openmpy.server.document.domain.entity.Document;
+import com.openmpy.server.document.domain.repository.querydsl.DocumentCustomRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -9,7 +10,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface DocumentRepository extends JpaRepository<Document, Long> {
+public interface DocumentRepository extends
+    JpaRepository<Document, Long>,
+    DocumentCustomRepository {
 
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
 

@@ -2,11 +2,11 @@ package com.openmpy.server.document.application.ranking.service;
 
 import static java.util.HashMap.newHashMap;
 
-import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentTop10Response;
 import com.openmpy.server.document.application.ranking.port.DocumentRankingPort;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.document.dto.response.DocumentPageResponse;
+import com.openmpy.server.document.dto.response.DocumentTop10Response;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;

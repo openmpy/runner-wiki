@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application.query.port;
+package com.openmpy.server.document.domain.repository.search;
 
 import com.openmpy.server.document.domain.entity.Document;
 import org.springframework.data.domain.Page;

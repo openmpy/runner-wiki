@@ -1,4 +1,4 @@
-package com.openmpy.server.document.application.query.dto.response;
+package com.openmpy.server.document.dto.response;
 
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentHistory;

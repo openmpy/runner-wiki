@@ -1,10 +1,9 @@
-package com.openmpy.server.document.infrastructure.persistence;
+package com.openmpy.server.document.domain.repository.querydsl;
 
 import static com.openmpy.server.document.domain.entity.QDocument.document;
 import static com.openmpy.server.document.domain.entity.QDocumentHistory.documentHistory;
 
-import com.openmpy.server.document.application.query.dto.response.DocumentGetResponse;
-import com.openmpy.server.document.application.query.port.DocumentQueryRepository;
+import com.openmpy.server.document.dto.response.DocumentGetResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPQLQueryFactory;
@@ -13,7 +12,7 @@ import org.springframework.stereotype.Repository;
 
 @RequiredArgsConstructor
 @Repository
-public class DocumentQueryRepositoryImpl implements DocumentQueryRepository {
+public class DocumentRepositoryImpl implements DocumentCustomRepository {
 
     private final JPQLQueryFactory query;
 

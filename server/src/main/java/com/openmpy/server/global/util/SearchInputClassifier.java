@@ -1,13 +1,11 @@
-package com.openmpy.server.document.application.support;
+package com.openmpy.server.global.util;
 
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import lombok.NoArgsConstructor;
 
-@RequiredArgsConstructor
-@Component
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
 public class SearchInputClassifier {
 
-    public boolean isChosungQuery(final String input) {
+    public static boolean isChosungQuery(final String input) {
         if (input == null || input.isBlank()) {
             return false;
         }
@@ -16,10 +14,8 @@ public class SearchInputClassifier {
             if (c >= 'ㄱ' && c <= 'ㅎ') {
                 continue;
             }
-
             return false;
         }
         return true;
     }
-
 }

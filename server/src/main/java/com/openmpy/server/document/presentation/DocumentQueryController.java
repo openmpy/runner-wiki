@@ -1,12 +1,12 @@
 package com.openmpy.server.document.presentation;
 
-import com.openmpy.server.document.application.query.dto.response.DocumentGetResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentHistoryPageResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentPageResponse;
-import com.openmpy.server.document.application.query.dto.response.DocumentTop10Response;
-import com.openmpy.server.document.application.query.service.DocumentQueryService;
-import com.openmpy.server.document.application.query.service.DocumentSearchQueryService;
+import com.openmpy.server.document.application.DocumentQueryService;
+import com.openmpy.server.document.application.DocumentSearchQueryService;
 import com.openmpy.server.document.application.ranking.service.DocumentRankingQueryService;
+import com.openmpy.server.document.dto.response.DocumentGetResponse;
+import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
+import com.openmpy.server.document.dto.response.DocumentPageResponse;
+import com.openmpy.server.document.dto.response.DocumentTop10Response;
 import com.openmpy.server.global.dto.PageResponse;
 import com.openmpy.server.global.util.ClientIpUtil;
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,8 +29,8 @@ public class DocumentQueryController {
 
     @GetMapping("/documents/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(
-            @PathVariable final Long documentId,
-            final HttpServletRequest servletRequest
+        @PathVariable final Long documentId,
+        final HttpServletRequest servletRequest
     ) {
         final String clientIp = ClientIpUtil.getClientIp(servletRequest);
         final DocumentGetResponse response = documentQueryService.getLatest(documentId);
@@ -41,9 +41,9 @@ public class DocumentQueryController {
 
     @GetMapping("/documents")
     public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
-            @RequestParam(defaultValue = "all") final String category,
-            @RequestParam(defaultValue = "0", required = false) final int page,
-            @RequestParam(defaultValue = "10", required = false) final int size
+        @RequestParam(defaultValue = "all") final String category,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentQueryService.getLatestDocuments(category, page, size));
     }
@@ -55,18 +55,18 @@ public class DocumentQueryController {
 
     @GetMapping("/documents/{documentId}/histories")
     public ResponseEntity<PageResponse<DocumentHistoryPageResponse>> getHistories(
-            @PathVariable final Long documentId,
-            @RequestParam(defaultValue = "0", required = false) final int page,
-            @RequestParam(defaultValue = "10", required = false) final int size
+        @PathVariable final Long documentId,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentQueryService.getHistories(documentId, page, size));
     }
 
     @GetMapping("/documents/search")
     public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocuments(
-            @RequestParam final String title,
-            @RequestParam(defaultValue = "0", required = false) final int page,
-            @RequestParam(defaultValue = "10", required = false) final int size
+        @RequestParam final String title,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentQueryService.searchDocuments(title, page, size));
     }
@@ -85,9 +85,9 @@ public class DocumentQueryController {
 
     @GetMapping("/documents/autocomplete")
     public ResponseEntity<PageResponse<DocumentPageResponse>> autoComplete(
-            @RequestParam final String title,
-            @RequestParam(defaultValue = "0", required = false) final int page,
-            @RequestParam(defaultValue = "10", required = false) final int size
+        @RequestParam final String title,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
     ) {
         return ResponseEntity.ok(documentSearchQueryService.autoComplete(title, page, size));
     }
