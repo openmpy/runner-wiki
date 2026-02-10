@@ -69,7 +69,7 @@ public class DocumentCommandController {
         if (!isVerified) {
             return ResponseEntity.status(403).build();
         }
-        return ResponseEntity.ok(documentCommandService.update(documentId, request, clientIp));
+        return ResponseEntity.ok(documentCommandService2.update(documentId, request, clientIp));
     }
 
     @DeleteMapping("/documents/{documentId}")

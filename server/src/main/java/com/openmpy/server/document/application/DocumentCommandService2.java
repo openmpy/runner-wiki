@@ -1,7 +1,9 @@
 package com.openmpy.server.document.application;
 
 import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
+import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
+import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
@@ -38,6 +40,24 @@ public class DocumentCommandService2 {
         return new DocumentCreateResponse(savedDocument.getId());
     }
 
+    @Transactional
+    public DocumentUpdateResponse update(
+        final Long documentId,
+        final DocumentUpdateRequest request,
+        final String clientIp
+    ) {
+        final Document document = findDocumentById(documentId);
+
+        document.addHistory(
+            request.author(),
+            request.content(),
+            ContentCalculator.calculateUtf8Bytes(request.content()),
+            clientIp
+        );
+        imageAttacher.attachTempImages(document, request.imageIds());
+        return new DocumentUpdateResponse(document.getId());
+    }
+
     private void validateDuplicate(final DocumentCreateRequest request) {
         if (documentRepository.existsByTitle_ValueAndCategory(
             request.title(),
@@ -45,5 +65,10 @@ public class DocumentCommandService2 {
         ) {
             throw new CustomException("이미 작성된 문서입니다.");
         }
+    }
+
+    private Document findDocumentById(final Long documentId) {
+        return documentRepository.findById(documentId)
+            .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
     }
 }
