@@ -1,12 +1,12 @@
 package com.openmpy.server.document.application;
 
-import com.openmpy.server.document.application.command.dto.request.DocumentCreateRequest;
-import com.openmpy.server.document.application.command.dto.request.DocumentUpdateRequest;
-import com.openmpy.server.document.application.command.dto.response.DocumentCreateResponse;
-import com.openmpy.server.document.application.command.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.document.application.support.ImageAttacher;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.document.dto.request.DocumentCreateRequest;
+import com.openmpy.server.document.dto.request.DocumentUpdateRequest;
+import com.openmpy.server.document.dto.response.DocumentCreateResponse;
+import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.ContentCalculator;
 import lombok.RequiredArgsConstructor;
