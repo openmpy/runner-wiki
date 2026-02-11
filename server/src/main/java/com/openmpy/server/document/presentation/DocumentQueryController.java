@@ -62,11 +62,11 @@ public class DocumentQueryController {
 
     @GetMapping("/documents/search")
     public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocuments(
-        @RequestParam final String title,
+        @RequestParam final String keyword,
         @RequestParam(defaultValue = "0", required = false) final int page,
         @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentQueryService.searchDocuments(title, page, size));
+        return ResponseEntity.ok(documentQueryService.searchDocuments(keyword, page, size));
     }
 
     @GetMapping("/documents/top10")

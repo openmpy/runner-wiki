@@ -105,20 +105,20 @@ public class DocumentQueryService {
 
     @Transactional(readOnly = true)
     public PageResponse<DocumentPageResponse> searchDocuments(
-        final String title,
+        final String keyword,
         final int page,
         final int size
     ) {
         final int offset = page * size;
 
         final List<DocumentPageResponse> responses = documentRepository.searchByTitleOrChosung(
-                title, offset, size
+                keyword, offset, size
             )
             .stream()
             .map(DocumentPageResponse::from)
             .toList();
         final Long totalElements = documentRepository.countByTitleOrChosung(
-            title, PageLimitCalculator.calculatePageLimit(page, size, size)
+            keyword, PageLimitCalculator.calculatePageLimit(page, size, size)
         );
 
         return PageResponse.of(responses, page, size, totalElements);
