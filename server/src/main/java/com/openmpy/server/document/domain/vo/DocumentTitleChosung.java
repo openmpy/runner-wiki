@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Embeddable
 public class DocumentTitleChosung {
 
-    private static final String TITLE_CHOSUNG_VALIDATION_REGEX = "^[ㄱ-ㅎ]+$";
+    private static final String TITLE_CHOSUNG_VALIDATION_REGEX = "^[a-zA-Z0-9ㄱ-ㅎ]+$";
 
     private String value;
 
