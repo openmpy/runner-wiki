@@ -6,15 +6,15 @@ import java.util.List;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
-public class ClientIpUtil {
+public class ClientIpResolver {
 
     private static final List<String> IP_HEADER_CANDIDATES = Arrays.asList(
-            "X-Forwarded-For",
-            "X-Real-IP",
-            "Proxy-Client-IP",
-            "WL-Proxy-Client-IP",
-            "HTTP_CLIENT_IP",
-            "HTTP_X_FORWARDED_FOR"
+        "X-Forwarded-For",
+        "X-Real-IP",
+        "Proxy-Client-IP",
+        "WL-Proxy-Client-IP",
+        "HTTP_CLIENT_IP",
+        "HTTP_X_FORWARDED_FOR"
     );
 
     public static String getClientIp(final HttpServletRequest request) {

@@ -11,7 +11,7 @@ import com.openmpy.server.document.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
-import com.openmpy.server.global.util.ClientIpUtil;
+import com.openmpy.server.global.util.ClientIpResolver;
 import com.openmpy.server.verifier.application.TurnstileVerifierAdapter;
 import jakarta.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -48,7 +48,7 @@ public class DocumentCommandController {
         @RequestBody final DocumentCreateRequest request,
         final HttpServletRequest servletRequest
     ) {
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpResolver.getClientIp(servletRequest);
         final boolean isVerified = turnstileVerifierAdapter.verify(request.token(), clientIp);
 
         if (!isVerified) {
@@ -63,7 +63,7 @@ public class DocumentCommandController {
         @RequestBody final DocumentUpdateRequest request,
         final HttpServletRequest servletRequest
     ) {
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpResolver.getClientIp(servletRequest);
         final boolean isVerified = turnstileVerifierAdapter.verify(request.token(), clientIp);
 
         if (!isVerified) {
@@ -100,7 +100,7 @@ public class DocumentCommandController {
         @RequestBody final List<MultipartFile> images,
         final HttpServletRequest servletRequest
     ) {
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpResolver.getClientIp(servletRequest);
         final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(
             images, clientIp
         );

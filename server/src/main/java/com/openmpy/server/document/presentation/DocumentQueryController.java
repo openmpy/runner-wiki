@@ -8,7 +8,7 @@ import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;
 import com.openmpy.server.document.dto.response.DocumentTop10Response;
 import com.openmpy.server.global.dto.PageResponse;
-import com.openmpy.server.global.util.ClientIpUtil;
+import com.openmpy.server.global.util.ClientIpResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +32,7 @@ public class DocumentQueryController {
         @PathVariable final Long documentId,
         final HttpServletRequest servletRequest
     ) {
-        final String clientIp = ClientIpUtil.getClientIp(servletRequest);
+        final String clientIp = ClientIpResolver.getClientIp(servletRequest);
         final DocumentGetResponse response = documentQueryService.getLatest(documentId);
 
         documentRankingQueryService.increaseRankIfAllowed(documentId, clientIp);
