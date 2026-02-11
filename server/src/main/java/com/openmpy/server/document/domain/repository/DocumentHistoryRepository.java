@@ -33,7 +33,6 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
         @Param("limit") int limit
     );
 
-
     @Query(
         value = """
             SELECT count(*)
@@ -60,4 +59,8 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
         """)
     Optional<DocumentHistory> findByIdWithDocument(@Param("id") final Long id);
 
+    List<DocumentHistory> findAllByDocument_Id(final Long documentId);
+
+    @Query("select h.version.value from DocumentHistory h where h.document.id = :documentId")
+    List<Integer> findAllVersionsByDocumentId(@Param("documentId") final Long documentId);
 }

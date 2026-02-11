@@ -3,10 +3,13 @@ package com.openmpy.server.document.domain.repository;
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.repository.querydsl.DocumentCustomRepository;
 import com.openmpy.server.document.domain.type.DocumentCategory;
+import jakarta.persistence.LockModeType;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -62,7 +65,6 @@ public interface DocumentRepository extends
         @Param("limit") final int limit
     );
 
-
     @Query(
         value = "SELECT count(*) " +
             "FROM ( " +
@@ -109,4 +111,8 @@ public interface DocumentRepository extends
         nativeQuery = true
     )
     Document findRandomDocument();
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    @Query("select d from Document d where d.id = :id")
+    Optional<Document> findByIdForUpdate(@Param("id") final Long id);
 }

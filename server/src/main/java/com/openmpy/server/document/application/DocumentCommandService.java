@@ -50,7 +50,8 @@ public class DocumentCommandService {
         final DocumentUpdateRequest request,
         final String clientIp
     ) {
-        final Document document = findDocumentById(documentId);
+        final Document document = documentRepository.findByIdForUpdate(documentId)
+            .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
 
         document.addHistory(
             request.author(),
