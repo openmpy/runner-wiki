@@ -51,12 +51,14 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
         @Param("limit") int limit
     );
 
-    @Query("""
-        SELECT dh
-        FROM DocumentHistory dh
-        JOIN FETCH dh.document d
-        WHERE dh.id = :id
-        """)
+    @Query(
+        value = """
+            SELECT dh
+            FROM DocumentHistory dh
+            JOIN FETCH dh.document d
+            WHERE dh.id = :id
+            """
+    )
     Optional<DocumentHistory> findByIdWithDocument(@Param("id") final Long id);
 
     List<DocumentHistory> findAllByDocument_Id(final Long documentId);
