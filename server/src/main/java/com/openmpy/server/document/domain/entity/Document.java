@@ -64,7 +64,7 @@ public class Document extends BaseTimeEntity {
     private final List<DocumentImage> images = new ArrayList<>();
 
     public static Document create(final String title, final DocumentCategory category) {
-        final String chosung = KoreanChosung.toChosung(title);
+        final String chosung = KoreanChosung.extract(title);
 
         return Document.builder()
             .title(new DocumentTitle(title))
