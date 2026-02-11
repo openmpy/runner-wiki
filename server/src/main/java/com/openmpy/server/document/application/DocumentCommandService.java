@@ -50,17 +50,21 @@ public class DocumentCommandService {
         final DocumentUpdateRequest request,
         final String clientIp
     ) {
-        final Document document = documentRepository.findByIdForUpdate(documentId)
-            .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
+        try {
+            final Document document = documentRepository.findByIdForUpdate(documentId)
+                .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
 
-        document.addHistory(
-            request.author(),
-            request.content(),
-            ContentCalculator.calculateUtf8Bytes(request.content()),
-            clientIp
-        );
-        documentImageCommandService.attachTempImages(document, request.imageIds());
-        return new DocumentUpdateResponse(document.getId());
+            document.addHistory(
+                request.author(),
+                request.content(),
+                ContentCalculator.calculateUtf8Bytes(request.content()),
+                clientIp
+            );
+            documentImageCommandService.attachTempImages(document, request.imageIds());
+            return new DocumentUpdateResponse(document.getId());
+        } catch (Exception e) {
+            throw new CustomException("동시 처리 중 충돌이 발생했습니다.");
+        }
     }
 
     @Transactional
