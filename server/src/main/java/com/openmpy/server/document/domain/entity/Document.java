@@ -17,6 +17,8 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +33,16 @@ import org.hibernate.annotations.SQLRestriction;
 @Builder(access = AccessLevel.PRIVATE)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@SQLRestriction("deleted_at IS NULL")
+@SQLRestriction("is_deleted = FALSE")
 @Entity
+@Table(
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_document_title_category_is_deleted",
+            columnNames = {"title", "category", "is_deleted"}
+        )
+    }
+)
 public class Document extends BaseTimeEntity {
 
     @Id
@@ -54,6 +64,9 @@ public class Document extends BaseTimeEntity {
     @Column(name = "latest_version", nullable = false)
     private Integer latestVersion;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -71,6 +84,7 @@ public class Document extends BaseTimeEntity {
             .titleChosung(new DocumentTitleChosung(chosung))
             .category(category)
             .latestVersion(0)
+            .isDeleted(false)
             .build();
     }
 
@@ -80,7 +94,7 @@ public class Document extends BaseTimeEntity {
         final Long size,
         final String clientIp
     ) {
-        if (deletedAt != null) {
+        if (isDeleted == true) {
             throw new CustomException("삭제된 문서에 추가할 수 없습니다.");
         }
 
@@ -99,7 +113,7 @@ public class Document extends BaseTimeEntity {
     }
 
     public void attachImages(final List<DocumentImage> images) {
-        if (deletedAt != null) {
+        if (isDeleted == true) {
             throw new CustomException("삭제된 문서에 이미지를 추가할 수 없습니다.");
         }
 
@@ -114,11 +128,13 @@ public class Document extends BaseTimeEntity {
     }
 
     public void delete() {
-        if (deletedAt != null) {
+        if (isDeleted == true) {
             throw new CustomException("이미 삭제된 문서입니다.");
         }
 
+        isDeleted = true;
         deletedAt = LocalDateTime.now();
+
         histories.forEach(DocumentHistory::delete);
         images.forEach(DocumentImage::delete);
     }

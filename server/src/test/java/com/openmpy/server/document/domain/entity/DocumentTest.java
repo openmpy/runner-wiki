@@ -5,7 +5,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.global.exception.CustomException;
-import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +24,7 @@ class DocumentTest {
         assertThat(document.getTitleChosung()).isEqualTo("ㅈㅁ");
         assertThat(document.getCategory()).isEqualTo(DocumentCategory.USER);
         assertThat(document.getLatestVersion()).isZero();
+        assertThat(document.getIsDeleted()).isFalse();
     }
 
     @DisplayName("문서 객체에 문서 기록 객체를 추가한다.")
@@ -74,12 +74,13 @@ class DocumentTest {
     @Test
     void document_test_04() {
         // given
-        final Document document = new Document();
+        final Document document = Document.create("제목", DocumentCategory.USER);
 
         // when
         document.delete();
 
         // then
+        assertThat(document.getIsDeleted()).isTrue();
         assertThat(document.getDeletedAt()).isNotNull();
     }
 
@@ -97,6 +98,7 @@ class DocumentTest {
         document.delete();
 
         // then
+        assertThat(document.getIsDeleted()).isTrue();
         assertThat(document.getDeletedAt()).isNotNull();
         assertThat(document.getHistories().getFirst().getDeletedAt()).isNotNull();
         assertThat(document.getImages().getFirst().getDeletedAt()).isNotNull();
@@ -108,7 +110,7 @@ class DocumentTest {
         // given
         final Document document = Document.create("제목", DocumentCategory.USER);
 
-        ReflectionTestUtils.setField(document, "deletedAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(document, "isDeleted", true);
 
         // when & then
         assertThatThrownBy(() -> document.addHistory("작성자", "내용", 10L, "127.0.0.1"))
@@ -123,7 +125,7 @@ class DocumentTest {
         final Document document = Document.create("제목", DocumentCategory.USER);
         final DocumentImage image = DocumentImage.create("http://test.com/image1", "127.0.0.1");
 
-        ReflectionTestUtils.setField(document, "deletedAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(document, "isDeleted", true);
 
         // when & then
         assertThatThrownBy(() -> document.attachImages(List.of(image)))
@@ -149,7 +151,7 @@ class DocumentTest {
         // given
         final Document document = Document.create("제목", DocumentCategory.USER);
 
-        ReflectionTestUtils.setField(document, "deletedAt", LocalDateTime.now());
+        ReflectionTestUtils.setField(document, "isDeleted", true);
 
         // when & then
         assertThatThrownBy(document::delete)
