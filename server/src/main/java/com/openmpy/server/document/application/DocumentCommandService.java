@@ -27,16 +27,16 @@ public class DocumentCommandService {
         validateDuplicate(request);
 
         final Document document = Document.create(request.title(), request.category());
-        final Document savedDocument = documentRepository.save(document);
+        documentRepository.save(document);
 
-        savedDocument.addHistory(
+        document.addHistory(
             request.author(),
             request.content(),
             ContentCalculator.calculateUtf8Bytes(request.content()),
             clientIp
         );
-        documentImageCommandService.attachTempImages(savedDocument, request.imageIds());
-        return new DocumentCreateResponse(savedDocument.getId());
+        documentImageCommandService.attachTempImages(document, request.imageIds());
+        return new DocumentCreateResponse(document.getId());
     }
 
     @Transactional
@@ -67,8 +67,8 @@ public class DocumentCommandService {
     private void validateDuplicate(final DocumentCreateRequest request) {
         if (documentRepository.existsByTitle_ValueAndCategory(
             request.title(),
-            request.category())
-        ) {
+            request.category()
+        )) {
             throw new CustomException("이미 작성된 문서입니다.");
         }
     }
