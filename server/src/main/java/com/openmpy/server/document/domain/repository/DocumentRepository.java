@@ -26,12 +26,11 @@ public interface DocumentRepository extends
             FROM (
                 SELECT id, updated_at
                 FROM document
-                WHERE deleted_at IS NULL
+                WHERE is_deleted = FALSE
                 ORDER BY updated_at DESC, id DESC
                 LIMIT :limit OFFSET :offset
             ) t
             JOIN document d ON d.id = t.id
-            WHERE d.deleted_at IS NULL
             ORDER BY t.updated_at DESC, t.id DESC
             """,
         nativeQuery = true
@@ -49,12 +48,11 @@ public interface DocumentRepository extends
                 SELECT id, updated_at
                 FROM document
                 WHERE category = :category
-                  AND deleted_at IS NULL
+                  AND is_deleted = FALSE
                 ORDER BY updated_at DESC, id DESC
                 LIMIT :limit OFFSET :offset
             ) t
             JOIN document d ON d.id = t.id
-            WHERE d.deleted_at IS NULL
             ORDER BY t.updated_at DESC, t.id DESC
             """,
         nativeQuery = true
@@ -66,12 +64,15 @@ public interface DocumentRepository extends
     );
 
     @Query(
-        value = "SELECT count(*) " +
-            "FROM ( " +
-            "  SELECT id FROM document " +
-            "  WHERE deleted_at IS NULL " +
-            "  LIMIT :limit " +
-            ") t",
+        value = """
+            SELECT count(*)
+            FROM (
+                SELECT id
+                FROM document
+                WHERE is_deleted = FALSE
+                LIMIT :limit
+            ) t
+            """,
         nativeQuery = true
     )
     Long count(
@@ -79,13 +80,16 @@ public interface DocumentRepository extends
     );
 
     @Query(
-        value = "SELECT count(*) " +
-            "FROM ( " +
-            "  SELECT id FROM document " +
-            "  WHERE category = :category " +
-            "    AND deleted_at IS NULL " +
-            "  LIMIT :limit " +
-            ") t",
+        value = """
+            SELECT count(*)
+            FROM (
+                SELECT id
+                FROM document
+                WHERE category = :category
+                  AND is_deleted = FALSE
+                LIMIT :limit
+            ) t
+            """,
         nativeQuery = true
     )
     Long countByCategory(
@@ -93,8 +97,10 @@ public interface DocumentRepository extends
         @Param("limit") final int limit
     );
 
-    Page<Document> findAllByTitle_ValueContainingIgnoreCase(final String title,
-        final Pageable pageable);
+    Page<Document> findAllByTitle_ValueContainingIgnoreCase(
+        final String title,
+        final Pageable pageable
+    );
 
     List<Document> findAllByIdIn(final List<Long> ids);
 
@@ -113,6 +119,6 @@ public interface DocumentRepository extends
     Document findRandomDocument();
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
-    @Query("select d from Document d where d.id = :id")
+    @Query("SELECT d FROM Document d WHERE d.id = :id")
     Optional<Document> findByIdForUpdate(@Param("id") final Long id);
 }

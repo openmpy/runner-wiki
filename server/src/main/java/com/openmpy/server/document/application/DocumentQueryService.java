@@ -80,7 +80,8 @@ public class DocumentQueryService {
 
         if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {
             final List<DocumentPageResponse> responses = documentRepository.findAllOrderByUpdatedAtDesc(
-                    offset, size)
+                    offset, size
+                )
                 .stream()
                 .map(DocumentPageResponse::from)
                 .toList();
