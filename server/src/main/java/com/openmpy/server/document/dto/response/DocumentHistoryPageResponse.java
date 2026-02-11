@@ -1,6 +1,6 @@
 package com.openmpy.server.document.dto.response;
 
-import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.domain.repository.projection.DocumentHistoryPageRow;
 import java.time.LocalDateTime;
 
 public record DocumentHistoryPageResponse(
@@ -13,15 +13,15 @@ public record DocumentHistoryPageResponse(
     LocalDateTime createdAt
 ) {
 
-    public static DocumentHistoryPageResponse from(final DocumentHistory documentHistory) {
+    public static DocumentHistoryPageResponse from(final DocumentHistoryPageRow row) {
         return new DocumentHistoryPageResponse(
-            documentHistory.getDocument().getTitle(),
-            documentHistory.getDocument().getId(),
-            documentHistory.getId(),
-            documentHistory.getAuthor(),
-            documentHistory.getVersion(),
-            documentHistory.getSize(),
-            documentHistory.getCreatedAt()
+            row.getDocumentTitle(),
+            row.getDocumentId(),
+            row.getHistoryId(),
+            row.getAuthor(),
+            row.getVersion(),
+            row.getSize(),
+            row.getCreatedAt()
         );
     }
 }

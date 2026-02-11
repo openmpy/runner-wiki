@@ -47,7 +47,8 @@ public class DocumentQueryService {
 
         final List<DocumentHistoryPageResponse> responses = documentHistoryRepository.findAllByDocumentId(
                 documentId, offset, size
-            ).stream()
+            )
+            .stream()
             .map(DocumentHistoryPageResponse::from)
             .toList();
         final Long totalElements = documentHistoryRepository.countByDocumentId(

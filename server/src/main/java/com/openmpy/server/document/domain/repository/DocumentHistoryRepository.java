@@ -1,6 +1,7 @@
 package com.openmpy.server.document.domain.repository;
 
 import com.openmpy.server.document.domain.entity.DocumentHistory;
+import com.openmpy.server.document.domain.repository.projection.DocumentHistoryPageRow;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,25 +13,31 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
     @Query(
         value = """
             SELECT
-                dh.*
+                d.id AS documentId,
+                d.title AS documentTitle,
+                dh.id AS historyId,
+                dh.author AS author,
+                dh.version AS version,
+                dh.size AS size,
+                dh.created_at AS createdAt
             FROM (
                 SELECT id, version
                 FROM document_history
                 WHERE document_id = :documentId
-                  AND deleted_at IS NULL
+                  AND is_deleted = FALSE
                 ORDER BY version DESC, id DESC
                 LIMIT :limit OFFSET :offset
             ) t
             JOIN document_history dh ON dh.id = t.id
-            WHERE dh.deleted_at IS NULL
+            JOIN document d ON d.id = dh.document_id
             ORDER BY t.version DESC, t.id DESC
             """,
         nativeQuery = true
     )
-    List<DocumentHistory> findAllByDocumentId(
-        @Param("documentId") Long documentId,
-        @Param("offset") int offset,
-        @Param("limit") int limit
+    List<DocumentHistoryPageRow> findAllByDocumentId(
+        @Param("documentId") final Long documentId,
+        @Param("offset") final int offset,
+        @Param("limit") final int limit
     );
 
     @Query(
@@ -40,15 +47,15 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
                 SELECT id
                 FROM document_history
                 WHERE document_id = :documentId
-                  AND deleted_at IS NULL
+                  AND is_deleted = FALSE
                 LIMIT :limit
             ) t
             """,
         nativeQuery = true
     )
     Long countByDocumentId(
-        @Param("documentId") Long documentId,
-        @Param("limit") int limit
+        @Param("documentId") final Long documentId,
+        @Param("limit") final int limit
     );
 
     @Query(
@@ -63,6 +70,6 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
 
     List<DocumentHistory> findAllByDocument_Id(final Long documentId);
 
-    @Query("select h.version.value from DocumentHistory h where h.document.id = :documentId")
+    @Query("SELECT h.version.value FROM DocumentHistory h WHERE h.document.id = :documentId")
     List<Integer> findAllVersionsByDocumentId(@Param("documentId") final Long documentId);
 }
