@@ -2,6 +2,9 @@ package com.openmpy.server.document.domain.entity;
 
 import com.openmpy.server.document.domain.vo.DocumentHistoryAuthor;
 import com.openmpy.server.document.domain.vo.DocumentHistoryContent;
+import com.openmpy.server.document.domain.vo.DocumentHistorySize;
+import com.openmpy.server.document.domain.vo.DocumentHistoryVersion;
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import jakarta.persistence.AttributeOverride;
 import jakarta.persistence.Column;
@@ -14,12 +17,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import java.time.LocalDateTime;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @Entity
 public class DocumentHistory extends BaseTimeEntity {
@@ -36,53 +44,51 @@ public class DocumentHistory extends BaseTimeEntity {
     @AttributeOverride(name = "value", column = @Column(columnDefinition = "TEXT", name = "content", nullable = false))
     private DocumentHistoryContent content;
 
-    @Column(nullable = false)
-    private Long version;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "version", nullable = false))
+    private DocumentHistoryVersion version;
 
-    @Column(nullable = false)
-    private Long size;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "size", nullable = false))
+    private DocumentHistorySize size;
 
-    @Column(nullable = false)
+    @Column(name = "client_ip", nullable = false)
     private String clientIp;
 
-    @Column
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_id", nullable = false)
     private Document document;
 
-    private DocumentHistory(
+    public static DocumentHistory create(
         final String author,
         final String content,
-        final Long version,
+        final Integer version,
         final Long size,
         final String clientIp
     ) {
-        this.author = new DocumentHistoryAuthor(author);
-        this.content = new DocumentHistoryContent(content);
-        this.version = version;
-        this.size = size;
-        this.clientIp = clientIp;
-    }
-
-    protected static DocumentHistory create(
-        final String author,
-        final String content,
-        final Long version,
-        final Long size,
-        final String clientIp
-    ) {
-        return new DocumentHistory(author, content, version, size, clientIp);
+        return DocumentHistory.builder()
+            .author(new DocumentHistoryAuthor(author))
+            .content(new DocumentHistoryContent(content))
+            .version(new DocumentHistoryVersion(version))
+            .size(new DocumentHistorySize(size))
+            .clientIp(clientIp)
+            .build();
     }
 
     protected void assignTo(final Document document) {
+        if (document == null) {
+            throw new CustomException("문서가 null 값입니다.");
+        }
+
         this.document = document;
     }
 
     public void delete() {
         if (deletedAt != null) {
-            return;
+            throw new CustomException("이미 삭제된 문서 기록입니다.");
         }
 
         deletedAt = LocalDateTime.now();
@@ -94,5 +100,13 @@ public class DocumentHistory extends BaseTimeEntity {
 
     public String getContent() {
         return content.getValue();
+    }
+
+    public Integer getVersion() {
+        return version.getValue();
+    }
+
+    public Long getSize() {
+        return size.getValue();
     }
 }
