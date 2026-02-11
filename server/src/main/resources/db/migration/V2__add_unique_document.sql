@@ -1,7 +1,6 @@
 -- 문서
-ALTER TABLE document
-    ADD CONSTRAINT uk_document_title_category_is_deleted
-        UNIQUE (title, category, is_deleted);
+CREATE UNIQUE INDEX uk_document_active
+    ON document (title, category) WHERE is_deleted = FALSE;
 
 -- 문서 기록
 ALTER TABLE document_history
