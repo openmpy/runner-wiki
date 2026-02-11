@@ -2,6 +2,7 @@ package com.openmpy.server.document.domain.vo;
 
 import com.openmpy.server.global.exception.CustomException;
 import jakarta.persistence.Embeddable;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,19 @@ public class DocumentHistoryAuthor {
         if (value.length() > AUTHOR_MAX_LENGTH) {
             throw new CustomException("작성자 길이가 10자를 넘길 수 없습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final DocumentHistoryAuthor author = (DocumentHistoryAuthor) o;
+        return Objects.equals(value, author.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }
