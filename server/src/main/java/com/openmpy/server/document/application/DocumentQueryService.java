@@ -30,7 +30,8 @@ public class DocumentQueryService {
     @Transactional(readOnly = true)
     public DocumentGetResponse getHistory(final Long documentHistoryId) {
         final DocumentHistory documentHistory = documentHistoryRepository.findByIdWithDocument(
-                documentHistoryId)
+                documentHistoryId
+            )
             .orElseThrow(() -> new CustomException("찾을 수 없는 문서 기록 번호입니다."));
 
         return DocumentGetResponse.from(documentHistory.getDocument(), documentHistory);
@@ -60,7 +61,8 @@ public class DocumentQueryService {
     @Transactional(readOnly = true)
     public DocumentGetResponse getLatest(final Long documentId) {
         final DocumentGetResponse response = documentRepository.findLatestDocumentById(
-            documentId);
+            documentId
+        );
 
         if (response == null) {
             throw new CustomException("문서 또는 문서 기록이 존재하지 않습니다.");

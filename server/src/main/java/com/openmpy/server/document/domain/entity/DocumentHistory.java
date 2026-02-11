@@ -65,6 +65,9 @@ public class DocumentHistory extends BaseTimeEntity {
     @Column(name = "client_ip", nullable = false)
     private String clientIp;
 
+    @Column(name = "is_deleted", nullable = false)
+    private Boolean isDeleted;
+
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
@@ -85,6 +88,7 @@ public class DocumentHistory extends BaseTimeEntity {
             .version(new DocumentHistoryVersion(version))
             .size(new DocumentHistorySize(size))
             .clientIp(clientIp)
+            .isDeleted(false)
             .build();
     }
 
@@ -97,10 +101,11 @@ public class DocumentHistory extends BaseTimeEntity {
     }
 
     public void delete() {
-        if (deletedAt != null) {
+        if (Boolean.TRUE.equals(isDeleted)) {
             throw new CustomException("이미 삭제된 문서 기록입니다.");
         }
 
+        isDeleted = true;
         deletedAt = LocalDateTime.now();
     }
 

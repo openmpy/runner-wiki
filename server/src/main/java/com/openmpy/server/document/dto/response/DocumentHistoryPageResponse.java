@@ -8,7 +8,7 @@ public record DocumentHistoryPageResponse(
     Long documentId,
     Long documentHistoryId,
     String author,
-    Long version,
+    Integer version,
     Long size,
     LocalDateTime createdAt
 ) {

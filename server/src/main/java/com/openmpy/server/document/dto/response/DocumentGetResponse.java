@@ -12,14 +12,16 @@ public record DocumentGetResponse(
     DocumentCategory category,
     String author,
     String content,
-    Long version,
+    Integer version,
     Long size,
     LocalDateTime createdAt,
     LocalDateTime lastModifiedAt
 ) {
 
-    public static DocumentGetResponse from(final Document document,
-        final DocumentHistory documentHistory) {
+    public static DocumentGetResponse from(
+        final Document document,
+        final DocumentHistory documentHistory
+    ) {
         return new DocumentGetResponse(
             document.getId(),
             documentHistory.getId(),

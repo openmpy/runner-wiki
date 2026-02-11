@@ -27,6 +27,7 @@ class DocumentHistoryTest {
         assertThat(history.getVersion()).isEqualTo(1);
         assertThat(history.getSize()).isEqualTo(10L);
         assertThat(history.getClientIp()).isEqualTo("127.0.0.1");
+        assertThat(history.getIsDeleted()).isFalse();
     }
 
     @DisplayName("문서 기록 객체를 문서 객체에 할당한다.")
@@ -53,6 +54,7 @@ class DocumentHistoryTest {
         history.delete();
 
         // then
+        assertThat(history.getIsDeleted()).isTrue();
         assertThat(history.getDeletedAt()).isNotNull();
     }
 
