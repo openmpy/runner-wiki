@@ -9,6 +9,7 @@ import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.ContentCalculator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,19 +25,23 @@ public class DocumentCommandService {
         final DocumentCreateRequest request,
         final String clientIp
     ) {
-        validateDuplicate(request);
+        try {
+            validateDuplicate(request);
 
-        final Document document = Document.create(request.title(), request.category());
-        documentRepository.save(document);
+            final Document document = Document.create(request.title(), request.category());
 
-        document.addHistory(
-            request.author(),
-            request.content(),
-            ContentCalculator.calculateUtf8Bytes(request.content()),
-            clientIp
-        );
-        documentImageCommandService.attachTempImages(document, request.imageIds());
-        return new DocumentCreateResponse(document.getId());
+            document.addHistory(
+                request.author(),
+                request.content(),
+                ContentCalculator.calculateUtf8Bytes(request.content()),
+                clientIp
+            );
+            documentRepository.save(document);
+            documentImageCommandService.attachTempImages(document, request.imageIds());
+            return new DocumentCreateResponse(document.getId());
+        } catch (final DataIntegrityViolationException e) {
+            throw new CustomException("이미 작성된 문서입니다.");
+        }
     }
 
     @Transactional
