@@ -2,6 +2,7 @@ package com.openmpy.server.document.domain.vo;
 
 import com.openmpy.server.global.exception.CustomException;
 import jakarta.persistence.Embeddable;
+import java.util.Objects;
 import java.util.regex.Pattern;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -43,5 +44,19 @@ public class DocumentTitle {
         if (!pattern.matcher(value).matches()) {
             throw new CustomException("문서 제목이 올바르지 않습니다.");
         }
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        final DocumentTitle title = (DocumentTitle) o;
+        return Objects.equals(value, title.value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
     }
 }
