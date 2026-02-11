@@ -111,9 +111,11 @@ public class DocumentQueryService {
         final int page,
         final int size
     ) {
-        final PageRequest pageRequest = PageRequest.of(page, size,
-            Sort.by(Sort.Direction.DESC, "updatedAt"));
-        final Page<Document> documentPage = documentRepository.findAllByTitle_ValueContainingIgnoreCase(
+        final PageRequest pageRequest = PageRequest.of(
+            page, size,
+            Sort.by(Sort.Direction.DESC, "updatedAt")
+        );
+        final Page<Document> documentPage = documentRepository.searchByTitleOrChosung(
             title, pageRequest
         );
 

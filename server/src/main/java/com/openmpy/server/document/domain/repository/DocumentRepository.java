@@ -97,8 +97,17 @@ public interface DocumentRepository extends
         @Param("limit") final int limit
     );
 
-    Page<Document> findAllByTitle_ValueContainingIgnoreCase(
-        final String title,
+    @Query(
+        value = """
+                SELECT d
+                FROM Document d
+                WHERE
+                    LOWER(d.title.value) LIKE LOWER(CONCAT(:keyword, '%'))
+                    OR LOWER(d.titleChosung.value) LIKE LOWER(CONCAT(:keyword, '%'))
+            """
+    )
+    Page<Document> searchByTitleOrChosung(
+        @Param("keyword") final String keyword,
         final Pageable pageable
     );
 
