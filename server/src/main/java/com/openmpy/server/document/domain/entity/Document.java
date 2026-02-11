@@ -94,7 +94,7 @@ public class Document extends BaseTimeEntity {
         final Long size,
         final String clientIp
     ) {
-        if (isDeleted == true) {
+        if (Boolean.TRUE.equals(isDeleted)) {
             throw new CustomException("삭제된 문서에 추가할 수 없습니다.");
         }
 
@@ -113,7 +113,7 @@ public class Document extends BaseTimeEntity {
     }
 
     public void attachImages(final List<DocumentImage> images) {
-        if (isDeleted == true) {
+        if (Boolean.TRUE.equals(isDeleted)) {
             throw new CustomException("삭제된 문서에 이미지를 추가할 수 없습니다.");
         }
 
@@ -128,7 +128,7 @@ public class Document extends BaseTimeEntity {
     }
 
     public void delete() {
-        if (isDeleted == true) {
+        if (Boolean.TRUE.equals(isDeleted)) {
             throw new CustomException("이미 삭제된 문서입니다.");
         }
 
