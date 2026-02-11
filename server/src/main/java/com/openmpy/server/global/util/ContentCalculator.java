@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 public class ContentCalculator {
 
     public static long calculateUtf8Bytes(final String content) {
-        if (content == null || content.isEmpty()) {
+        if (content == null || content.isBlank()) {
             return 0L;
         }
         return content.getBytes(StandardCharsets.UTF_8).length;
