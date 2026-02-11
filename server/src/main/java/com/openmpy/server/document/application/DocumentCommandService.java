@@ -69,7 +69,8 @@ public class DocumentCommandService {
 
     @Transactional
     public void delete(final Long documentId) {
-        final Document document = findDocumentById(documentId);
+        final Document document = documentRepository.findById(documentId)
+            .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
 
         document.delete();
     }
@@ -81,10 +82,5 @@ public class DocumentCommandService {
         )) {
             throw new CustomException("이미 작성된 문서입니다.");
         }
-    }
-
-    private Document findDocumentById(final Long documentId) {
-        return documentRepository.findById(documentId)
-            .orElseThrow(() -> new CustomException("찾을 수 없는 문서 번호입니다."));
     }
 }
