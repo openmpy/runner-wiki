@@ -62,7 +62,7 @@ public class DocumentCommandService {
             );
             documentImageCommandService.attachTempImages(document, request.imageIds());
             return new DocumentUpdateResponse(document.getId());
-        } catch (Exception e) {
+        } catch (final DataIntegrityViolationException e) {
             throw new CustomException("동시 처리 중 충돌이 발생했습니다.");
         }
     }
