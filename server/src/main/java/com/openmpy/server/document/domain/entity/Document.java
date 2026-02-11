@@ -2,6 +2,7 @@ package com.openmpy.server.document.domain.entity;
 
 import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.document.domain.vo.DocumentTitle;
+import com.openmpy.server.document.domain.vo.DocumentTitleChosung;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.jpa.BaseTimeEntity;
 import com.openmpy.server.global.util.KoreanChosung;
@@ -19,12 +20,17 @@ import jakarta.persistence.OneToMany;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.SQLRestriction;
 
 @Getter
-@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@Builder(access = AccessLevel.PRIVATE)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("deleted_at IS NULL")
 @Entity
 public class Document extends BaseTimeEntity {
@@ -37,17 +43,18 @@ public class Document extends BaseTimeEntity {
     @AttributeOverride(name = "value", column = @Column(name = "title", nullable = false))
     private DocumentTitle title;
 
-    @Column
-    private String titleChosung;
+    @Embedded
+    @AttributeOverride(name = "value", column = @Column(name = "title_chosung", nullable = false))
+    private DocumentTitleChosung titleChosung;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "category", nullable = false)
     private DocumentCategory category;
 
-    @Column(nullable = false)
-    private Long latestVersion;
+    @Column(name = "latest_version", nullable = false)
+    private Integer latestVersion;
 
-    @Column
+    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
@@ -56,18 +63,15 @@ public class Document extends BaseTimeEntity {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private final List<DocumentImage> images = new ArrayList<>();
 
-    private Document(
-        final String title,
-        final DocumentCategory category
-    ) {
-        this.title = new DocumentTitle(title);
-        this.titleChosung = KoreanChosung.toChosung(title);
-        this.category = category;
-        this.latestVersion = 0L;
-    }
-
     public static Document create(final String title, final DocumentCategory category) {
-        return new Document(title, category);
+        final String chosung = KoreanChosung.toChosung(title);
+
+        return Document.builder()
+            .title(new DocumentTitle(title))
+            .titleChosung(new DocumentTitleChosung(chosung))
+            .category(category)
+            .latestVersion(0)
+            .build();
     }
 
     public void addHistory(
@@ -77,13 +81,18 @@ public class Document extends BaseTimeEntity {
         final String clientIp
     ) {
         if (deletedAt != null) {
-            throw new CustomException("삭제된 문서는 수정할 수 없습니다.");
+            throw new CustomException("삭제된 문서에 추가할 수 없습니다.");
         }
 
         latestVersion++;
 
-        final DocumentHistory history = DocumentHistory.create(author, content, latestVersion, size,
-            clientIp);
+        final DocumentHistory history = DocumentHistory.create(
+            author,
+            content,
+            latestVersion,
+            size,
+            clientIp
+        );
 
         history.assignTo(this);
         histories.add(history);
@@ -95,6 +104,10 @@ public class Document extends BaseTimeEntity {
         }
 
         for (final DocumentImage image : images) {
+            if (image == null) {
+                throw new CustomException("이미지가 null 값입니다.");
+            }
+
             image.markAsUsed(this);
             this.images.add(image);
         }
@@ -102,7 +115,7 @@ public class Document extends BaseTimeEntity {
 
     public void delete() {
         if (deletedAt != null) {
-            return;
+            throw new CustomException("이미 삭제된 문서입니다.");
         }
 
         deletedAt = LocalDateTime.now();
@@ -112,5 +125,9 @@ public class Document extends BaseTimeEntity {
 
     public String getTitle() {
         return title.getValue();
+    }
+
+    public String getTitleChosung() {
+        return titleChosung.getValue();
     }
 }
