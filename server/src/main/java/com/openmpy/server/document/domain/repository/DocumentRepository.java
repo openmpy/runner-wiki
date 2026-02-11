@@ -106,13 +106,13 @@ public interface DocumentRepository extends
 
     @Query(
         value = """
-              SELECT *
-              FROM document
-              WHERE id >= (
-                SELECT floor(random() * (SELECT max(id) FROM document)) + 1
-              )
-              ORDER BY id
-              LIMIT 1
+            SELECT *
+            FROM document
+            WHERE is_deleted = FALSE
+            OFFSET floor(random() * (
+                SELECT count(*) FROM document WHERE is_deleted = FALSE
+            ))
+            LIMIT 1
             """,
         nativeQuery = true
     )
