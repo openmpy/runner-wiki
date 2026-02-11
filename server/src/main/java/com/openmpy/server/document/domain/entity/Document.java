@@ -17,8 +17,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,14 +33,6 @@ import org.hibernate.annotations.SQLRestriction;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @SQLRestriction("is_deleted = FALSE")
 @Entity
-@Table(
-    uniqueConstraints = {
-        @UniqueConstraint(
-            name = "uk_document_title_category_is_deleted",
-            columnNames = {"title", "category", "is_deleted"}
-        )
-    }
-)
 public class Document extends BaseTimeEntity {
 
     @Id
