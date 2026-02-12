@@ -1,9 +1,12 @@
+CREATE
+EXTENSION IF NOT EXISTS citext;
+
 -- 문서
 CREATE TABLE document
 (
     id             BIGSERIAL PRIMARY KEY,
-    title          VARCHAR(255) NOT NULL,
-    title_chosung  VARCHAR(255) NOT NULL,
+    title          CITEXT       NOT NULL,
+    title_chosung  CITEXT       NOT NULL,
     category       VARCHAR(255) NOT NULL,
     latest_version INT          NOT NULL,
     is_deleted     BOOLEAN      NOT NULL,
