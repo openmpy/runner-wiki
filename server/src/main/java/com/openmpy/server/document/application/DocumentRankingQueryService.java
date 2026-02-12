@@ -42,8 +42,8 @@ public class DocumentRankingQueryService {
 
         final List<Long> rankedIds = rawIds.stream().map(Long::parseLong).toList();
         final List<Document> documents = documentRepository.findAllByIdIn(rankedIds);
-
         final Map<Long, Integer> orderIndex = newHashMap(rankedIds.size() * 2);
+
         for (int i = 0; i < rankedIds.size(); i++) {
             orderIndex.put(rankedIds.get(i), i);
         }
@@ -71,7 +71,6 @@ public class DocumentRankingQueryService {
         final Set<Long> foundIds = foundDocuments.stream()
             .map(Document::getId)
             .collect(Collectors.toSet());
-
         final List<String> invalidMembers = rankedIds.stream()
             .filter(id -> !foundIds.contains(id))
             .limit(30)
