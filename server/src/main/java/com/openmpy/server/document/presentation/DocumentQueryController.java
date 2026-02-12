@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RestController
 public class DocumentQueryController {
 
     private final DocumentQueryService documentQueryService;
     private final DocumentRankingQueryService documentRankingQueryService;
 
-    @GetMapping("/documents/{documentId}")
+    @GetMapping("/v1/documents/{documentId}")
     public ResponseEntity<DocumentGetResponse> getLatest(
         @PathVariable final Long documentId,
         final HttpServletRequest servletRequest
@@ -37,7 +37,7 @@ public class DocumentQueryController {
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/documents")
+    @GetMapping("/v1/documents")
     public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
         @RequestParam(defaultValue = "all") final String category,
         @RequestParam(defaultValue = "0", required = false) final int page,
@@ -46,12 +46,12 @@ public class DocumentQueryController {
         return ResponseEntity.ok(documentQueryService.getLatestDocuments(category, page, size));
     }
 
-    @GetMapping("/document-histories/{historyId}")
+    @GetMapping("/v1/document-histories/{historyId}")
     public ResponseEntity<DocumentGetResponse> getHistory(@PathVariable final Long historyId) {
         return ResponseEntity.ok(documentQueryService.getHistory(historyId));
     }
 
-    @GetMapping("/documents/{documentId}/histories")
+    @GetMapping("/v1/documents/{documentId}/histories")
     public ResponseEntity<PageResponse<DocumentHistoryPageResponse>> getHistories(
         @PathVariable final Long documentId,
         @RequestParam(defaultValue = "0", required = false) final int page,
@@ -60,7 +60,7 @@ public class DocumentQueryController {
         return ResponseEntity.ok(documentQueryService.getHistories(documentId, page, size));
     }
 
-    @GetMapping("/documents/search")
+    @GetMapping("/v1/documents/search")
     public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocuments(
         @RequestParam final String keyword,
         @RequestParam(defaultValue = "0", required = false) final int page,
@@ -69,13 +69,13 @@ public class DocumentQueryController {
         return ResponseEntity.ok(documentQueryService.searchDocuments(keyword, page, size));
     }
 
-    @GetMapping("/documents/top10")
+    @GetMapping("/v1/documents/top10")
     public ResponseEntity<DocumentTop10Response> getDocumentTop10() {
         final DocumentTop10Response response = documentRankingQueryService.getDocumentTop10();
         return ResponseEntity.ok(response);
     }
 
-    @GetMapping("/documents/shuffle")
+    @GetMapping("/v1/documents/shuffle")
     public ResponseEntity<DocumentPageResponse> getShuffleDocument() {
         final DocumentPageResponse response = documentQueryService.getShuffleDocument();
         return ResponseEntity.ok(response);

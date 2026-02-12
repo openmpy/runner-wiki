@@ -30,7 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
-@RequestMapping("/api/v1")
+@RequestMapping("/api")
 @RestController
 public class DocumentCommandController {
 
@@ -43,7 +43,7 @@ public class DocumentCommandController {
     @Value("${admin.password}")
     private String password;
 
-    @PostMapping("/documents")
+    @PostMapping("/v1/documents")
     public ResponseEntity<DocumentCreateResponse> save(
         @RequestBody final DocumentCreateRequest request,
         final HttpServletRequest servletRequest
@@ -57,7 +57,7 @@ public class DocumentCommandController {
         return ResponseEntity.ok(documentCommandService.save(request, clientIp));
     }
 
-    @PutMapping("/documents/{documentId}")
+    @PutMapping("/v1/documents/{documentId}")
     public ResponseEntity<DocumentUpdateResponse> update(
         @PathVariable final Long documentId,
         @RequestBody final DocumentUpdateRequest request,
@@ -72,7 +72,7 @@ public class DocumentCommandController {
         return ResponseEntity.ok(documentCommandService.update(documentId, request, clientIp));
     }
 
-    @DeleteMapping("/documents/{documentId}")
+    @DeleteMapping("/v1/documents/{documentId}")
     public ResponseEntity<Void> delete(
         @RequestHeader("password") final String password,
         @PathVariable final Long documentId
@@ -84,7 +84,7 @@ public class DocumentCommandController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/document-histories/{historyId}")
+    @DeleteMapping("/v1/document-histories/{historyId}")
     public ResponseEntity<Void> deleteHistory(
         @RequestHeader("password") final String password,
         @PathVariable final Long historyId
@@ -95,7 +95,7 @@ public class DocumentCommandController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/document-images")
+    @PostMapping("/v1/document-images")
     public ResponseEntity<DocumentImageUploadResponses> uploadImages(
         @RequestBody final List<MultipartFile> images,
         final HttpServletRequest servletRequest
