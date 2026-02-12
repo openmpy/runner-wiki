@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -113,28 +114,64 @@ public interface DocumentRepository extends
         @Param("limit") final int limit
     );
 
+    Slice<Document> findAllByTitle_ValueStartingWith(final String title, final Pageable pageable);
+
+    Slice<Document> findAllByTitleChosung_ValueStartingWith(
+        final String titleChosung,
+        final Pageable pageable
+    );
+
     @Query(
         value = """
-            SELECT d.*
+            SELECT
+                d.*
             FROM (
-                SELECT id, updated_at
+                SELECT id
                 FROM document
                 WHERE is_deleted = FALSE
+                  AND LOWER(title) LIKE LOWER(CONCAT(:keyword, '%'))
                   AND (
-                        LOWER(title) LIKE LOWER(CONCAT(:keyword, '%'))
-                     OR LOWER(title_chosung) LIKE LOWER(CONCAT(:keyword, '%'))
+                        :cursorId IS NULL
+                     OR id < :cursorId
                   )
-                ORDER BY updated_at DESC, id DESC
-                LIMIT :limit OFFSET :offset
+                ORDER BY id DESC
+                LIMIT :limit
             ) t
             JOIN document d ON d.id = t.id
-            ORDER BY t.updated_at DESC, t.id DESC
+            ORDER BY t.id DESC
             """,
         nativeQuery = true
     )
-    List<Document> searchByTitleOrChosungV2(
+    List<Document> findAllByTitleStartingWithCursor(
         @Param("keyword") final String keyword,
-        @Param("offset") final int offset,
+        @Param("cursorId") final Long cursorId,
+        @Param("limit") final int limit
+    );
+
+    @Query(
+        value = """
+            SELECT
+                d.*
+            FROM (
+                SELECT id
+                FROM document
+                WHERE is_deleted = FALSE
+                  AND LOWER(title_chosung) LIKE LOWER(CONCAT(:keyword, '%'))
+                  AND (
+                        :cursorId IS NULL
+                     OR id < :cursorId
+                  )
+                ORDER BY id DESC
+                LIMIT :limit
+            ) t
+            JOIN document d ON d.id = t.id
+            ORDER BY t.id DESC
+            """,
+        nativeQuery = true
+    )
+    List<Document> findAllByTitleChosungStartingWithCursor(
+        @Param("keyword") final String keyword,
+        @Param("cursorId") final Long cursorId,
         @Param("limit") final int limit
     );
 

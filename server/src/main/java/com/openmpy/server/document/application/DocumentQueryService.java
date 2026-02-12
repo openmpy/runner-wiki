@@ -8,13 +8,17 @@ import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.document.dto.response.DocumentGetResponse;
 import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;
+import com.openmpy.server.global.dto.CursorResponse;
 import com.openmpy.server.global.dto.PageResponse;
+import com.openmpy.server.global.dto.SliceResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.PageLimitCalculator;
+import com.openmpy.server.global.util.SearchInputClassifier;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
@@ -81,9 +85,7 @@ public class DocumentQueryService {
         final int page,
         final int size
     ) {
-        if (page > MAX_PAGE_LIMIT) {
-            throw new CustomException("최대 10,000 페이지까지만 조회할 수 있습니다.");
-        }
+        validatePage(page);
 
         final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
         final PageRequest pageRequest = PageRequest.of(page, size, sort);
@@ -115,9 +117,7 @@ public class DocumentQueryService {
         final int page,
         final int size
     ) {
-        if (page > MAX_PAGE_LIMIT) {
-            throw new CustomException("최대 10,000 페이지까지만 조회할 수 있습니다.");
-        }
+        validatePage(page);
 
         final int offset = page * size;
 
@@ -150,49 +150,101 @@ public class DocumentQueryService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<DocumentPageResponse> searchDocumentsV1(
+    public SliceResponse<DocumentPageResponse> searchDocumentsV1(
         final String keyword,
         final int page,
         final int size
     ) {
         final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
         final PageRequest pageRequest = PageRequest.of(page, size, sort);
-        final Page<Document> documentPage = documentRepository.searchByTitleOrChosungV1(
-            keyword, pageRequest
+
+        if (SearchInputClassifier.isChosungQuery(keyword)) {
+            final Slice<Document> documentSlice = documentRepository.findAllByTitleChosung_ValueStartingWith(
+                keyword,
+                pageRequest
+            );
+
+            return convertSearchSliceResponse(page, size, documentSlice);
+        }
+
+        final Slice<Document> documentSlice = documentRepository.findAllByTitle_ValueStartingWith(
+            keyword,
+            pageRequest
         );
-
-        final List<DocumentPageResponse> responses = documentPage
-            .stream()
-            .map(DocumentPageResponse::from)
-            .toList();
-
-        return PageResponse.of(responses, page, size, documentPage.getTotalElements());
+        return convertSearchSliceResponse(page, size, documentSlice);
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<DocumentPageResponse> searchDocumentsV2(
+    public CursorResponse<DocumentPageResponse> searchDocumentsV2(
         final String keyword,
-        final int page,
+        final Long cursorId,
         final int size
     ) {
-        final int offset = page * size;
+        final int fetchSize = size + 1;
 
-        final List<DocumentPageResponse> responses = documentRepository.searchByTitleOrChosungV2(
-                keyword, offset, size
-            )
-            .stream()
-            .map(DocumentPageResponse::from)
-            .toList();
-        final Long totalElements = documentRepository.countByTitleOrChosung(
-            keyword, PageLimitCalculator.calculatePageLimit(page, size, MOVABLE_PAGE_COUNT)
+        if (SearchInputClassifier.isChosungQuery(keyword)) {
+            final List<Document> documents = documentRepository.findAllByTitleChosungStartingWithCursor(
+                keyword,
+                cursorId,
+                fetchSize
+            );
+
+            return convertSearchCursorResponse(size, documents);
+        }
+
+        final List<Document> documents = documentRepository.findAllByTitleStartingWithCursor(
+            keyword,
+            cursorId,
+            fetchSize
         );
 
-        return PageResponse.of(responses, page, size, totalElements);
+        return convertSearchCursorResponse(size, documents);
     }
 
     @Transactional(readOnly = true)
     public DocumentPageResponse getShuffleDocument() {
         final Document document = documentRepository.findRandomDocument();
         return DocumentPageResponse.from(document);
+    }
+
+    private void validatePage(final int page) {
+        if (page > MAX_PAGE_LIMIT) {
+            throw new CustomException("최대 10,000 페이지까지만 조회할 수 있습니다.");
+        }
+    }
+
+    private SliceResponse<DocumentPageResponse> convertSearchSliceResponse(
+        final int page,
+        final int size,
+        final Slice<Document> documentSlice
+    ) {
+        final List<DocumentPageResponse> responses = documentSlice.stream()
+            .map(DocumentPageResponse::from)
+            .toList();
+
+        return new SliceResponse<>(
+            responses,
+            page,
+            size,
+            documentSlice.hasNext(),
+            documentSlice.hasPrevious()
+        );
+    }
+
+    private CursorResponse<DocumentPageResponse> convertSearchCursorResponse(
+        final int size,
+        final List<Document> documents
+    ) {
+        final List<DocumentPageResponse> responses = documents
+            .stream()
+            .map(DocumentPageResponse::from)
+            .toList();
+        final boolean hasNext = documents.size() > size;
+
+        return new CursorResponse<>(
+            responses,
+            hasNext ? documents.get(size).getId() : null,
+            hasNext
+        );
     }
 }

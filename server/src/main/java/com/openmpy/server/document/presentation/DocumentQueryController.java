@@ -6,7 +6,9 @@ import com.openmpy.server.document.dto.response.DocumentGetResponse;
 import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;
 import com.openmpy.server.document.dto.response.DocumentTop10Response;
+import com.openmpy.server.global.dto.CursorResponse;
 import com.openmpy.server.global.dto.PageResponse;
+import com.openmpy.server.global.dto.SliceResponse;
 import com.openmpy.server.global.util.ClientIpResolver;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +72,7 @@ public class DocumentQueryController {
     }
 
     @GetMapping("/v1/documents/search")
-    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocumentsV1(
+    public ResponseEntity<SliceResponse<DocumentPageResponse>> searchDocumentsV1(
         @RequestParam final String keyword,
         @RequestParam(defaultValue = "0", required = false) final int page,
         @RequestParam(defaultValue = "10", required = false) final int size
@@ -79,12 +81,12 @@ public class DocumentQueryController {
     }
 
     @GetMapping("/v2/documents/search")
-    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocumentsV2(
+    public ResponseEntity<CursorResponse<DocumentPageResponse>> searchDocumentsV2(
         @RequestParam final String keyword,
-        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(required = false) final Long cursorId,
         @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentQueryService.searchDocumentsV2(keyword, page, size));
+        return ResponseEntity.ok(documentQueryService.searchDocumentsV2(keyword, cursorId, size));
     }
 
     @GetMapping("/v1/documents/top10")
