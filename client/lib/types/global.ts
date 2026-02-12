@@ -7,3 +7,10 @@ export interface Page<T> {
   hasNext: boolean;
   hasPrevious: boolean;
 }
+
+/** 커서 기반 페이지네이션 응답 (검색 등) */
+export interface CursorPage<T> {
+  payload: T[];
+  nextId: number;
+  hasNext: boolean;
+}

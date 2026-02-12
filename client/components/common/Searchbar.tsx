@@ -1,25 +1,25 @@
 "use client";
 
-import { searchDocuments, MAX_PAGE } from "@/lib/api/document";
+import { searchDocuments } from "@/lib/api/document";
 import { DocumentPage } from "@/lib/types/document";
-import { Page } from "@/lib/types/global";
+import { CursorPage } from "@/lib/types/global";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
 import DocumentCategoryBadge from "../document/DocumentCategoryBadge";
 
+const SEARCH_PAGE_SIZE = 15;
+
 export default function Searchbar() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<DocumentPage[]>([]);
-  const [pageInfo, setPageInfo] = useState<Page<DocumentPage> | null>(null);
+  const [pageInfo, setPageInfo] = useState<CursorPage<DocumentPage> | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showResults, setShowResults] = useState(false);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [overMaxPage, setOverMaxPage] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
-  const loadingPageRef = useRef<number | null>(null);
+  const loadingCursorRef = useRef<number | null>(null);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -38,27 +38,26 @@ export default function Searchbar() {
   }, []);
 
   const performSearch = useCallback(
-    async (query: string, page: number = 0, reset: boolean = false) => {
+    async (
+      query: string,
+      cursorId: number | null = null,
+      reset: boolean = false
+    ) => {
       if (!query.trim()) return;
-      if (!reset && loadingPageRef.current === page) return;
-      if (page > MAX_PAGE) {
-        setOverMaxPage(true);
+      if (!reset && cursorId !== null && loadingCursorRef.current === cursorId)
         return;
-      }
 
-      loadingPageRef.current = page;
-      if (reset) setOverMaxPage(false);
+      loadingCursorRef.current = cursorId;
 
       if (reset) {
         setIsLoading(true);
-        setCurrentPage(0);
-        loadingPageRef.current = 0;
+        loadingCursorRef.current = null;
       } else {
         setIsLoadingMore(true);
       }
 
       try {
-        const data = await searchDocuments(query, page, 10);
+        const data = await searchDocuments(query, cursorId, SEARCH_PAGE_SIZE);
         if (data && data.payload) {
           if (reset) {
             setSearchResults(data.payload);
@@ -74,7 +73,6 @@ export default function Searchbar() {
             setPageInfo(data);
           }
           setShowResults(true);
-          setCurrentPage(page);
         } else {
           if (reset) {
             setSearchResults([]);
@@ -91,9 +89,7 @@ export default function Searchbar() {
       } finally {
         setIsLoading(false);
         setIsLoadingMore(false);
-        if (loadingPageRef.current === page) {
-          loadingPageRef.current = null;
-        }
+        loadingCursorRef.current = null;
       }
     },
     []
@@ -101,26 +97,20 @@ export default function Searchbar() {
 
   const loadMoreResults = useCallback(() => {
     if (!pageInfo?.hasNext || isLoadingMore || !searchQuery.trim()) return;
-    if (currentPage + 1 > MAX_PAGE) {
-      setOverMaxPage(true);
-      return;
-    }
-    performSearch(searchQuery, currentPage + 1, false);
-  }, [pageInfo, isLoadingMore, searchQuery, currentPage, performSearch]);
+    performSearch(searchQuery, pageInfo.nextId, false);
+  }, [pageInfo, isLoadingMore, searchQuery, performSearch]);
 
   useEffect(() => {
     if (!searchQuery.trim()) {
       setSearchResults([]);
       setPageInfo(null);
       setShowResults(false);
-      setCurrentPage(0);
-      setOverMaxPage(false);
-      loadingPageRef.current = null;
+      loadingCursorRef.current = null;
       return;
     }
 
     const debounceTimer = setTimeout(() => {
-      performSearch(searchQuery, 0, true);
+      performSearch(searchQuery, null, true);
     }, 300);
 
     return () => clearTimeout(debounceTimer);
@@ -207,11 +197,6 @@ export default function Searchbar() {
               {isLoadingMore && (
                 <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
                   불러오는 중...
-                </div>
-              )}
-              {overMaxPage && (
-                <div className="p-4 text-center text-gray-500 dark:text-zinc-400 text-sm font-bmhanna border-t border-gray-200 dark:border-zinc-600">
-                  최대 10,000 페이지까지만 조회할 수 있습니다.
                 </div>
               )}
             </div>

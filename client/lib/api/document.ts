@@ -155,15 +155,20 @@ export async function updateDocument(
 }
 
 export async function searchDocuments(
-  title: string,
-  page: number = 0,
-  size: number = 10
+  keyword: string,
+  cursorId: number | null = null,
+  size: number = 15
 ) {
   try {
-    page = Math.min(Math.max(0, page), MAX_PAGE);
-    
+    const params = new URLSearchParams({
+      keyword,
+      size: String(size),
+    });
+    if (cursorId != null) {
+      params.set("cursorId", String(cursorId));
+    }
     const response = await fetch(
-      `${API_BASE_URL}/v1/documents/search?keyword=${title}&page=${page}&size=${size}`,
+      `${API_BASE_URL}/v2/documents/search?${params.toString()}`,
       {
         method: "GET",
         headers: {
