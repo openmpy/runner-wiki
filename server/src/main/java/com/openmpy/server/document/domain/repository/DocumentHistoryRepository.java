@@ -14,7 +14,7 @@ public interface DocumentHistoryRepository extends JpaRepository<DocumentHistory
         value = """
             SELECT
                 d.id AS documentId,
-                d.title AS documentTitle,
+                d.title::text AS documentTitle,
                 dh.id AS historyId,
                 dh.author AS author,
                 dh.version AS version,
