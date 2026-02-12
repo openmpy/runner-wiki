@@ -6,6 +6,8 @@ import com.openmpy.server.document.domain.type.DocumentCategory;
 import jakarta.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
@@ -16,6 +18,22 @@ public interface DocumentRepository extends
     DocumentCustomRepository {
 
     boolean existsByTitle_ValueAndCategory(final String title, final DocumentCategory category);
+
+    Page<Document> findPageByCategory(final DocumentCategory category, final Pageable pageable);
+
+    @Query(
+        value = """
+                SELECT d
+                FROM Document d
+                WHERE
+                    LOWER(d.title.value) LIKE LOWER(CONCAT(:keyword, '%'))
+                    OR LOWER(d.titleChosung.value) LIKE LOWER(CONCAT(:keyword, '%'))
+            """
+    )
+    Page<Document> searchByTitleOrChosungV1(
+        @Param("keyword") String keyword,
+        Pageable pageable
+    );
 
     @Query(
         value = """
@@ -114,7 +132,7 @@ public interface DocumentRepository extends
             """,
         nativeQuery = true
     )
-    List<Document> searchByTitleOrChosung(
+    List<Document> searchByTitleOrChosungV2(
         @Param("keyword") final String keyword,
         @Param("offset") final int offset,
         @Param("limit") final int limit

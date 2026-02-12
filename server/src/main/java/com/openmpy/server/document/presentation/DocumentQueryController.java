@@ -38,12 +38,21 @@ public class DocumentQueryController {
     }
 
     @GetMapping("/v1/documents")
-    public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocuments(
+    public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocumentsV1(
         @RequestParam(defaultValue = "all") final String category,
         @RequestParam(defaultValue = "0", required = false) final int page,
         @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentQueryService.getLatestDocuments(category, page, size));
+        return ResponseEntity.ok(documentQueryService.getLatestDocumentsV1(category, page, size));
+    }
+
+    @GetMapping("/v2/documents")
+    public ResponseEntity<PageResponse<DocumentPageResponse>> getLatestDocumentsV2(
+        @RequestParam(defaultValue = "all") final String category,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentQueryService.getLatestDocumentsV2(category, page, size));
     }
 
     @GetMapping("/v1/document-histories/{historyId}")
@@ -61,12 +70,21 @@ public class DocumentQueryController {
     }
 
     @GetMapping("/v1/documents/search")
-    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocuments(
+    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocumentsV1(
         @RequestParam final String keyword,
         @RequestParam(defaultValue = "0", required = false) final int page,
         @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentQueryService.searchDocuments(keyword, page, size));
+        return ResponseEntity.ok(documentQueryService.searchDocumentsV1(keyword, page, size));
+    }
+
+    @GetMapping("/v2/documents/search")
+    public ResponseEntity<PageResponse<DocumentPageResponse>> searchDocumentsV2(
+        @RequestParam final String keyword,
+        @RequestParam(defaultValue = "0", required = false) final int page,
+        @RequestParam(defaultValue = "10", required = false) final int size
+    ) {
+        return ResponseEntity.ok(documentQueryService.searchDocumentsV2(keyword, page, size));
     }
 
     @GetMapping("/v1/documents/top10")

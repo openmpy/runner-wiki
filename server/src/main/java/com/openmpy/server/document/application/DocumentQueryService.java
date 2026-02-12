@@ -4,6 +4,7 @@ import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentHistory;
 import com.openmpy.server.document.domain.repository.DocumentHistoryRepository;
 import com.openmpy.server.document.domain.repository.DocumentRepository;
+import com.openmpy.server.document.domain.type.DocumentCategory;
 import com.openmpy.server.document.dto.response.DocumentGetResponse;
 import com.openmpy.server.document.dto.response.DocumentHistoryPageResponse;
 import com.openmpy.server.document.dto.response.DocumentPageResponse;
@@ -12,6 +13,10 @@ import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.PageLimitCalculator;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -20,6 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentQueryService {
 
     private static final String DOCUMENT_CATEGORY_ALL = "all";
+    public static final int MOVABLE_PAGE_COUNT = 10;
 
     private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
@@ -69,7 +75,37 @@ public class DocumentQueryService {
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<DocumentPageResponse> getLatestDocuments(
+    public PageResponse<DocumentPageResponse> getLatestDocumentsV1(
+        final String category,
+        final int page,
+        final int size
+    ) {
+        final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
+        final PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+        if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {
+            final Page<Document> documentPage = documentRepository.findAll(pageRequest);
+            final List<DocumentPageResponse> responses = documentPage
+                .stream()
+                .map(DocumentPageResponse::from)
+                .toList();
+
+            return PageResponse.of(responses, page, size, documentPage.getTotalElements());
+        }
+
+        final Page<Document> documentPage = documentRepository.findPageByCategory(
+            DocumentCategory.valueOf(category), pageRequest
+        );
+        final List<DocumentPageResponse> responses = documentPage
+            .stream()
+            .map(DocumentPageResponse::from)
+            .toList();
+
+        return PageResponse.of(responses, page, size, documentPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentPageResponse> getLatestDocumentsV2(
         final String category,
         final int page,
         final int size
@@ -84,7 +120,7 @@ public class DocumentQueryService {
                 .map(DocumentPageResponse::from)
                 .toList();
             final Long totalElements = documentRepository.count(
-                PageLimitCalculator.calculatePageLimit(page, size, size)
+                PageLimitCalculator.calculatePageLimit(page, size, MOVABLE_PAGE_COUNT)
             );
 
             return PageResponse.of(responses, page, size, totalElements);
@@ -97,28 +133,49 @@ public class DocumentQueryService {
             .map(DocumentPageResponse::from)
             .toList();
         final Long totalElements = documentRepository.countByCategory(
-            category.toUpperCase(), PageLimitCalculator.calculatePageLimit(page, size, size)
+            category.toUpperCase(),
+            PageLimitCalculator.calculatePageLimit(page, size, MOVABLE_PAGE_COUNT)
         );
 
         return PageResponse.of(responses, page, size, totalElements);
     }
 
     @Transactional(readOnly = true)
-    public PageResponse<DocumentPageResponse> searchDocuments(
+    public PageResponse<DocumentPageResponse> searchDocumentsV1(
+        final String keyword,
+        final int page,
+        final int size
+    ) {
+        final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
+        final PageRequest pageRequest = PageRequest.of(page, size, sort);
+        final Page<Document> documentPage = documentRepository.searchByTitleOrChosungV1(
+            keyword, pageRequest
+        );
+
+        final List<DocumentPageResponse> responses = documentPage
+            .stream()
+            .map(DocumentPageResponse::from)
+            .toList();
+
+        return PageResponse.of(responses, page, size, documentPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public PageResponse<DocumentPageResponse> searchDocumentsV2(
         final String keyword,
         final int page,
         final int size
     ) {
         final int offset = page * size;
 
-        final List<DocumentPageResponse> responses = documentRepository.searchByTitleOrChosung(
+        final List<DocumentPageResponse> responses = documentRepository.searchByTitleOrChosungV2(
                 keyword, offset, size
             )
             .stream()
             .map(DocumentPageResponse::from)
             .toList();
         final Long totalElements = documentRepository.countByTitleOrChosung(
-            keyword, PageLimitCalculator.calculatePageLimit(page, size, size)
+            keyword, PageLimitCalculator.calculatePageLimit(page, size, MOVABLE_PAGE_COUNT)
         );
 
         return PageResponse.of(responses, page, size, totalElements);
