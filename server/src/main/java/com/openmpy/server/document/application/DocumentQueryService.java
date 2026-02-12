@@ -26,6 +26,7 @@ public class DocumentQueryService {
 
     private static final String DOCUMENT_CATEGORY_ALL = "all";
     public static final int MOVABLE_PAGE_COUNT = 10;
+    public static final int MAX_PAGE_LIMIT = 10000;
 
     private final DocumentRepository documentRepository;
     private final DocumentHistoryRepository documentHistoryRepository;
@@ -80,6 +81,10 @@ public class DocumentQueryService {
         final int page,
         final int size
     ) {
+        if (page > MAX_PAGE_LIMIT) {
+            throw new CustomException("최대 10,000 페이지까지만 조회할 수 있습니다.");
+        }
+
         final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
         final PageRequest pageRequest = PageRequest.of(page, size, sort);
 
@@ -110,6 +115,10 @@ public class DocumentQueryService {
         final int page,
         final int size
     ) {
+        if (page > MAX_PAGE_LIMIT) {
+            throw new CustomException("최대 10,000 페이지까지만 조회할 수 있습니다.");
+        }
+
         final int offset = page * size;
 
         if (category.equalsIgnoreCase(DOCUMENT_CATEGORY_ALL)) {

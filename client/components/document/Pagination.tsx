@@ -1,5 +1,6 @@
 "use client";
 
+import { MAX_PAGE } from "@/lib/api/document";
 import { Page } from "@/lib/types/global";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -17,6 +18,8 @@ export default function Pagination({
   basePath,
 }: PaginationProps) {
   const { page, totalPages, hasNext, hasPrevious } = pagination;
+  const effectiveTotalPages = Math.min(totalPages, MAX_PAGE);
+  const effectiveHasNext = hasNext && page + 1 < MAX_PAGE;
   const [maxVisible, setMaxVisible] = useState(5);
 
   useEffect(() => {
@@ -29,11 +32,12 @@ export default function Pagination({
     return () => window.removeEventListener("resize", updateMaxVisible);
   }, []);
 
-  // 페이지 번호 배열 생성 (현재 페이지 주변 maxVisible개)
+  // 페이지 번호 배열 생성 (현재 페이지 주변 maxVisible개, 최대 1만 페이지까지)
   const getPageNumbers = () => {
     const pages: (number | string)[] = [];
+    const lastPageIndex = effectiveTotalPages - 1;
     let start = Math.max(0, page - Math.floor(maxVisible / 2));
-    const end = Math.min(totalPages - 1, start + maxVisible - 1);
+    const end = Math.min(lastPageIndex, start + maxVisible - 1);
 
     // 끝에 도달했을 때 시작점 조정
     if (end - start < maxVisible - 1) {
@@ -54,11 +58,11 @@ export default function Pagination({
     }
 
     // 마지막 페이지
-    if (end < totalPages - 1) {
-      if (end < totalPages - 2) {
+    if (end < lastPageIndex) {
+      if (end < lastPageIndex - 1) {
         pages.push("...");
       }
-      pages.push(totalPages - 1);
+      pages.push(lastPageIndex);
     }
 
     return pages;
@@ -69,13 +73,13 @@ export default function Pagination({
     if (currentCategory && currentCategory !== "ALL") {
       params.set("category", currentCategory);
     }
-    params.set("page", pageNum.toString());
+    params.set("page", Math.min(pageNum, MAX_PAGE - 1).toString());
     return `${basePath}?${params.toString()}`;
   };
 
   const pageNumbers = getPageNumbers();
 
-  if (totalPages <= 1) {
+  if (effectiveTotalPages <= 1) {
     return null;
   }
 
@@ -83,7 +87,7 @@ export default function Pagination({
     <div className="flex items-center justify-center gap-2 mt-8">
       {/* 이전 버튼 */}
       <Link
-        href={hasPrevious ? buildPageUrl(page - 1) : "#"}
+        href={hasPrevious ? buildPageUrl(Math.max(0, page - 1)) : "#"}
         className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
           hasPrevious
             ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
@@ -112,7 +116,7 @@ export default function Pagination({
             <Link
               key={pageIndex}
               href={buildPageUrl(pageIndex)}
-              className={`flex items-center justify-center min-w-7 h-7 rounded border transition-colors text-xs ${
+              className={`flex items-center justify-center px-2 h-7 rounded border transition-colors text-xs ${
                 isActive
                   ? "bg-mint dark:bg-zinc-700 text-white border-mint dark:border-zinc-700 font-semibold dark:text-zinc-200"
                   : "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
@@ -128,9 +132,9 @@ export default function Pagination({
 
       {/* 다음 버튼 */}
       <Link
-        href={hasNext ? buildPageUrl(page + 1) : "#"}
+        href={effectiveHasNext ? buildPageUrl(page + 1) : "#"}
         className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
-          hasNext
+          effectiveHasNext
             ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
             : "border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-600 cursor-not-allowed"
         }`}

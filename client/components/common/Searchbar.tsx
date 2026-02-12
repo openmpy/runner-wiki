@@ -1,6 +1,6 @@
 "use client";
 
-import { searchDocuments } from "@/lib/api/document";
+import { searchDocuments, MAX_PAGE } from "@/lib/api/document";
 import { DocumentPage } from "@/lib/types/document";
 import { Page } from "@/lib/types/global";
 import Link from "next/link";
@@ -16,6 +16,7 @@ export default function Searchbar() {
   const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [showResults, setShowResults] = useState(false);
   const [currentPage, setCurrentPage] = useState(0);
+  const [overMaxPage, setOverMaxPage] = useState(false);
   const searchRef = useRef<HTMLDivElement>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   const loadingPageRef = useRef<number | null>(null);
@@ -40,8 +41,13 @@ export default function Searchbar() {
     async (query: string, page: number = 0, reset: boolean = false) => {
       if (!query.trim()) return;
       if (!reset && loadingPageRef.current === page) return;
+      if (page > MAX_PAGE) {
+        setOverMaxPage(true);
+        return;
+      }
 
       loadingPageRef.current = page;
+      if (reset) setOverMaxPage(false);
 
       if (reset) {
         setIsLoading(true);
@@ -95,6 +101,10 @@ export default function Searchbar() {
 
   const loadMoreResults = useCallback(() => {
     if (!pageInfo?.hasNext || isLoadingMore || !searchQuery.trim()) return;
+    if (currentPage + 1 > MAX_PAGE) {
+      setOverMaxPage(true);
+      return;
+    }
     performSearch(searchQuery, currentPage + 1, false);
   }, [pageInfo, isLoadingMore, searchQuery, currentPage, performSearch]);
 
@@ -104,6 +114,7 @@ export default function Searchbar() {
       setPageInfo(null);
       setShowResults(false);
       setCurrentPage(0);
+      setOverMaxPage(false);
       loadingPageRef.current = null;
       return;
     }
@@ -196,6 +207,11 @@ export default function Searchbar() {
               {isLoadingMore && (
                 <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
                   불러오는 중...
+                </div>
+              )}
+              {overMaxPage && (
+                <div className="p-4 text-center text-gray-500 dark:text-zinc-400 text-sm font-bmhanna border-t border-gray-200 dark:border-zinc-600">
+                  최대 10,000 페이지까지만 조회할 수 있습니다.
                 </div>
               )}
             </div>

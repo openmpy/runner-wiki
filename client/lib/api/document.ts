@@ -2,14 +2,18 @@ import { DocumentCategory } from "@/lib/types/document";
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
+export const MAX_PAGE = 10000;
+
 export async function getLatestDocuments(
   category: string,
   page: number = 0,
   size: number = 15
 ) {
   try {
+    page = Math.min(Math.max(0, page), MAX_PAGE);
+
     const response = await fetch(
-      `${API_BASE_URL}/v1/documents?category=${category}&page=${page}&size=${size}`,
+      `${API_BASE_URL}/v2/documents?category=${category}&page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {
@@ -79,6 +83,8 @@ export async function getHistories(
   size: number = 15
 ) {
   try {
+    page = Math.min(Math.max(0, page), MAX_PAGE);
+    
     const response = await fetch(
       `${API_BASE_URL}/v1/documents/${documentHistoryId}/histories?page=${page}&size=${size}`,
       {
@@ -154,8 +160,10 @@ export async function searchDocuments(
   size: number = 10
 ) {
   try {
+    page = Math.min(Math.max(0, page), MAX_PAGE);
+    
     const response = await fetch(
-      `${API_BASE_URL}/v1/documents/autocomplete?title=${title}&page=${page}&size=${size}`,
+      `${API_BASE_URL}/v1/documents/search?keyword=${title}&page=${page}&size=${size}`,
       {
         method: "GET",
         headers: {

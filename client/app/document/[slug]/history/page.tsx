@@ -2,7 +2,7 @@ import DocumentHistoryCards from "@/components/document/DocumentHistoryCards";
 import DocumentHistoryTable from "@/components/document/DocumentHistoryTable";
 import DocumentTitle from "@/components/document/DocumentTitle";
 import Pagination from "@/components/document/Pagination";
-import { getHistories } from "@/lib/api/document";
+import { getHistories, getLatestDocument, MAX_PAGE } from "@/lib/api/document";
 import { Metadata } from "next";
 import Link from "next/link";
 import { cache } from "react";
@@ -23,6 +23,14 @@ export async function generateMetadata({
   const searchParam = await searchParams;
   const currentPage = searchParam.page ? parseInt(searchParam.page, 10) : 0;
   const documentId = parseInt(slug);
+
+  if (currentPage > MAX_PAGE) {
+    return {
+      title: "편집기록 - 런너위키",
+      description:
+        "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
+    };
+  }
 
   try {
     const data = await getHistoriesCached(documentId, currentPage);
@@ -53,7 +61,16 @@ export default async function DocumentHistoryPage({
   const currentPage = searchParam.page ? parseInt(searchParam.page, 10) : 0;
 
   const documentId = parseInt(slug);
-  const data = await getHistoriesCached(documentId, currentPage);
+  const overMaxPage = currentPage > MAX_PAGE;
+  let documentForTitle: Awaited<ReturnType<typeof getLatestDocument>> | null = null;
+  if (overMaxPage) {
+    try {
+      documentForTitle = await getLatestDocument(documentId);
+    } catch {
+      documentForTitle = null;
+    }
+  }
+  const data = overMaxPage ? null : await getHistoriesCached(documentId, currentPage);
 
   return (
     <div>
@@ -77,10 +94,22 @@ export default async function DocumentHistoryPage({
         </div>
       </div>
       <div>
-        <p className="font-bmhanna text-lg text-gray-500 dark:text-zinc-200 mb-2">
-          {data.payload[0].title}
-        </p>
+        {(documentForTitle || data?.payload?.[0]) && (
+          <p className="font-bmhanna text-lg text-gray-500 dark:text-zinc-200 mb-2">
+            {(data?.payload?.[0] ?? documentForTitle)?.title}
+          </p>
+        )}
 
+        {overMaxPage ? (
+          <div className="p-4">
+            <div className="flex flex-col items-center">
+              <p className="text-gray-500 dark:text-zinc-400 font-bmhanna">
+                최대 10,000 페이지까지만 조회할 수 있습니다.
+              </p>
+            </div>
+          </div>
+        ) : (
+        <>
         {/* 데스크탑 */}
         {data ? (
           <>
@@ -131,6 +160,8 @@ export default async function DocumentHistoryPage({
 
         {/* 페이지네이션 */}
         {data && <Pagination pagination={data} basePath={`history`} />}
+        </>
+        )}
       </div>
     </div>
   );
