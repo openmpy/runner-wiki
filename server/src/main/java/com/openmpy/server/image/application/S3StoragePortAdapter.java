@@ -24,7 +24,8 @@ public class S3StoragePortAdapter implements ImageStoragePort {
     public UploadedImage upload(final MultipartFile file) {
         try {
             final String key = UUID.randomUUID() + "." + StringUtils.getFilenameExtension(
-                file.getOriginalFilename());
+                file.getOriginalFilename()
+            );
 
             s3Client.putObject(
                 PutObjectRequest.builder()
@@ -35,7 +36,8 @@ public class S3StoragePortAdapter implements ImageStoragePort {
                 RequestBody.fromInputStream(file.getInputStream(), file.getSize())
             );
             return new UploadedImage(
-                s3Properties.endpoint() + "/" + s3Properties.bucket() + "/" + key);
+                s3Properties.endpoint() + "/" + s3Properties.bucket() + "/" + key
+            );
         } catch (final Exception e) {
             throw new IllegalStateException("이미지 업로드 실패", e);
         }
