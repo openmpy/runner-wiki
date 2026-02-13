@@ -50,7 +50,7 @@ flowchart TB
     BE[Backend<br/>Spring Boot<br/>Docker Container]
     PG[(PostgreSQL)]
     RD[(Redis)]
-    S3[(Amazon S3<br/>Image Storage)]
+    S3[(Amazon S3)]
     U --> FE
     FE -->|HTTPS API| BE
     BE --> PG
@@ -101,8 +101,10 @@ flowchart TB
 
 ### 이미지 첨부
 
-- 문서에 이미지 업로드/연결
-- 이미지 상태 관리(임시/만료 등) 및 정리 로직
+- AWS S3 Presigned URL 기반 직접 업로드 방식
+- 임시 경로에 업로드 후 문서 저장 시 실제 경로로 이동
+- Lifecycle 정책으로 미사용 이미지 자동 삭제
+- 업로드 파일 타입 및 만료 시간 제한으로 보안 강화
 
 ### 조회수 및 인기 문서
 
@@ -121,25 +123,23 @@ flowchart TB
     - 일반 텍스트: 제목 문자열 기준 검색
     - 초성: 제목을 초성으로 변환한 값 기준 검색
 
-- PostgreSQL 기능 활용
-    - GENERATED COLUMN으로 정규화 컬럼 생성
-    - `pg_trgm` 확장으로 유사도 검색 처리
-
 ## 성능 개선
 
 ### 문서 페이지 조회
 
-> 응답 속도 73.13% 감소 (5,281ms > 1,419ms)
+> 응답 속도 95.91% 감소 (19,872ms > 813ms)
 
 ```mermaid
 xychart-beta
-    title "데이터: 3000만 건, 단위: ms"
-    x-axis ["기본", "인덱스 적용", "인덱스 + 쿼리문 개선"]
-    y-axis 0 --> 6000
-    bar [5281, 1959, 1419]
+    title "데이터: 1000만 건, 단위: ms"
+    x-axis ["기본", "인덱스 적용", "인덱스 + 커버링 인덱스"]
+    y-axis 0 --> 20000
+    bar [19872, 1682, 813]
 ```
 
 #### 개선 전
+
+<img width="2264" height="800" alt="Image" src="https://github.com/user-attachments/assets/61d3a397-8ed5-4635-bd61-3b087294ad88" />
 
 Spring Data JPA의 `PageRequest + Sort`를 사용하여 다음과 같이 최신 문서 목록을 조회
 
@@ -152,99 +152,131 @@ Spring Data JPA의 `PageRequest + Sort`를 사용하여 다음과 같이 최신 
 - 데이터가 많아질수록 `ORDER BY + OFFSET` 비용이 급격히 증가
 - `COUNT(*)` 쿼리가 대용량 테이블에서 병목이 됨
 
-#### 개선 1: 쿼리 구조 변경 (ID 선조회 + JOIN)
+#### 개선 1: 인덱스 설정
 
-1. 인덱스를 타고 `id`만 최신순으로 페이징
-2. 해당 `id` 목록을 기준으로 실제 row를 다시 조인
+<img width="2264" height="800" alt="Image" src="https://github.com/user-attachments/assets/ecf08e03-e098-446f-b4e9-3fb2d543a7fe" />
+
+1. 정렬 + 필터에 맞춘 복합 인덱스
+
+```sql
+CREATE INDEX idx_document_active_updated_id_desc
+    ON document (updated_at DESC, id DESC) WHERE is_deleted = FALSE;
+
+CREATE INDEX idx_document_active_category_updated_id_desc
+    ON document (category, updated_at DESC, id DESC) WHERE is_deleted = FALSE;
+```
+
+- 삭제되지 않은 데이터만 인덱싱
+- 정렬을 인덱스로 처리
+- OFFSET 조회 성능 개선
+
+#### 개선 2: 커버링 인덱스 기법 적용
+
+<img width="2264" height="800" alt="Image" src="https://github.com/user-attachments/assets/b3698e2c-239f-4c97-b7d6-27edcbca02b4" />
+
+1. 전체 row를 바로 조회하지 않고, 인덱스로 커버 가능한 `id`, `updated_at`만 먼저 조회
+
+```sql
+SELECT id, updated_at
+FROM document
+WHERE is_deleted = FALSE
+ORDER BY updated_at DESC, id DESC
+LIMIT :limit OFFSET :offset;
+```
+
+- 정렬 대상 데이터 크기 감소
+- 정렬 비용 절감
+
+2. ID 기준 실제 데이터 재조회
+
+```sql
+SELECT d.*
+FROM (SELECT id, updated_at
+      FROM document
+      WHERE is_deleted = FALSE
+      ORDER BY updated_at DESC, id DESC
+      LIMIT :limit OFFSET :offset) t
+         JOIN document d ON d.id = t.id
+ORDER BY t.updated_at DESC, t.id DESC;
+```
+
+- 1차 조회 결과를 기준으로 필요한 데이터만 다시 조인
+- 대량 Full Scan 방지
+- 불필요한 Row 접근 제거
+
+3. 조회 시 전체 개수를 끝까지 세지 않고, UI에 필요한 범위까지만 카운트하도록 제한
+
+```sql
+SELECT count(*)
+FROM (SELECT id
+      FROM document
+      WHERE is_deleted = FALSE
+      LIMIT :limit) t
+```
+
+```java
+public static int calculatePageLimit(
+    final int page,             // 현재 페이지 번호
+    final int pageSize,         // 한 페이지당 데이터 수
+    final int movablePageCount  // 한 번에 보여줄 페이지 개수
+) {
+    return ((page / movablePageCount) + 1) * pageSize * movablePageCount + 1;
+}
+```
+
+### 문서 검색 조회
+
+> 응답 속도 96.65% 감소 (6,591ms > 221ms)
+
+```mermaid
+xychart-beta
+    title "데이터: 1000만 건, 단위: ms"
+    x-axis ["Slice", "Cursor"]
+    y-axis 0 --> 7000
+    bar [6591, 221]
+```
+
+#### 개선 전
+
+Spring Data JPA의 `PageRequest + Sort`를 사용하여 다음과 같이 검색 데이터를 조회
+
+```java
+final Sort sort = Sort.by(Direction.DESC, "updatedAt").descending();
+final PageRequest pageRequest = PageRequest.of(page, size, sort);
+
+final Slice<Document> documentSlice = documentRepository.findAllByTitleChosung_ValueStartingWith(
+    keyword,
+    pageRequest
+);
+```
+
+문제점
+
+- Offset 증가에 따른 성능 저하
+- 대용량 데이터에서 성능이 악화
+
+#### 개선: Cursor 기반으로 조회
+
+마지막으로 조회한 기준값`cursorId`을 이용해 다음 페이지를 조회
 
 ```sql
 SELECT d.*
 FROM (SELECT id
       FROM document
-      WHERE deleted_at IS NULL
-      ORDER BY updated_at DESC LIMIT :limit
-      OFFSET :offset) t
-         LEFT JOIN document d ON t.id = d.id
-WHERE d.deleted_at IS NULL;
+      WHERE is_deleted = FALSE
+        AND LOWER(title_chosung) LIKE LOWER(CONCAT(:keyword, '%'))
+        AND (
+          :cursorId IS NULL
+              OR id < :cursorId
+          )
+      ORDER BY id DESC
+      LIMIT :limit) t
+         JOIN document d ON d.id = t.id
+ORDER BY t.id DESC
 ```
 
-- 정렬 비용을 `전체 row`가 아니라 `id 컬럼` 수준으로 축소
-- 테이블 접근 횟수를 `페이지 크기`만큼으로 제한
-
-#### 개선 2: COUNT 쿼리 제한
-
-조회 시 전체 개수를 끝까지 세지 않고, UI에 필요한 범위까지만 카운트하도록 제한
-
-```java
-Long totalElements = documentHistoryRepository.countByDocumentId(
-        documentId,
-        PageLimitCalculator.calculatePageLimit(page, size, 10)
-);
-```
-
-### 문서 기록 페이지 조회
-
-> 응답 속도 91.84% 감소 (21,085ms > 1,721ms)
-
-```mermaid
-xychart-beta
-    title "데이터: 3000만 건, 단위 ms"
-    x-axis ["기본", "인덱스 적용", "인덱스 + 쿼리문 개선"]
-    y-axis 0 --> 22000
-    bar [21085, 15197, 1721]
-```
-
-#### 개선 전
-
-Spring Data JPA의 `PageRequest + Sort` 기반으로 문서 기록(DocumentHistory)을 조회
-
-- `ORDER BY version DESC` 기반 정렬
-- `OFFSET` 기반 페이징
-- `Page` 생성 시 자동으로 수행되는 `COUNT` 쿼리
-
-문제점
-
-- 문서 기록 데이터는 계속 누적되기 때문에 `ORDER BY + OFFSET` 비용이 시간이 갈수록 증가
-- `COUNT(*)` 쿼리가 대용량 문서 기록 테이블에서 병목이 될 가능성이 큼
-
-#### 개선 1: 쿼리 구조 변경 (ID 선조회 + JOIN)
-
-1. `document_id` + `deleted_at IS NULL` 조건으로 범위를 먼저 좁힘
-2. 인덱스를 타고 `id`만 `version DESC` 기준으로 페이징
-3. 해당 `id` 목록을 기준으로 실제 row를 다시 조인
-
-```sql
-SELECT dh.*
-FROM (SELECT id
-      FROM document_history
-      WHERE document_id = :documentId
-        AND deleted_at IS NULL
-      ORDER BY version DESC LIMIT :limit
-      OFFSET :offset) t
-         JOIN document_history dh
-              ON dh.id = t.id
-WHERE dh.deleted_at IS NULL;
-```
-
-- 정렬 비용을 `전체 row`가 아니라 `id 컬럼` 수준으로 축소
-- 조인으로 가져오는 row 수를 `페이지 크기`로 제한
-- `document_id` 조건으로 탐색 범위를 빠르게 축소
-
-#### 개선 2: COUNT 쿼리 제한
-
-조회 시 전체 문서 기록 개수를 끝까지 세지 않고, UI에 필요한 범위까지만 카운트하도록 제한
-
-```sql
-SELECT count(*)
-FROM (SELECT id
-      FROM document_history
-      WHERE document_id = :documentId
-        AND deleted_at IS NULL
-      ORDER BY version DESC LIMIT :limit) t;
-```
-
-- 정확한 전체 건수 대신 `필요한 범위까지만` 계산
-- 대용량 테이블에서 `COUNT(*)`로 인한 전체 스캔 방지
+- Index Range Scan으로 효율적인 다음 페이지 조회
+- 페이지 깊이에 영향 없는 일정한 성능
 
 ## 트러블 슈팅
 
@@ -252,7 +284,7 @@ FROM (SELECT id
 
 #### 문제
 
-동일한 카테고리에 동일한 제목으로 게시글 생성 요청이 동시에 여러 번 들어올 경우, 중복된 게시글이 생성되는 문제가 발생
+- 동일한 카테고리에 동일한 제목으로 게시글 생성 요청이 동시에 여러 번 들어올 경우, 중복된 게시글이 생성되는 문제가 발생
 
 #### 원인
 
@@ -268,7 +300,47 @@ FROM (SELECT id
 
 > 동시성 문제는 코드보다 **DB 제약 조건으로 해결하는 것이 가장 안정적**이라는 점을 경험
 
-### 2. 개발/운영 서버 간 테이블 제약 조건 불일치 문제
+### 2. 게시글 수정 동시성 문제
+
+#### 문제
+
+- 게시글 수정 요청이 동시에 여러 번 들어올 경우, 게시글 버전이 중복돼서 생성되는 문제가 발생
+
+#### 원인
+
+- 동시 요청 상황에서 트랜잭션 경합 발생
+- Race Condition으로 인해 중복 데이터 저장 가능
+
+#### 해결
+
+- DB 레벨에서 **유니크 제약 조건(UNIQUE INDEX)** 추가
+- 비관적 락 도입
+- 중복 생성 시 DB 예외를 캐치하여 실패 처리
+
+### 3. 이미지 업로드 병목 문제
+
+#### 문제
+
+- 기존에는 서버가 이미지를 직접 받아서 S3로 업로드하는 방식이었는데, 트래픽이 늘어날수록 문제가 발생
+    - 이미지 업로드 요청이 몰리면 서버 CPU/메모리/네트워크가 업로드 트래픽을 그대로 감당
+    - 업로드 중간에 타임아웃/끊김이 생기면 서버 리소스만 낭비
+    - `글 작성 취소` 같은 케이스에서 불필요한 업로드 처리 기능까지 작성
+
+#### 원인
+
+- 업로드 경로가 `Client → Server → S3` 로 구성되어 서버가 파일 전송 중계자 역할을 함
+- 업로드는 데이터가 크고 시간이 길어 서버 자원 점유 시간이 길어짐
+- 서버가 업로드/검증/저장까지 전부 담당해 업무가 과도하게 집중
+
+#### 해결
+
+- 업로드 흐름을 `Client → S3` 로 바꾸고, 서버는 `업로드 권한(서명된 URL)`만 발급하도록 분리
+    - 서버는 Presigned URL 발급 API만 제공 (짧은 만료시간 + 업로드 정책)
+    - 클라이언트는 발급받은 URL로 S3에 직접 PUT 업로드
+    - 업로드 성공 후, 클라이언트가 서버에 최종 게시글 저장 요청
+    - 서버는 `어떤 이미지가 실제로 게시글에 사용됐는지`만 관리하고, 업로드 트래픽에서 빠짐
+
+### 4. 개발/운영 서버 간 테이블 제약 조건 불일치 문제
 
 #### 문제
 
