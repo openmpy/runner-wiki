@@ -8,6 +8,8 @@ import com.openmpy.server.document.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.util.ContentCalculator;
+import com.openmpy.server.image.application.port.ImageStoragePort;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -18,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class DocumentCommandService {
 
     private final DocumentRepository documentRepository;
-    private final DocumentImageCommandService documentImageCommandService;
+    private final ImageStoragePort imageStoragePort;
 
     @Transactional
     public DocumentCreateResponse save(
@@ -32,12 +34,15 @@ public class DocumentCommandService {
 
             document.addHistory(
                 request.author(),
-                request.content(),
+                imageStoragePort.convertTempToImageUrl(request.content()),
                 ContentCalculator.calculateUtf8Bytes(request.content()),
                 clientIp
             );
             documentRepository.save(document);
-            documentImageCommandService.attachTempImages(document, request.imageIds());
+
+            if (request.imageUrls() != null) {
+                useImages(request.imageUrls());
+            }
             return new DocumentCreateResponse(document.getId());
         } catch (final DataIntegrityViolationException e) {
             throw new CustomException("이미 작성된 문서입니다.");
@@ -56,11 +61,14 @@ public class DocumentCommandService {
 
             document.addHistory(
                 request.author(),
-                request.content(),
+                imageStoragePort.convertTempToImageUrl(request.content()),
                 ContentCalculator.calculateUtf8Bytes(request.content()),
                 clientIp
             );
-            documentImageCommandService.attachTempImages(document, request.imageIds());
+
+            if (request.imageUrls() != null) {
+                useImages(request.imageUrls());
+            }
             return new DocumentUpdateResponse(document.getId());
         } catch (final DataIntegrityViolationException e) {
             throw new CustomException("동시 처리 중 충돌이 발생했습니다.");
@@ -81,6 +89,12 @@ public class DocumentCommandService {
             request.category()
         )) {
             throw new CustomException("이미 작성된 문서입니다.");
+        }
+    }
+
+    private void useImages(final List<String> imageUrls) {
+        for (final String imageUrl : imageUrls) {
+            imageStoragePort.useImage(imageUrl);
         }
     }
 }

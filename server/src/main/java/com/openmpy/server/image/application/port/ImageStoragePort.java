@@ -1,11 +1,13 @@
 package com.openmpy.server.image.application.port;
 
-import com.openmpy.server.image.dto.UploadedImage;
-import org.springframework.web.multipart.MultipartFile;
+import com.openmpy.server.image.dto.ImagePresignRequest;
+import com.openmpy.server.image.dto.ImagePresignResponse;
 
 public interface ImageStoragePort {
 
-    UploadedImage upload(final MultipartFile image);
+    ImagePresignResponse presign(final ImagePresignRequest request);
 
-    void delete(final String url);
+    String convertTempToImageUrl(final String content);
+
+    void useImage(final String imageUrl);
 }

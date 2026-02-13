@@ -21,7 +21,7 @@ export default function DocumentNewPage() {
   const [author, setAuthor] = useState("");
   const [token, setToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imageIds, setImageIds] = useState<number[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isEditorReady, setIsEditorReady] = useState(false);
 
   const handleSubmit = async () => {
@@ -49,7 +49,7 @@ export default function DocumentNewPage() {
         category,
         author,
         content: markdown,
-        ...(imageIds.length > 0 && { imageIds }),
+        ...(imageUrls.length > 0 && { imageUrls }),
         token,
       });
 
@@ -82,8 +82,8 @@ export default function DocumentNewPage() {
         <ToastEditor
           ref={editorRef}
           onReady={() => setIsEditorReady(true)}
-          onImageUploaded={(imageId) =>
-            setImageIds((prev) => [...prev, imageId])
+          onImageUploaded={(imageUrl) =>
+            setImageUrls((prev) => [...prev, imageUrl])
           }
         />
 

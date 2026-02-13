@@ -21,36 +21,35 @@ public class S3Config {
     @Bean
     public S3Client s3Client() {
         final StaticCredentialsProvider provider = StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(s3Properties.accessKey(), s3Properties.secretKey())
+            AwsBasicCredentials.create(s3Properties.accessKey(), s3Properties.secretKey())
         );
 
         final S3Configuration s3Configuration = S3Configuration.builder()
-                .pathStyleAccessEnabled(true)
-                .build();
+            .pathStyleAccessEnabled(true)
+            .build();
 
         return S3Client.builder()
-                .region(Region.of(s3Properties.region()))
-                .credentialsProvider(provider)
-                .endpointOverride(URI.create(s3Properties.endpoint()))
-                .serviceConfiguration(s3Configuration)
-                .build();
+            .region(Region.of(s3Properties.region()))
+            .credentialsProvider(provider)
+            .endpointOverride(URI.create(s3Properties.endpoint()))
+            .serviceConfiguration(s3Configuration)
+            .build();
     }
 
     @Bean
-    public S3Presigner s3Properties() {
+    public S3Presigner s3Presigner() {
         final StaticCredentialsProvider provider = StaticCredentialsProvider.create(
-                AwsBasicCredentials.create(s3Properties.accessKey(), s3Properties.secretKey())
+            AwsBasicCredentials.create(s3Properties.accessKey(), s3Properties.secretKey())
         );
-
         final S3Configuration s3Configuration = S3Configuration.builder()
-                .pathStyleAccessEnabled(true)
-                .build();
+            .pathStyleAccessEnabled(true)
+            .build();
 
         return S3Presigner.builder()
-                .region(Region.of(s3Properties.region()))
-                .credentialsProvider(provider)
-                .endpointOverride(URI.create(s3Properties.endpoint()))
-                .serviceConfiguration(s3Configuration)
-                .build();
+            .region(Region.of(s3Properties.region()))
+            .credentialsProvider(provider)
+            .endpointOverride(URI.create(s3Properties.endpoint()))
+            .serviceConfiguration(s3Configuration)
+            .build();
     }
 }

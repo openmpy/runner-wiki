@@ -3,6 +3,7 @@
 import "@toast-ui/editor/dist/toastui-editor.css";
 import { Editor } from "@toast-ui/react-editor";
 import dynamic from "next/dynamic";
+import { getPresignImageUrl } from "@/lib/api/document";
 import {
   forwardRef,
   useEffect,
@@ -25,12 +26,8 @@ export interface ToastEditorHandle {
 interface ToastEditorProps {
   initialValue?: string;
   onReady?: () => void;
-  onImageUploaded?: (imageId: number) => void;
+  onImageUploaded?: (imageUrl: string) => void;
 }
-
-type UploadResponse = {
-  images: { imageId: number; url: string }[];
-};
 
 const TOOLBAR_DESKTOP = [
   ["heading", "bold", "italic", "strike"],
@@ -132,36 +129,23 @@ const ToastEditor = forwardRef<ToastEditorHandle, ToastEditorProps>(
               setIsUploading(true);
 
               try {
-                const formData = new FormData();
-                formData.append(
-                  "images",
-                  blob,
-                  (blob as File).name ?? "image.png"
-                );
+                const contentType =
+                  blob.type || "image/png";
+                const { uploadUrl, imageUrl } =
+                  await getPresignImageUrl(contentType);
 
-                const response = await fetch(
-                  `${process.env.NEXT_PUBLIC_API_BASE_URL}/v1/document-images`,
-                  { method: "POST", body: formData }
-                );
+                const putResponse = await fetch(uploadUrl, {
+                  method: "PUT",
+                  headers: { "Content-Type": contentType },
+                  body: blob,
+                });
 
-                if (!response.ok) {
-                  const error = await response.json();
-                  throw new Error(
-                    error.message || "이미지 업로드에 실패했습니다."
-                  );
+                if (!putResponse.ok) {
+                  throw new Error("S3 업로드에 실패했습니다.");
                 }
 
-                const data: UploadResponse = await response.json();
-                const imageData = data.images?.[0];
-
-                if (!imageData?.url)
-                  throw new Error("업로드 응답에 url이 없습니다.");
-
-                callback(imageData.url, (blob as File).name ?? "image");
-
-                if (imageData.imageId && onImageUploaded) {
-                  onImageUploaded(imageData.imageId);
-                }
+                callback(imageUrl, (blob as File).name ?? "image");
+                onImageUploaded?.(imageUrl);
               } catch (e) {
                 alert("이미지 업로드에 실패했습니다.");
                 console.error(e);

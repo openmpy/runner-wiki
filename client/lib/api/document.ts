@@ -30,12 +30,37 @@ export async function getLatestDocuments(
   }
 }
 
+export interface PresignImageResponse {
+  uploadUrl: string;
+  imageUrl: string;
+}
+
+export async function getPresignImageUrl(
+  contentType: string
+): Promise<PresignImageResponse> {
+  const response = await fetch(
+    `${API_BASE_URL}/v1/document-images/presign`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ contentType }),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.message || "Presigned URL 발급에 실패했습니다.");
+  }
+
+  return response.json();
+}
+
 export interface CreateDocumentRequest {
   title: string;
   category: DocumentCategory;
   author: string;
   content: string;
-  imageIds?: number[];
+  imageUrls?: string[];
   token: string;
 }
 
@@ -126,7 +151,7 @@ export async function getDocumentHistory(documentHistoryId: number) {
 export interface UpdateDocumentRequest {
   author: string;
   content: string;
-  imageIds?: number[];
+  imageUrls?: string[];
   token: string;
 }
 

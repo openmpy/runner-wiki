@@ -9,12 +9,12 @@ import com.openmpy.server.document.application.DocumentRankingCommandService;
 import com.openmpy.server.document.dto.request.DocumentCreateRequest;
 import com.openmpy.server.document.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.dto.response.DocumentCreateResponse;
-import com.openmpy.server.document.dto.response.DocumentImageUploadResponses;
 import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.util.ClientIpResolver;
+import com.openmpy.server.image.dto.ImagePresignRequest;
+import com.openmpy.server.image.dto.ImagePresignResponse;
 import com.openmpy.server.verifier.application.TurnstileVerifierAdapter;
 import jakarta.servlet.http.HttpServletRequest;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
@@ -95,17 +94,15 @@ public class DocumentCommandController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/v1/document-images")
-    public ResponseEntity<DocumentImageUploadResponses> uploadImages(
-        @RequestBody final List<MultipartFile> images,
-        final HttpServletRequest servletRequest
+    @PostMapping("/v1/document-images/presign")
+    public ResponseEntity<ImagePresignResponse> createPresignedImage(
+        @RequestBody final ImagePresignRequest request
     ) {
-        final String clientIp = ClientIpResolver.getClientIp(servletRequest);
-        final DocumentImageUploadResponses responses = documentImageCommandService.uploadImages(
-            images, clientIp
+        final ImagePresignResponse response = documentImageCommandService.createPresignedImage(
+            request
         );
 
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(response);
     }
 
     private void validatePassword(final String password) {

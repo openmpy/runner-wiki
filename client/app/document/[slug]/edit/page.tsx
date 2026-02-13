@@ -24,7 +24,7 @@ export default function DocumentHistoryEditPage() {
   const [token, setToken] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const [imageIds, setImageIds] = useState<number[]>([]);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [isEditorReady, setIsEditorReady] = useState(false);
 
   const slug = params.slug as string;
@@ -35,7 +35,7 @@ export default function DocumentHistoryEditPage() {
       try {
         setIsLoading(true);
         setIsEditorReady(false);
-        setImageIds([]);
+        setImageUrls([]);
 
         const data = await getLatestDocument(documentId);
         setCategory(data.category);
@@ -79,7 +79,7 @@ export default function DocumentHistoryEditPage() {
       const data = await updateDocument(documentId, {
         author,
         content: markdown,
-        ...(imageIds.length > 0 && { imageIds }),
+        ...(imageUrls.length > 0 && { imageUrls }),
         token,
       });
 
@@ -133,8 +133,8 @@ export default function DocumentHistoryEditPage() {
           ref={editorRef}
           initialValue={content}
           onReady={() => setIsEditorReady(true)}
-          onImageUploaded={(imageId) => {
-            setImageIds((prev) => [...prev, imageId]);
+          onImageUploaded={(imageUrl) => {
+            setImageUrls((prev) => [...prev, imageUrl]);
           }}
         />
 

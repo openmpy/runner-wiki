@@ -63,9 +63,6 @@ public class Document extends BaseTimeEntity {
     @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
     private final List<DocumentHistory> histories = new ArrayList<>();
 
-    @OneToMany(mappedBy = "document", cascade = CascadeType.ALL)
-    private final List<DocumentImage> images = new ArrayList<>();
-
     public static Document create(final String title, final DocumentCategory category) {
         final String chosung = KoreanChosung.extract(title);
 
@@ -102,21 +99,6 @@ public class Document extends BaseTimeEntity {
         histories.add(history);
     }
 
-    public void attachImages(final List<DocumentImage> images) {
-        if (Boolean.TRUE.equals(isDeleted)) {
-            throw new CustomException("삭제된 문서에 이미지를 추가할 수 없습니다.");
-        }
-
-        for (final DocumentImage image : images) {
-            if (image == null) {
-                throw new CustomException("이미지가 null 값입니다.");
-            }
-
-            image.markAsUsed(this);
-            this.images.add(image);
-        }
-    }
-
     public void delete() {
         if (Boolean.TRUE.equals(isDeleted)) {
             throw new CustomException("이미 삭제된 문서입니다.");
@@ -126,7 +108,6 @@ public class Document extends BaseTimeEntity {
         deletedAt = LocalDateTime.now();
 
         histories.forEach(DocumentHistory::delete);
-        images.forEach(DocumentImage::delete);
     }
 
     public String getTitle() {

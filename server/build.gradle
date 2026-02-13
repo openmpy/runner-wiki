@@ -46,7 +46,7 @@ dependencies {
     annotationProcessor 'jakarta.persistence:jakarta.persistence-api'
 
     // s3
-    implementation 'software.amazon.awssdk:s3:2.40.15'
+    implementation 'software.amazon.awssdk:s3:2.41.26'
 
     // flyway
     runtimeOnly 'org.flywaydb:flyway-database-postgresql:11.20.0'

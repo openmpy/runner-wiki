@@ -9,7 +9,7 @@ public record DocumentCreateRequest(
     DocumentCategory category,
     String author,
     String content,
-    @Nullable List<Long> imageIds,
+    @Nullable List<String> imageUrls,
     String token
 ) {
 

@@ -1,5 +1,5 @@
 CREATE
-EXTENSION IF NOT EXISTS citext;
+    EXTENSION IF NOT EXISTS citext;
 
 -- 문서
 CREATE TABLE document
@@ -31,20 +31,4 @@ CREATE TABLE document_history
     updated_at  TIMESTAMP    NOT NULL,
 
     CONSTRAINT fk_document_history_document FOREIGN KEY (document_id) REFERENCES document (id)
-);
-
--- 문서 이미지
-CREATE TABLE document_image
-(
-    id          BIGSERIAL PRIMARY KEY,
-    document_id BIGINT,
-    url         VARCHAR(255) NOT NULL,
-    status      VARCHAR(255) NOT NULL,
-    client_ip   VARCHAR(255) NOT NULL,
-    expired_at  TIMESTAMP,
-    deleted_at  TIMESTAMP,
-    created_at  TIMESTAMP    NOT NULL,
-    updated_at  TIMESTAMP    NOT NULL,
-
-    CONSTRAINT fk_document_image_document FOREIGN KEY (document_id) REFERENCES document (id)
 );
