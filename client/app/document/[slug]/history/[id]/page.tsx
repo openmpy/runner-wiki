@@ -23,7 +23,7 @@ export async function generateMetadata({
     const data = await getDocumentHistoryCached(documentHistoryId);
 
     return {
-      title: `${data.title} | 기록 - 런너위키`,
+      title: `테일즈런너 | ${data.title} - 런너위키`,
       description: `${data.content}`,
     };
   } catch {
