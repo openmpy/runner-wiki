@@ -1,5 +1,6 @@
 package com.openmpy.server.document.presentation;
 
+import com.openmpy.server.document.application.DocumentHistoryQueryService;
 import com.openmpy.server.document.application.DocumentQueryService;
 import com.openmpy.server.document.application.DocumentRankingQueryService;
 import com.openmpy.server.document.dto.response.DocumentGetResponse;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class DocumentQueryController {
 
     private final DocumentQueryService documentQueryService;
+    private final DocumentHistoryQueryService documentHistoryQueryService;
     private final DocumentRankingQueryService documentRankingQueryService;
 
     @GetMapping("/v1/documents/{documentId}")
@@ -59,7 +61,7 @@ public class DocumentQueryController {
 
     @GetMapping("/v1/document-histories/{historyId}")
     public ResponseEntity<DocumentGetResponse> getHistory(@PathVariable final Long historyId) {
-        return ResponseEntity.ok(documentQueryService.getHistory(historyId));
+        return ResponseEntity.ok(documentHistoryQueryService.getHistory(historyId));
     }
 
     @GetMapping("/v1/documents/{documentId}/histories")
@@ -68,7 +70,7 @@ public class DocumentQueryController {
         @RequestParam(defaultValue = "0", required = false) final int page,
         @RequestParam(defaultValue = "10", required = false) final int size
     ) {
-        return ResponseEntity.ok(documentQueryService.getHistories(documentId, page, size));
+        return ResponseEntity.ok(documentHistoryQueryService.getHistories(documentId, page, size));
     }
 
     @GetMapping("/v1/documents/search")
