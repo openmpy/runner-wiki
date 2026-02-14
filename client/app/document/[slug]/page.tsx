@@ -23,12 +23,12 @@ export async function generateMetadata({
     const data = await getLatestDocumentCached(documentId);
 
     return {
-      title: `${data.title} - 런너위키 | 테일즈런너`,
+      title: `${data.title} - 런너위키 (테일즈런너)`,
       description: `${data.content}`,
     };
   } catch {
     return {
-      title: "런너위키 | 테일즈런너",
+      title: "런너위키 (테일즈런너)",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서를 열람할 수 있습니다.",
     };

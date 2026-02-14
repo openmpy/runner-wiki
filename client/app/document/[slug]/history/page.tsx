@@ -26,7 +26,7 @@ export async function generateMetadata({
 
   if (currentPage > MAX_PAGE) {
     return {
-      title: "편집기록 - 런너위키 | 테일즈런너",
+      title: "편집기록 - 런너위키 (테일즈런너)",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
@@ -36,13 +36,13 @@ export async function generateMetadata({
     const data = await getHistoriesCached(documentId, currentPage);
 
     return {
-      title: `${data.payload[0].title} | 편집기록 - 런너위키 | 테일즈런너`,
+      title: `${data.payload[0].title} | 편집기록 - 런너위키 (테일즈런너)`,
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
   } catch {
     return {
-      title: "편집기록 - 런너위키 | 테일즈런너",
+      title: "편집기록 - 런너위키 (테일즈런너)",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };

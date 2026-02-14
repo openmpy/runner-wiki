@@ -23,12 +23,12 @@ export async function generateMetadata({
     const data = await getDocumentHistoryCached(documentHistoryId);
 
     return {
-      title: `${data.title} | 편집기록 - 런너위키 | 테일즈런너`,
+      title: `${data.title} | 편집기록 - 런너위키 (테일즈런너)`,
       description: `${data.content}`,
     };
   } catch {
     return {
-      title: "편집기록 - 런너위키 | 테일즈런너",
+      title: "편집기록 - 런너위키 (테일즈런너)",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 기록을 열람할 수 있습니다.",
     };
