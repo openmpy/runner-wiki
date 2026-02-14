@@ -10,7 +10,7 @@ import "./globals.css";
 import Providers from "./providers";
 
 export const metadata: Metadata = {
-  title: "테일즈런너 | 런너위키",
+  title: "런너위키 | 테일즈런너",
   description:
     "테일즈런너를 플레이하는 유저라면 누구나 문서를 작성하고 열람할 수 있습니다.",
 };

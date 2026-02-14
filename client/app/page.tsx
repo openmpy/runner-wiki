@@ -26,7 +26,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-2">
           <h2 className="text-lg lg:text-xl font-bmhanna">런너위키란?</h2>
-          <p className="text-sm leading-relaxed">
+          <p className="text-base">
             테일즈런너를 플레이하는 유저라면 누구나 문서 작성하고 열람할 수
             있습니다.
           </p>
@@ -34,7 +34,7 @@ export default function Home() {
 
         <div className="flex flex-col gap-2">
           <h2 className="text-lg lg:text-xl font-bmhanna">안내</h2>
-          <p className="text-sm leading-relaxed">
+          <p className="text-base">
             문서 작업 시 <strong>IP가 기록</strong>되며 이는 스팸, 악성 이용,
             시스템 악용 방지를 위한 용도로만 사용됩니다.
             <br />
@@ -45,7 +45,7 @@ export default function Home() {
         {/* 문의 */}
         <div className="flex flex-col gap-2">
           <h2 className="text-lg lg:text-xl font-bmhanna">문의</h2>
-          <p className="text-sm leading-relaxed">
+          <p className="text-base">
             서비스 관련 문의, 오류 제보, 문서 삭제 요청 등은{" "}
             <Link
               href="mailto:runnerwiki@proton.me"

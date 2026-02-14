@@ -14,7 +14,7 @@ export default function DocumentTableRow({ document }: DocumentTableRowProps) {
         <td className="px-3 py-3">
           <Link
             href={`/document/${document.documentId}`}
-            className="block hover:underline transition-colors text-sm whitespace-nowrap"
+            className="block hover:underline transition-colors text-base whitespace-nowrap"
           >
             {document.title}
           </Link>
@@ -22,7 +22,7 @@ export default function DocumentTableRow({ document }: DocumentTableRowProps) {
         <td className="px-3 py-3 text-center">
           <DocumentCategoryBadge category={document.category} />
         </td>
-        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-zinc-500 text-xs">
+        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-zinc-500 text-sm">
           {formatRelativeTime(document.lastModifiedAt)}
         </td>
       </tr>

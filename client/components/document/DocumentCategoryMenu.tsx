@@ -35,7 +35,7 @@ export default function DocumentCategoryMenu({
         return (
           <Link key={category} href={href}>
             <button
-              className={`font-bmhanna ${bgColor} text-white dark:text-zinc-200 px-4 rounded-sm hover:opacity-90 transition-opacity cursor-pointer`}
+              className={`font-bmhanna ${bgColor} text-white dark:text-zinc-200 px-5 py-0.5 rounded-sm hover:opacity-90 transition-opacity cursor-pointer text-base`}
             >
               {label}
             </button>

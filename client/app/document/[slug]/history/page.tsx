@@ -6,7 +6,7 @@ import { getHistories, getLatestDocument, MAX_PAGE } from "@/lib/api/document";
 import { Metadata } from "next";
 import Link from "next/link";
 import { cache } from "react";
-import { HiArrowLeft, HiPlus } from "react-icons/hi";
+import { FaArrowLeft, FaPlus } from "react-icons/fa";
 
 const getHistoriesCached = cache((id: number, page: number) =>
   getHistories(id, page)
@@ -26,7 +26,7 @@ export async function generateMetadata({
 
   if (currentPage > MAX_PAGE) {
     return {
-      title: "테일즈런너 | 편집기록 - 런너위키",
+      title: "편집기록 - 런너위키 | 테일즈런너",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
@@ -36,13 +36,13 @@ export async function generateMetadata({
     const data = await getHistoriesCached(documentId, currentPage);
 
     return {
-      title: `${data.payload[0].title} | 편집기록 - 런너위키`,
+      title: `${data.payload[0].title} | 편집기록 - 런너위키 | 테일즈런너`,
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
   } catch {
     return {
-      title: "편집기록 - 런너위키",
+      title: "편집기록 - 런너위키 | 테일즈런너",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서 편집 기록을 열람할 수 있습니다.",
     };
@@ -79,16 +79,16 @@ export default async function DocumentHistoryPage({
         <div className="flex gap-2">
           <Link
             href={`/document/${documentId}`}
-            className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-4 py-2 lg:py-1"
           >
-            <HiArrowLeft className="lg:hidden" />
+            <FaArrowLeft className="lg:hidden" />
             <span className="hidden lg:inline">뒤로가기</span>
           </Link>
           <Link
             href={`/document/${documentId}/edit`}
-            className="bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-4 py-2 lg:py-1"
           >
-            <HiPlus className="lg:hidden font-bold" />
+            <FaPlus className="lg:hidden" />
             <span className="hidden lg:inline">편집하기</span>
           </Link>
         </div>

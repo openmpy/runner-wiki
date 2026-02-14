@@ -88,7 +88,7 @@ export default function Pagination({
       {/* 이전 버튼 */}
       <Link
         href={hasPrevious ? buildPageUrl(Math.max(0, page - 1)) : "#"}
-        className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
+        className={`flex items-center justify-center w-10 h-7 rounded border transition-colors ${
           hasPrevious
             ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
             : "border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-600 cursor-not-allowed"
@@ -116,7 +116,7 @@ export default function Pagination({
             <Link
               key={pageIndex}
               href={buildPageUrl(pageIndex)}
-              className={`flex items-center justify-center px-2 h-7 rounded border transition-colors text-xs ${
+              className={`flex items-center justify-center px-2 h-7 rounded border transition-colors text-sm ${
                 isActive
                   ? "bg-mint dark:bg-zinc-700 text-white border-mint dark:border-zinc-700 font-semibold dark:text-zinc-200"
                   : "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
@@ -133,7 +133,7 @@ export default function Pagination({
       {/* 다음 버튼 */}
       <Link
         href={effectiveHasNext ? buildPageUrl(page + 1) : "#"}
-        className={`flex items-center justify-center w-7 h-7 rounded border transition-colors ${
+        className={`flex items-center justify-center w-10 h-7 rounded border transition-colors ${
           effectiveHasNext
             ? "border-gray-300 hover:bg-gray-100 text-gray-700 dark:border-zinc-700 dark:hover:bg-zinc-500 dark:text-zinc-200"
             : "border-gray-200 text-gray-400 dark:border-zinc-800 dark:text-gray-600 cursor-not-allowed"

@@ -14,13 +14,13 @@ export default function DocumentCard({ document }: DocumentCardProps) {
         <div className="flex items-center justify-between mb-4">
           <Link
             href={`/document/${document.documentId}`}
-            className="block hover:underline transition-colors text-sm"
+            className="block hover:underline transition-colors text-base"
           >
             {document.title}
           </Link>
           <DocumentCategoryBadge category={document.category} />
         </div>
-        <p className="text-gray-500 dark:text-zinc-500 text-xs">
+        <p className="text-gray-500 dark:text-zinc-500 text-sm">
           {formatRelativeTime(document.lastModifiedAt)}
         </p>
       </div>

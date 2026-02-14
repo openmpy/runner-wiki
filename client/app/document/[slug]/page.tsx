@@ -7,8 +7,7 @@ import { formatRelativeTime } from "@/lib/utils/date";
 import { Metadata } from "next";
 import Link from "next/link";
 import { cache } from "react";
-import { HiPlus } from "react-icons/hi";
-import { MdHistory } from "react-icons/md";
+import { FaHistory, FaPlus } from "react-icons/fa";
 
 const getLatestDocumentCached = cache((id: number) => getLatestDocument(id));
 
@@ -24,12 +23,12 @@ export async function generateMetadata({
     const data = await getLatestDocumentCached(documentId);
 
     return {
-      title: `테일즈런너 | ${data.title} - 런너위키`,
+      title: `${data.title} - 런너위키 | 테일즈런너`,
       description: `${data.content}`,
     };
   } catch {
     return {
-      title: "런너위키",
+      title: "런너위키 | 테일즈런너",
       description:
         "테일즈런너를 플레이하는 유저라면 누구나 문서를 열람할 수 있습니다.",
     };
@@ -53,16 +52,16 @@ export default async function DocumentDetailPage({
         <div className="flex gap-2">
           <Link
             href={`/document/${documentId}/history`}
-            className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-4 py-2 lg:py-1"
           >
-            <MdHistory className="lg:hidden font-bold" />
+            <FaHistory className="lg:hidden" />
             <span className="hidden lg:inline">편집기록</span>
           </Link>
           <Link
             href={`/document/${documentId}/edit`}
-            className="bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-2 lg:py-1"
+            className="bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-4 py-2 lg:py-1"
           >
-            <HiPlus className="lg:hidden font-bold" />
+            <FaPlus className="lg:hidden" />
             <span className="hidden lg:inline">편집하기</span>
           </Link>
         </div>
@@ -72,7 +71,7 @@ export default async function DocumentDetailPage({
         <TableOfContents items={toc} />
         <ToastViewer initialValue={data.content} />
 
-        <div className="text-xs text-gray-600 dark:text-zinc-600 border-t border-t-gray-300 dark:border-t-zinc-700 pt-3">
+        <div className="text-sm text-gray-600 dark:text-zinc-600 border-t border-t-gray-300 dark:border-t-zinc-700 pt-3">
           마지막 편집 시간: {formatRelativeTime(data.lastModifiedAt)}
         </div>
       </div>

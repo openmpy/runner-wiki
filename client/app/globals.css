@@ -43,6 +43,10 @@
   color: #111;
 }
 
+.toast-viewer p {
+  font-size: 15px;
+}
+
 .dark .toast-viewer {
   background: lab(8.30603% 0.618205 -2.16572);
   color: #e4e4e7;
@@ -138,6 +142,10 @@
 }
 
 /* 작성 영역 */
+.toast-editor .toastui-editor-contents {
+  font-size: 16px;
+}
+
 .dark .toast-editor .toastui-editor-contents {
   background: lab(8.30603% 0.618205 -2.16572);
   color: #e4e4e7;

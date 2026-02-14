@@ -99,7 +99,7 @@ export default function DocumentFormActions({
 
       <div className="flex justify-end gap-2">
         <button
-          className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-3 py-1 cursor-pointer"
+          className="bg-gray-400 dark:bg-zinc-500 font-bmhanna text-white dark:text-zinc-200 rounded-sm hover:opacity-90 transition-opacity px-4 py-1 cursor-pointer"
           onClick={onCancel}
           type="button"
         >
@@ -110,7 +110,7 @@ export default function DocumentFormActions({
           onClick={onSubmit}
           disabled={isDisabled}
           type="button"
-          className={`bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm px-3 py-1
+          className={`bg-mint dark:bg-zinc-700 font-bmhanna text-white dark:text-zinc-200 rounded-sm px-4 py-1
             ${
               isDisabled
                 ? "opacity-50 cursor-not-allowed"

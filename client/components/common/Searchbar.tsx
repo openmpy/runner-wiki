@@ -165,7 +165,7 @@ export default function Searchbar() {
             setShowResults(true);
           }
         }}
-        className="w-full px-4 py-2 pl-4 pr-12 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none text-sm"
+        className="w-full px-4 py-2 pl-4 pr-12 bg-white dark:bg-zinc-900 rounded-sm focus:outline-none text-base"
       />
       <FaSearch className="absolute right-4 text-gray-400" />
       {showResults && (
@@ -174,7 +174,7 @@ export default function Searchbar() {
           className="absolute top-full left-0 right-0 mt-1 bg-white dark:bg-zinc-900 border border-gray-200 dark:border-zinc-600 rounded-sm shadow-lg max-h-96 overflow-y-auto z-50"
         >
           {isLoading ? (
-            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
+            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-base font-bmhanna">
               검색 중입니다.
             </div>
           ) : searchResults.length > 0 ? (
@@ -188,20 +188,20 @@ export default function Searchbar() {
                 >
                   <div className="px-4 py-2 hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
                     <div className="flex items-center justify-between">
-                      <span className="text-sm">{document.title}</span>
+                      <span className="text-base">{document.title}</span>
                       <DocumentCategoryBadge category={document.category} />
                     </div>
                   </div>
                 </Link>
               ))}
               {isLoadingMore && (
-                <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
+                <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-base font-bmhanna">
                   불러오는 중...
                 </div>
               )}
             </div>
           ) : (
-            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-sm font-bmhanna">
+            <div className="p-4 text-center text-gray-400 dark:text-zinc-400 text-base font-bmhanna">
               검색 결과가 없습니다.
             </div>
           )}

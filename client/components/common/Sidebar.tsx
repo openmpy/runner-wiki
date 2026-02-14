@@ -22,11 +22,11 @@ export default async function Sidebar() {
               >
                 <div className="flex items-center gap-1">
                   <p className="text-mint text-sm font-bold dark:text-orange-400">{index + 1}.</p>
-                  <p className="text-sm hover:underline flex-1 truncate">
+                  <p className="text-base hover:underline flex-1 truncate">
                     {document.title}
                   </p>
                 </div>
-                <p className="text-xs text-gray-400">
+                <p className="text-sm text-gray-400">
                   {formatRelativeTime2(document.lastModifiedAt)}
                 </p>
               </Link>

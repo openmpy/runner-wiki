@@ -21,7 +21,7 @@ export default function DocumentCategoryBadge({
   const { label, className } = CATEGORY_CONFIG[category];
 
   return (
-    <span className={`rounded-sm font-bold px-2 py-0.5 text-xs ${className}`}>
+    <span className={`rounded-sm font-bold px-2 py-0.5 text-sm ${className}`}>
       {label}
     </span>
   );

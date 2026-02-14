@@ -13,19 +13,19 @@ export default function DocumentHistoryTableRow({
   return (
     <>
       <tr className="hover:bg-gray-100 dark:hover:bg-zinc-700 transition-colors">
-        <td className="px-3 py-3 text-center">{documentHistory.version}</td>
+        <td className="px-3 py-3 text-center text-base">{documentHistory.version}</td>
         <td className="px-3 py-3 text-center">
           <Link
             href={`/document/${documentHistory.documentId}/history/${documentHistory.documentHistoryId}`}
-            className="block hover:underline transition-colors text-sm whitespace-nowrap"
+            className="block hover:underline transition-colors text-base whitespace-nowrap"
           >
             {documentHistory.author}
           </Link>
         </td>
-        <td className="px-3 py-3 text-center">
+        <td className="px-3 py-3 text-center text-base">
           {formatFileSize(documentHistory.size)}
         </td>
-        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-zinc-500">
+        <td className="px-3 py-3 whitespace-nowrap text-gray-500 dark:text-zinc-500 text-sm">
           {formatRelativeTime(documentHistory.createdAt)}
         </td>
       </tr>
