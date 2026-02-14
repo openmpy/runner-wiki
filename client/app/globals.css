@@ -43,7 +43,7 @@
   color: #111;
 }
 
-.toast-viewer p {
+.toast-viewer .toastui-editor-contents {
   font-size: 15px;
 }
 
@@ -75,7 +75,7 @@
 }
 
 .dark .toast-viewer pre {
-  background: #020617;
+  background: #1e293b;
   color: #e5e7eb;
 }
 
@@ -143,7 +143,7 @@
 
 /* 작성 영역 */
 .toast-editor .toastui-editor-contents {
-  font-size: 16px;
+  font-size: 15px;
 }
 
 .dark .toast-editor .toastui-editor-contents {
