@@ -2,6 +2,8 @@ package com.openmpy.server.document.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
 import com.openmpy.server.document.domain.entity.Document;
 import com.openmpy.server.document.domain.entity.DocumentHistory;
@@ -13,12 +15,15 @@ import com.openmpy.server.document.dto.request.DocumentUpdateRequest;
 import com.openmpy.server.document.dto.response.DocumentCreateResponse;
 import com.openmpy.server.document.dto.response.DocumentUpdateResponse;
 import com.openmpy.server.global.exception.CustomException;
+import com.openmpy.server.image.application.port.ImageStoragePort;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest(webEnvironment = WebEnvironment.NONE)
@@ -33,6 +38,9 @@ class DocumentCommandServiceTest {
 
     @Autowired
     private DocumentHistoryRepository documentHistoryRepository;
+
+    @MockitoBean
+    private ImageStoragePort imageStoragePort;
 
     @BeforeEach
     void setUp() {
@@ -51,6 +59,9 @@ class DocumentCommandServiceTest {
             null,
             "success-token"
         );
+
+        // stub
+        when(imageStoragePort.convertTempToImageUrl(anyString())).thenReturn("내용");
 
         // when
         final DocumentCreateResponse response = documentCommandService.save(request, "127.0.0.1");
@@ -72,6 +83,54 @@ class DocumentCommandServiceTest {
         assertThat(foundDocumentHistory.getClientIp()).isEqualTo("127.0.0.1");
     }
 
+    @DisplayName("이미지가 포함된 문서를 작성한다.")
+    @Test
+    void document_command_service_test_02() {
+        // given
+        final DocumentCreateRequest request = new DocumentCreateRequest(
+            "제목",
+            DocumentCategory.USER,
+            "작성자",
+            "내용"
+                + "\n![image.png](https://test.com/temp/test1.png)"
+                + "\n![image.png](https://test.com/temp/test2.png)",
+            List.of(
+                "https://test.com/temp/test1.png",
+                "https://test.com/temp/test2.png"
+            ),
+            "success-token");
+
+        // stub
+        when(imageStoragePort.convertTempToImageUrl(anyString())).thenReturn(
+            "내용"
+                + "\n![image.png](https://test.com/image/test1.png)"
+                + "\n![image.png](https://test.com/image/test2.png)"
+        );
+
+        // when
+        final DocumentCreateResponse response = documentCommandService.save(request, "127.0.0.1");
+
+        // then
+        final Document foundDocument = documentRepository.findAll().getFirst();
+        final DocumentHistory foundDocumentHistory = foundDocument.getHistories().getFirst();
+
+        assertThat(response.documentId()).isNotNull();
+        assertThat(foundDocument.getId()).isNotNull();
+        assertThat(foundDocument.getTitle()).isEqualTo("제목");
+        assertThat(foundDocument.getCategory()).isEqualTo(DocumentCategory.USER);
+        assertThat(foundDocument.getLatestVersion()).isEqualTo(1);
+
+        assertThat(foundDocumentHistory.getAuthor()).isEqualTo("작성자");
+        assertThat(foundDocumentHistory.getContent()).isEqualTo(
+            "내용"
+                + "\n![image.png](https://test.com/image/test1.png)"
+                + "\n![image.png](https://test.com/image/test2.png)"
+        );
+        assertThat(foundDocumentHistory.getVersion()).isEqualTo(1);
+        assertThat(foundDocumentHistory.getSize()).isEqualTo(98L);
+        assertThat(foundDocumentHistory.getClientIp()).isEqualTo("127.0.0.1");
+    }
+
     @DisplayName("작성된 문서에 이미지가 포함 되지 않은 내용으로 수정한다.")
     @Test
     void document_command_service_test_03() {
@@ -88,6 +147,9 @@ class DocumentCommandServiceTest {
             10L,
             "127.0.0.1"
         );
+
+        // stub
+        when(imageStoragePort.convertTempToImageUrl(anyString())).thenReturn("내용2");
 
         // when
         final DocumentUpdateRequest request = new DocumentUpdateRequest(
@@ -112,6 +174,65 @@ class DocumentCommandServiceTest {
         assertThat(foundDocumentHistory.getContent()).isEqualTo("내용2");
         assertThat(foundDocumentHistory.getVersion()).isEqualTo(2);
         assertThat(foundDocumentHistory.getSize()).isEqualTo(7);
+        assertThat(foundDocumentHistory.getClientIp()).isEqualTo("127.0.0.1");
+    }
+
+    @DisplayName("작성된 문서에 이미지를 첨부해서 수정한다.")
+    @Test
+    void document_command_service_test_04() {
+        // given
+        final Document document = Document.create(
+            "제목",
+            DocumentCategory.USER
+        );
+        documentRepository.save(document);
+
+        document.addHistory(
+            "작성자",
+            "내용",
+            10L,
+            "127.0.0.1"
+        );
+
+        // stub
+        when(imageStoragePort.convertTempToImageUrl(anyString())).thenReturn(
+            "내용2"
+                + "\n![image.png](https://test.com/image/test1.png)"
+                + "\n![image.png](https://test.com/image/test2.png)"
+        );
+
+        // when
+        final DocumentUpdateRequest request = new DocumentUpdateRequest(
+            "작성자2",
+            "내용2"
+                + "\n![image.png](https://test.com/temp/test1.png)"
+                + "\n![image.png](https://test.com/temp/test2.png)",
+            List.of(
+                "https://test.com/temp/test1.png",
+                "https://test.com/temp/test2.png"
+            ),
+            "success-token"
+        );
+        final DocumentUpdateResponse response = documentCommandService.update(
+            document.getId(),
+            request,
+            "127.0.0.1"
+        );
+
+        // then
+        final Document foundDocument = documentRepository.findAll().getFirst();
+        final DocumentHistory foundDocumentHistory = foundDocument.getHistories().getLast();
+
+        assertThat(response.documentId()).isNotNull();
+
+        assertThat(foundDocumentHistory.getAuthor()).isEqualTo("작성자2");
+        assertThat(foundDocumentHistory.getContent()).isEqualTo(
+            "내용2"
+                + "\n![image.png](https://test.com/image/test1.png)"
+                + "\n![image.png](https://test.com/image/test2.png)"
+        );
+        assertThat(foundDocumentHistory.getVersion()).isEqualTo(2);
+        assertThat(foundDocumentHistory.getSize()).isEqualTo(99);
         assertThat(foundDocumentHistory.getClientIp()).isEqualTo("127.0.0.1");
     }
 
