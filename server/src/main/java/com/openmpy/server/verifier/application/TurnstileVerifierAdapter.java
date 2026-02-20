@@ -18,7 +18,7 @@ public class TurnstileVerifierAdapter implements VerifierPort {
     private static final String TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
     private final CloudflareProperties cloudflareProperties;
-    private final RestClient restClient = RestClient.create();
+    private final RestClient restClient;
 
     @Override
     public boolean verify(final String token, final String clientIp) {
