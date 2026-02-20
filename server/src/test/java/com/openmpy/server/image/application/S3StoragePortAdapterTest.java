@@ -113,10 +113,9 @@ class S3StoragePortAdapterTest {
     void s3_storage_port_adapter_test_03() {
         // given
         final String content = """
-            내용
-            ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/temp/0f8238e3-c77d-49a6-8686-6e41d6b1a1b8.png)
-            ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/temp/f15fd5ad-cc57-4474-a7b5-75bcc02e720c.png)
-            ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/temp/3a9237aa-6be8-4d09-b18f-aff87672872c.png)
+            ㅋㅋㅋㅋㅋㅋ
+            
+            ![4a1fd56f-8cd4-4058-876b-2db466ea99ca.png](https://test.s3.ap-northeast-2.amazonaws.com/temp/5e6acc88-90ac-4953-b3a8-8ee7c6fb7453.png)![75ce8262-c04d-46fb-9e6a-d238490e357b.png](https://test.s3.ap-northeast-2.amazonaws.com/temp/47e11dd5-ae32-4066-94dd-cdd1d3f32b1a.png)
             """;
 
         // when
@@ -125,10 +124,9 @@ class S3StoragePortAdapterTest {
         // then
         assertThat(result).isEqualTo(
             """
-                내용
-                ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/image/0f8238e3-c77d-49a6-8686-6e41d6b1a1b8.png)
-                ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/image/f15fd5ad-cc57-4474-a7b5-75bcc02e720c.png)
-                ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/image/3a9237aa-6be8-4d09-b18f-aff87672872c.png)
+                ㅋㅋㅋㅋㅋㅋ
+                
+                ![4a1fd56f-8cd4-4058-876b-2db466ea99ca.png](https://test.s3.ap-northeast-2.amazonaws.com/image/5e6acc88-90ac-4953-b3a8-8ee7c6fb7453.png)![75ce8262-c04d-46fb-9e6a-d238490e357b.png](https://test.s3.ap-northeast-2.amazonaws.com/image/47e11dd5-ae32-4066-94dd-cdd1d3f32b1a.png)
                 """
         );
     }

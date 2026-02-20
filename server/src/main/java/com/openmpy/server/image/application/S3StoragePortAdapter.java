@@ -89,18 +89,19 @@ public class S3StoragePortAdapter implements ImageStoragePort {
             return content;
         }
 
-        final Pattern compile = Pattern.compile(
-            "https://" + s3Properties.bucket()
-                + "\\.s3\\.ap-northeast-2\\.amazonaws\\.com/temp/([^\\s\"']+)"
+        final Pattern pattern = Pattern.compile(
+            "https://" + Pattern.quote(s3Properties.bucket())
+                + "\\.s3\\.ap-northeast-2\\.amazonaws\\.com/temp/([^\\s)\"']+)"
         );
-        final Matcher matcher = compile.matcher(content);
+
+        final Matcher matcher = pattern.matcher(content);
         final StringBuffer sb = new StringBuffer();
 
         while (matcher.find()) {
             final String fileName = matcher.group(1);
             final String newUrl = s3Properties.endpoint() + "/image/" + fileName;
 
-            matcher.appendReplacement(sb, newUrl);
+            matcher.appendReplacement(sb, Matcher.quoteReplacement(newUrl));
         }
 
         matcher.appendTail(sb);
