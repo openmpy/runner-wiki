@@ -1,12 +1,14 @@
 package com.openmpy.server.image.application;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import com.openmpy.server.global.exception.CustomException;
 import com.openmpy.server.global.properties.S3Properties;
 import com.openmpy.server.image.dto.ImagePresignRequest;
 import com.openmpy.server.image.dto.ImagePresignResponse;
@@ -15,6 +17,8 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.mockito.ArgumentCaptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -127,5 +131,52 @@ class S3StoragePortAdapterTest {
                 ![image.png](https://test.s3.ap-northeast-2.amazonaws.com/image/3a9237aa-6be8-4d09-b18f-aff87672872c.png)
                 """
         );
+    }
+
+    @DisplayName("내용이 비어있으면 빈 값 그대로 반환한다.")
+    @ParameterizedTest(name = "입력: {0}")
+    @NullAndEmptySource
+    void s3_storage_port_adapter_test_04(final String input) {
+        // when
+        final String result = s3StoragePortAdapter.convertTempToImageUrl(input);
+
+        // then
+        assertThat(result).isNullOrEmpty();
+    }
+
+    @DisplayName("지원하지 않는 컨텐츠 타입일 경우 예외가 발생한다.")
+    @Test
+    void exception_s3_storage_port_adapter_test_01() {
+        // given
+        final ImagePresignRequest request = new ImagePresignRequest("image/test");
+
+        // when & then
+        assertThatThrownBy(() -> s3StoragePortAdapter.presign(request))
+            .isInstanceOf(CustomException.class)
+            .hasMessage("지원하지 않는 Content Type 입니다.");
+    }
+
+    @DisplayName("URL이 잘못된 형식이면 예외가 발생한다.")
+    @Test
+    void exception_s3_storage_port_adapter_test_02() {
+        // given
+        final String url = "invalid-url";
+
+        // when & then
+        assertThatThrownBy(() -> s3StoragePortAdapter.useImage(url))
+            .isInstanceOf(CustomException.class)
+            .hasMessage("잘못된 URL 형식입니다.");
+    }
+
+    @DisplayName("URL에서 이미지 타입을 찾을 수 없으면 예외가 발생한다.")
+    @Test
+    void exception_s3_storage_port_adapter_test_03() {
+        // given
+        final String url = "https://test.s3.ap-northeast-2.amazonaws.com/temp";
+
+        // when & then
+        assertThatThrownBy(() -> s3StoragePortAdapter.useImage(url))
+            .isInstanceOf(CustomException.class)
+            .hasMessage("잘못된 키 값입니다.");
     }
 }

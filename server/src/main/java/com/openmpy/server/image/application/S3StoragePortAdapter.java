@@ -5,10 +5,8 @@ import com.openmpy.server.global.properties.S3Properties;
 import com.openmpy.server.image.application.port.ImageStoragePort;
 import com.openmpy.server.image.dto.ImagePresignRequest;
 import com.openmpy.server.image.dto.ImagePresignResponse;
-import java.net.URI;
-import java.nio.file.Paths;
 import java.time.Duration;
-import java.util.Set;
+import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,16 +22,16 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 @Component
 public class S3StoragePortAdapter implements ImageStoragePort {
 
-    private static final Set<String> ALLOWED_CONTENT_TYPES = Set.of(
-        "image/jpeg",
-        "image/png",
-        "image/webp",
-        "image/gif",
-        "image/heic",
-        "image/heif",
-        "image/avif",
-        "image/bmp",
-        "image/tiff"
+    private static final Map<String, String> CONTENT_TYPE_TO_EXTENSION = Map.of(
+        "image/jpeg", "jpeg",
+        "image/png", "png",
+        "image/webp", "webp",
+        "image/gif", "gif",
+        "image/heic", "heic",
+        "image/heif", "heif",
+        "image/avif", "avif",
+        "image/bmp", "bmp",
+        "image/tiff", "tiff"
     );
     public static final String IMAGE_FOLDER = "image";
     public static final String TEMP_FOLDER = "temp";
@@ -46,7 +44,10 @@ public class S3StoragePortAdapter implements ImageStoragePort {
     public ImagePresignResponse presign(final ImagePresignRequest request) {
         validateContentType(request.contentType());
 
-        final String extension = normalizeExtension(request.contentType());
+        final String extension = CONTENT_TYPE_TO_EXTENSION.getOrDefault(
+            request.contentType(),
+            "bin"
+        );
         final String key = UUID.randomUUID() + "." + extension;
 
         final PutObjectRequest putObjectRequest = PutObjectRequest.builder()
@@ -70,7 +71,7 @@ public class S3StoragePortAdapter implements ImageStoragePort {
 
     @Override
     public void useImage(final String tempImageUrl) {
-        final String key = extractKey(tempImageUrl);
+        final String key = extractFileName(tempImageUrl);
 
         s3Client.copyObject(it -> it.sourceBucket(s3Properties.bucket())
             .sourceKey(TEMP_FOLDER + "/" + key)
@@ -107,38 +108,24 @@ public class S3StoragePortAdapter implements ImageStoragePort {
     }
 
     private void validateContentType(final String contentType) {
-        if (!ALLOWED_CONTENT_TYPES.contains(contentType)) {
+        if (!CONTENT_TYPE_TO_EXTENSION.containsKey(contentType)) {
             throw new CustomException("지원하지 않는 Content Type 입니다.");
         }
     }
 
-    private String normalizeExtension(final String contentType) {
-        return switch (contentType) {
-            case "image/jpeg" -> "jpeg";
-            case "image/png" -> "png";
-            case "image/webp" -> "webp";
-            case "image/gif" -> "gif";
-            case "image/heic" -> "heic";
-            case "image/heif" -> "heif";
-            case "image/avif" -> "avif";
-            case "image/bmp" -> "bmp";
-            case "image/tiff" -> "tiff";
-            default -> "bin";
-        };
-    }
+    private String extractFileName(final String url) {
+        final int lastSlash = url.lastIndexOf('/');
 
-    private String extractKey(final String url) {
-        try {
-            final URI uri = URI.create(url);
-            final String path = uri.getPath();
-
-            if (path == null || path.isBlank()) {
-                throw new CustomException("잘못된 S3 URL입니다.");
-            }
-
-            return Paths.get(path).getFileName().toString();
-        } catch (final Exception e) {
-            throw new CustomException("잘못된 이미지 URL입니다. " + url);
+        if (lastSlash == -1) {
+            throw new CustomException("잘못된 URL 형식입니다.");
         }
+
+        final String fileName = url.substring(lastSlash + 1);
+        final String extension = fileName.substring(fileName.lastIndexOf('.') + 1);
+
+        if (!CONTENT_TYPE_TO_EXTENSION.containsValue(extension)) {
+            throw new CustomException("잘못된 키 값입니다.");
+        }
+        return fileName;
     }
 }
